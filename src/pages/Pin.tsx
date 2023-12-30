@@ -6,7 +6,7 @@ export default function Pin() {
     const [pin, setPin] = useState('');
 
     return (<View>
-        <Text>Current Pin: {pin}</Text>
+        <Text style={{textAlign: 'center'}}>{pin}</Text>
         <PinPad sendPin={setPin}></PinPad>
     </View>)
 }

@@ -1,29 +1,37 @@
-import { GestureResponderEvent, Pressable, Text, StyleSheet } from "react-native"
+import { Pressable, Text, StyleSheet } from "react-native"
 import colors from "../assets/colors";
 
 export interface PinButtonProps {
     digit: number,
-    onPress: (event: GestureResponderEvent) => void
+    onPress: (digit: number) => void
 }
 
 export default function PinButton(props: PinButtonProps) {
+    function handlePress() {
+        props.onPress(props.digit);
+    }
+
     return (
-        <Pressable onPress={props.onPress} style={styles.button}>
-            <Text>{props.digit}</Text>
+        <Pressable onPress={handlePress} style={styles.button}>
+            <Text style={styles.text}>{props.digit}</Text>
         </Pressable>
     )
 }
 
 const styles = StyleSheet.create({
     button: {
-        color: colors.whiteText,
         margin: 5,
-        width: 70,
-        height: 70,
+        width: 80,
+        height: 80,
         borderRadius: 50,
         borderColor: colors.border,
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center'
     },
+
+    text: {
+        color: colors.whiteText,
+        fontSize: 25
+    }
 });
