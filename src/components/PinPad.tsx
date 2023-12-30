@@ -1,5 +1,8 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useState } from 'react';
+
+import { sha256 } from 'js-sha256';
+
 import PinButton from './PinButton';
 import colors from '../assets/colors';
 import PinVisualizer from './PinVisualizer';
@@ -7,7 +10,7 @@ import PinVisualizer from './PinVisualizer';
 const maxPinLength = 6;
 
 export interface PinPadProps {
-    sendPin: (value: string) => void;
+    onComplete: (value: string) => any;
 }
 
 export default function PinPad(props: PinPadProps) {
@@ -18,6 +21,7 @@ export default function PinPad(props: PinPadProps) {
      * @param digit number 0-9 to add to pin
      */
     function updatePin(digit: number) {
+        // Check validity
         if (pin.length >= maxPinLength) {
             return;
         }
@@ -27,7 +31,11 @@ export default function PinPad(props: PinPadProps) {
 
         const newPin = pin + digit;
         setPin(newPin);
-        props.sendPin(newPin);
+
+        // Send pin back if max length
+        if (newPin.length === maxPinLength) {
+            props.onComplete(hash256(newPin));
+        }
     }
 
     /**
@@ -39,7 +47,7 @@ export default function PinPad(props: PinPadProps) {
         }
         const newPin = pin.slice(0, -1);
         setPin(newPin);
-        props.sendPin(newPin);
+        props.onComplete('');
     }
 
     return (<>
@@ -47,7 +55,7 @@ export default function PinPad(props: PinPadProps) {
             max={maxPinLength}
             currentLength={pin.length}
         />
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <View>
                 <PinButton digit={1} onPress={updatePin}/>
                 <PinButton digit={4} onPress={updatePin}/>
@@ -79,3 +87,14 @@ const styles = StyleSheet.create({
         borderWidth: 1
     }
 });
+
+/**
+ * Hash text using SHA-256
+ * @param text text to hash
+ * @returns hashed text
+ */
+function hash256(text: string): string {
+    const hash = sha256.create();
+    hash.update(text);
+    return hash.hex();
+}

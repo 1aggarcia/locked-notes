@@ -5,8 +5,10 @@ import PinPad from '../components/PinPad';
 export default function Pin() {
     const [pin, setPin] = useState('');
 
-    return (<View>
-        <Text style={{textAlign: 'center'}}>{pin}</Text>
-        <PinPad sendPin={setPin}></PinPad>
-    </View>)
+    return (
+        <View>
+            <Text style={{textAlign: 'center'}}>{pin}</Text>
+            <PinPad onComplete={setPin}></PinPad>
+        </View>
+    )
 }
