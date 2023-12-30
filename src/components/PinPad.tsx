@@ -10,7 +10,11 @@ import PinVisualizer from './PinVisualizer';
 const maxPinLength = 6;
 
 export interface PinPadProps {
-    onComplete: (value: string) => any;
+    // Function to execute when the pin is completed
+    onComplete: (pin: string) => any;
+
+    // Salt should be a 64 character long hexadecimal string
+    salt: string;
 }
 
 export default function PinPad(props: PinPadProps) {
@@ -34,7 +38,7 @@ export default function PinPad(props: PinPadProps) {
 
         // Send pin back if max length
         if (newPin.length === maxPinLength) {
-            props.onComplete(hash256(newPin));
+            props.onComplete(hash256(newPin, props.salt));
         }
     }
 
@@ -93,8 +97,8 @@ const styles = StyleSheet.create({
  * @param text text to hash
  * @returns hashed text
  */
-function hash256(text: string): string {
+function hash256(text: string, salt: string): string {
     const hash = sha256.create();
-    hash.update(text);
+    hash.update(salt + text);
     return hash.hex();
 }
