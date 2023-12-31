@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Note from '../pages/Note';
+import AppText from './AppText';
 
 const secondsInMinute = 60;
 const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
@@ -17,8 +18,8 @@ export default function Unlocked(props: UnlockedProps) {
 
     return (
         <View style={{flex: 1}}>
-            <Text>Unlocked time: {formatTime(props.openTime)}</Text>
-            {page === 'NoteList' && <Text>Non existent page</Text>}
+            <AppText>Unlocked time: {formatTime(props.openTime)}</AppText>
+            {page === 'NoteList' && <AppText>Non existent page</AppText>}
             {page === 'Note' && <Note note={note}/>}
         </View>
     )

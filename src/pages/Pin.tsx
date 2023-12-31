@@ -1,6 +1,7 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useState } from 'react';
 import PinPad from '../components/PinPad';
+import AppText from '../components/AppText';
 
 const salt = generateSalt(64);
 
@@ -19,7 +20,7 @@ export default function Pin(props: PinProps) {
 
     return (
         <View style={{justifyContent: 'flex-end', flex: 1}}>
-            <Text style={{textAlign: 'center', fontSize: 40}}>App Locked</Text>
+            <AppText style={{textAlign: 'center', fontSize: 40}}>App Locked</AppText>
             <PinPad salt={salt} onComplete={complete}></PinPad>
         </View>
     )

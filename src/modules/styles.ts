@@ -8,11 +8,15 @@ const styles = StyleSheet.create({
         backgroundColor: colorMap.bg,
         flex: 1,
     },
+    appText: {
+        color: colorMap.text
+    },
     noteTitle: {
         fontSize: 22,
         fontWeight: 'bold',
         padding: 15,
         paddingBottom: 5,
+        color: colorMap.text
     },
     noteBody: {
         flex: 1,
@@ -20,13 +24,14 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingTop: 5,
         textAlignVertical: 'top',
+        color: colorMap.text
     },
     pinButton: {
         margin: 5,
         width: 80,
         height: 80,
         borderRadius: 50,
-        borderColor: darkModeColors.border,
+        borderColor: colorMap.border,
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center'
@@ -40,11 +45,11 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         borderRadius: 20,
-        borderColor: darkModeColors.border,
+        borderColor: colorMap.border,
         borderWidth: 2,
     },
     pinDotFull: {
-        backgroundColor: darkModeColors.border
+        backgroundColor: colorMap.border
     }
 });
 

@@ -1,5 +1,6 @@
-import { Text, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import styles from '../modules/styles'
+import AppText from './AppText'
 
 export interface ViewNoteProps {
     note: {
@@ -13,8 +14,8 @@ export interface ViewNoteProps {
 export default function ViewNote(props: ViewNoteProps) {
     return(
         <ScrollView style={{flex: 1}}>
-            <Text style={styles.noteTitle}>{props.note.title}</Text>
-            <Text style={styles.noteBody}>{props.note.body}</Text>
+            <AppText style={styles.noteTitle}>{props.note.title}</AppText>
+            <AppText style={styles.noteBody}>{props.note.body}</AppText>
         </ScrollView>
     )
 }

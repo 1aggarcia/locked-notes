@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { useState } from 'react';
 
 import { sha256 } from 'js-sha256';
@@ -6,6 +6,7 @@ import { sha256 } from 'js-sha256';
 import PinButton from './PinButton';
 import { darkModeColors } from '../assets/colors';
 import PinVisualizer from './PinVisualizer';
+import AppText from './AppText';
 
 const maxPinLength = 6;
 
@@ -78,7 +79,7 @@ export default function PinPad(props: PinPadProps) {
             </View>
         </View>
         <Pressable onPress={backspace}>
-            <Text style={styles.backspace}>Delete</Text>
+            <AppText style={styles.backspace}>Delete</AppText>
         </Pressable>
     </>)
 }

@@ -1,5 +1,6 @@
-import { Pressable, Text } from "react-native"
+import { Pressable } from "react-native"
 import styles from "../modules/styles";
+import AppText from "./AppText";
 
 export interface PinButtonProps {
     digit: number,
@@ -13,7 +14,7 @@ export default function PinButton(props: PinButtonProps) {
 
     return (
         <Pressable onPress={handlePress} style={styles.pinButton}>
-            <Text style={{fontSize: 25}}>{props.digit}</Text>
+            <AppText style={{fontSize: 25}}>{props.digit}</AppText>
         </Pressable>
     )
 }
