@@ -3,11 +3,13 @@ import { StyleSheet, View } from 'react-native';
 
 import Pin from './pages/Pin';
 import colors from './assets/colors';
+import EditNote from './pages/EditNote';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Pin />
+      {/* <Pin /> */}
+      <EditNote title='The Title' body='the note body'/>
       <StatusBar style="auto" />
     </View>
   );
