@@ -1,4 +1,4 @@
-import { TextInput, StyleSheet, View } from 'react-native'
+import { TextInput, Text, StyleSheet, View } from 'react-native'
 import { useState } from 'react';
 import colors from '../assets/colors';
 
@@ -38,13 +38,16 @@ export default function EditNote(props: EditNoteProps) {
 
 const styles = StyleSheet.create({
     title: {
-        padding: 15,
         fontSize: 22,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        padding: 15,
+        paddingBottom: 5,
     },
     body: {
         flex: 1,
-        padding: 18,
-        fontSize: 15,
+        fontSize: 18,
+        padding: 15,
+        paddingTop: 5,
+        textAlignVertical: 'top'
     }
 });
