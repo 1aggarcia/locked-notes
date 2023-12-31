@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -15,6 +15,15 @@ const maxTime = 300;
 export default function App() {
   const [openTime, setOpenTime] = useState(maxTime);
 
+  // Countdown until reaching 0 seconds
+  useEffect(() => {
+    setTimeout(() => {
+      if (openTime > 0) {
+        setOpenTime(openTime - 1);
+      }
+    }, 1000)
+  });
+
   return (
     <View style={styles.container}>
       <StatusBar />
@@ -22,7 +31,7 @@ export default function App() {
         openTime > 0?
         <Unlocked page='Note' openTime={openTime}/>
         :
-        <Pin />
+        <Pin unlock={() => setOpenTime(maxTime)}/>
       }
     </View>
   );

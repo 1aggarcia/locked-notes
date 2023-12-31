@@ -15,7 +15,7 @@ export default function Unlocked(props: UnlockedProps) {
 
     return (
         <View style={{flex: 1}}>
-            <Text>Time Remaining: {formatTime(props.openTime)}</Text>
+            <Text>Unlocked time: {formatTime(props.openTime)}</Text>
             {page === 'NoteList' && <Text>Non existent page</Text>}
             {page === 'Note' && <Note title='Título' body={newLines}/>}
         </View>

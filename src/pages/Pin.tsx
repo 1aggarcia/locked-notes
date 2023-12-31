@@ -4,13 +4,23 @@ import PinPad from '../components/PinPad';
 
 const salt = generateSalt(64);
 
-export default function Pin() {
+export interface PinProps {
+    // Function to unlock the app on correct pin entry
+    unlock: () => void
+}
+
+export default function Pin(props: PinProps) {
     const [hashedPin, setHashedPin] = useState('');
+
+    function complete(pin: string) {
+        setHashedPin(pin)
+        props.unlock();
+    }
 
     return (
         <View style={{justifyContent: 'flex-end', flex: 1}}>
-            <Text style={{textAlign: 'center'}}>{hashedPin}</Text>
-            <PinPad salt={salt} onComplete={setHashedPin}></PinPad>
+            <Text style={{textAlign: 'center', fontSize: 40}}>App Locked</Text>
+            <PinPad salt={salt} onComplete={complete}></PinPad>
         </View>
     )
 }
