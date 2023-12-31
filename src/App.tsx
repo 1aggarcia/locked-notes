@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -6,17 +7,23 @@ import {
 
 import Pin from './pages/Pin';
 import colors from './assets/colors';
-import Note from './pages/Note';
+import Unlocked from './components/Unlocked';
 
-const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
+// Max Time app can be open, in seconds. Should be less than 60 minutes
+const maxTime = 300;
 
 export default function App() {
+  const [openTime, setOpenTime] = useState(maxTime);
+
   return (
     <View style={styles.container}>
       <StatusBar />
-      {/* <ViewNote title='Títul' body={newLines}></ViewNote> */}
-      <Note title='Título' body={newLines}/>
-      {/* <Pin /> */}
+      {
+        openTime > 0?
+        <Unlocked page='Note' openTime={openTime}/>
+        :
+        <Pin />
+      }
     </View>
   );
 }

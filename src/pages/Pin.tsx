@@ -8,7 +8,7 @@ export default function Pin() {
     const [hashedPin, setHashedPin] = useState('');
 
     return (
-        <View>
+        <View style={{justifyContent: 'flex-end', flex: 1}}>
             <Text style={{textAlign: 'center'}}>{hashedPin}</Text>
             <PinPad salt={salt} onComplete={setHashedPin}></PinPad>
         </View>

@@ -1,5 +1,4 @@
 import { TextInput, StyleSheet, View } from 'react-native'
-import { Dispatch, useState } from 'react';
 import colors from '../assets/colors';
 
 

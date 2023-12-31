@@ -59,7 +59,7 @@ export default function PinPad(props: PinPadProps) {
             max={maxPinLength}
             currentLength={pin.length}
         />
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={styles.keypad}>
             <View>
                 <PinButton digit={1} onPress={updatePin}/>
                 <PinButton digit={4} onPress={updatePin}/>
@@ -83,9 +83,14 @@ export default function PinPad(props: PinPadProps) {
     </>)
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
+    keypad: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        margin: 20
+    },
     backspace: {
-        textAlign: 'right',
+        alignSelf: 'flex-end',
         padding: 10,
         borderColor: colors.border,
         borderWidth: 1

@@ -15,7 +15,6 @@ export default function Note(props: NoteProps) {
 
     return (
         <View style={{flex: 1}}>
-            <Text>Top</Text>
             {
                 editing?
                 <EditNote 
@@ -25,7 +24,6 @@ export default function Note(props: NoteProps) {
                 :
                 <ViewNote title={title} body={body} />
             }
-            <Text>Bottom</Text>
         </View>
     )
 }
