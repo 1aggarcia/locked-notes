@@ -4,12 +4,8 @@ import styles from '../modules/styles';
 
 
 export interface EditNoteProps {
-    note: {
-        title: string,
-        body: string,
-        dateCreated: string,
-        dateModified: string,
-    }
+    title: string;
+    body: string;
     setTitle: (value: string) => void;
     setBody: (value: string) => void;
 }
@@ -19,14 +15,14 @@ export default function EditNote(props: EditNoteProps) {
         <View style={{flex: 1}}>
             <TextInput 
                 style={styles.noteTitle}
-                value={props.note.title}
+                value={props.title}
                 onChangeText={props.setTitle}
                 placeholder='Title'
                 placeholderTextColor={darkModeColors.placeholder}
             />
             <TextInput 
                 style={styles.noteBody}
-                value={props.note.body}
+                value={props.body}
                 onChangeText={props.setBody}
                 placeholder='Body'
                 placeholderTextColor={darkModeColors.placeholder}

@@ -23,11 +23,11 @@ export default function Note(props: NoteProps) {
             {
                 editing?
                 <EditNote 
-                    note={props.note}
+                    title={title} body={body} 
                     setTitle={setTitle} setBody={setBody}
                 />
                 :
-                <ViewNote note={props.note} />
+                <ViewNote title={title} body={body} />
             }
         </View>
     )

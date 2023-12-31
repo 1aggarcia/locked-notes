@@ -3,19 +3,15 @@ import styles from '../modules/styles'
 import AppText from './AppText'
 
 export interface ViewNoteProps {
-    note: {
-        title: string,
-        body: string,
-        dateCreated: string,
-        dateModified: string,
-    }
+    title: string;
+    body: string;
 }
 
 export default function ViewNote(props: ViewNoteProps) {
     return(
         <ScrollView style={{flex: 1}}>
-            <AppText style={styles.noteTitle}>{props.note.title}</AppText>
-            <AppText style={styles.noteBody}>{props.note.body}</AppText>
+            <AppText style={styles.noteTitle}>{props.title}</AppText>
+            <AppText style={styles.noteBody}>{props.body}</AppText>
         </ScrollView>
     )
 }
