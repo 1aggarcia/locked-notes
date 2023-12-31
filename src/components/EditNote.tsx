@@ -1,36 +1,32 @@
-import { TextInput, Text, StyleSheet, View } from 'react-native'
-import { useState } from 'react';
+import { TextInput, StyleSheet, View } from 'react-native'
+import { Dispatch, useState } from 'react';
 import colors from '../assets/colors';
 
 
 export interface EditNoteProps {
     title: string;
     body: string;
+    setTitle: (value: string) => void;
+    setBody: (value: string) => void;
 }
 
 export default function EditNote(props: EditNoteProps) {
-    const [editing, setEditing] = useState(true);
-    const [title, setTitle] = useState(props.title);
-    const [body, setBody] = useState(props.body);
-
     return(
         <View style={{flex: 1}}>
             <TextInput 
                 style={styles.title}
-                value={title}
-                onChangeText={setTitle}
+                value={props.title}
+                onChangeText={props.setTitle}
                 placeholder='Title'
                 placeholderTextColor={colors.placeholder}
-                editable={editing}
             />
             <TextInput 
                 style={styles.body}
-                value={body}
-                onChangeText={setBody}
+                value={props.body}
+                onChangeText={props.setBody}
                 placeholder='Body'
                 placeholderTextColor={colors.placeholder}
                 multiline
-                editable={editing}
             />
         </View>
     )
@@ -48,6 +44,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 15,
         paddingTop: 5,
-        textAlignVertical: 'top'
+        textAlignVertical: 'top',
     }
 });

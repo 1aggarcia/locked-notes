@@ -6,7 +6,7 @@ import {
 
 import Pin from './pages/Pin';
 import colors from './assets/colors';
-import EditNote from './pages/EditNote';
+import Note from './pages/Note';
 
 const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
 
@@ -14,7 +14,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar />
-      <EditNote title='Título' body={newLines}/>
+      {/* <ViewNote title='Títul' body={newLines}></ViewNote> */}
+      <Note title='Título' body={newLines}/>
       {/* <Pin /> */}
     </View>
   );
