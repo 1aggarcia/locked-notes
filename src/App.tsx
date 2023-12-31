@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
+import styles from './modules/styles';
 
 import Pin from './pages/Pin';
 import { darkModeColors } from './assets/colors';
@@ -25,7 +26,7 @@ export default function App() {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={styles.app}>
       <StatusBar />
       {
         openTime > 0?
@@ -36,10 +37,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: darkModeColors.bg,
-    flex: 1,
-  },
-});

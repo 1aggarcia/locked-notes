@@ -1,5 +1,5 @@
-import { Pressable, Text, StyleSheet } from "react-native"
-import { darkModeColors } from "../assets/colors";
+import { Pressable, Text } from "react-native"
+import styles from "../modules/styles";
 
 export interface PinButtonProps {
     digit: number,
@@ -12,25 +12,8 @@ export default function PinButton(props: PinButtonProps) {
     }
 
     return (
-        <Pressable onPress={handlePress} style={styles.button}>
-            <Text style={styles.text}>{props.digit}</Text>
+        <Pressable onPress={handlePress} style={styles.pinButton}>
+            <Text style={{fontSize: 25}}>{props.digit}</Text>
         </Pressable>
     )
 }
-
-const styles = StyleSheet.create({
-    button: {
-        margin: 5,
-        width: 80,
-        height: 80,
-        borderRadius: 50,
-        borderColor: darkModeColors.border,
-        borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-
-    text: {
-        fontSize: 25
-    }
-});

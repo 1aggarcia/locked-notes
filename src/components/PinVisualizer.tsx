@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native"
-import { darkModeColors } from "../assets/colors";
+import { View } from "react-native"
+import styles from "../modules/styles";
 
 export interface PinVisualizerProps {
     max: number,
@@ -18,35 +18,17 @@ export default function PinVisualizer(props: PinVisualizerProps) {
         let list = []
         for (let i = 0; i < props.max; i++) {
             if (i < props.currentLength) {
-                list.push(<View key={i} style={[styles.dot, styles.dotFull]} />);
+                list.push(<View key={i} style={[styles.pinDot, styles.pinDotFull]} />);
             } else {
-                list.push(<View key={i} style={styles.dot} />)
+                list.push(<View key={i} style={styles.pinDot} />)
             }
         }
         return list;
     }
 
     return (
-        <View style={styles.container}>
+        <View style={styles.pinDots}>
             {createDots()}
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-    },
-    dot: {
-        width: 15,
-        height: 15,
-        borderRadius: 20,
-        borderColor: darkModeColors.border,
-        borderWidth: 2,
-    },
-    dotFull: {
-        backgroundColor: darkModeColors.border
-    }
-});
