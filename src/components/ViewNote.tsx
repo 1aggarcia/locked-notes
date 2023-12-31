@@ -1,16 +1,16 @@
 import { Text, StyleSheet, ScrollView } from 'react-native'
+import Note from '../modules/note';
 
 
 export interface ViewNoteProps {
-    title: string;
-    body: string;
+    note: Note
 }
 
 export default function ViewNote(props: ViewNoteProps) {
     return(
         <ScrollView style={{flex: 1}}>
-            <Text style={styles.title}>{props.title}</Text>
-            <Text style={styles.body}>{props.body}</Text>
+            <Text style={styles.title}>{props.note.title}</Text>
+            <Text style={styles.body}>{props.note.body}</Text>
         </ScrollView>
     )
 }

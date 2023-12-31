@@ -1,10 +1,10 @@
 import { TextInput, StyleSheet, View } from 'react-native'
-import colors from '../assets/colors';
+import { darkModeColors } from '../assets/colors';
+import Note from '../modules/note';
 
 
 export interface EditNoteProps {
-    title: string;
-    body: string;
+    note: Note
     setTitle: (value: string) => void;
     setBody: (value: string) => void;
 }
@@ -14,17 +14,17 @@ export default function EditNote(props: EditNoteProps) {
         <View style={{flex: 1}}>
             <TextInput 
                 style={styles.title}
-                value={props.title}
+                value={props.note.title}
                 onChangeText={props.setTitle}
                 placeholder='Title'
-                placeholderTextColor={colors.placeholder}
+                placeholderTextColor={darkModeColors.placeholder}
             />
             <TextInput 
                 style={styles.body}
-                value={props.body}
+                value={props.note.body}
                 onChangeText={props.setBody}
                 placeholder='Body'
-                placeholderTextColor={colors.placeholder}
+                placeholderTextColor={darkModeColors.placeholder}
                 multiline
             />
         </View>

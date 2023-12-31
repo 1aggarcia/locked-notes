@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { sha256 } from 'js-sha256';
 
 import PinButton from './PinButton';
-import colors from '../assets/colors';
+import { darkModeColors } from '../assets/colors';
 import PinVisualizer from './PinVisualizer';
 
 const maxPinLength = 6;
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     backspace: {
         alignSelf: 'flex-end',
         padding: 10,
-        borderColor: colors.border,
+        borderColor: darkModeColors.border,
         borderWidth: 1
     }
 });

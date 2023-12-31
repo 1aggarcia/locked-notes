@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native"
-import colors from "../assets/colors";
+import { darkModeColors } from "../assets/colors";
 
 export interface PinVisualizerProps {
     max: number,
@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         borderRadius: 20,
-        borderColor: colors.border,
+        borderColor: darkModeColors.border,
         borderWidth: 2,
     },
     dotFull: {
-        backgroundColor: colors.border
+        backgroundColor: darkModeColors.border
     }
 });

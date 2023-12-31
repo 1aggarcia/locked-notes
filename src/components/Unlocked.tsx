@@ -5,6 +5,8 @@ import Note from '../pages/Note';
 const secondsInMinute = 60;
 const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
 
+const note = {title: 'Título', body: newLines, dateCreated: '', dateModified: ''}
+
 export interface UnlockedProps {
     page: 'NoteList' | 'Note';
     openTime: number;
@@ -17,7 +19,7 @@ export default function Unlocked(props: UnlockedProps) {
         <View style={{flex: 1}}>
             <Text>Unlocked time: {formatTime(props.openTime)}</Text>
             {page === 'NoteList' && <Text>Non existent page</Text>}
-            {page === 'Note' && <Note title='Título' body={newLines}/>}
+            {page === 'Note' && <Note note={note}/>}
         </View>
     )
 }
