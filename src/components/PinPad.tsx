@@ -52,7 +52,6 @@ export default function PinPad(props: PinPadProps) {
         }
         const newPin = pin.slice(0, -1);
         setPin(newPin);
-        props.onComplete('');
     }
 
     return (<>
