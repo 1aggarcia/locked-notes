@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import NoteView from '../pages/NoteView';
+
 import AppText from '../components/AppText';
+
+import NoteView from '../pages/NoteView';
 import NoteList from '../pages/NoteList';
 import Settings from '../pages/Settings';
+import ResetPin from '../pages/ResetPin';
 
 const secondsInMinute = 60;
 const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
@@ -11,7 +14,7 @@ const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\na
 const note = {title: 'Título', body: newLines, dateCreated: '', dateModified: ''}
 
 export interface UnlockedProps {
-    page: 'NoteList' | 'NoteView' | 'Settings';
+    page: 'NoteList' | 'NoteView' | 'Settings' | 'ResetPin';
     timeOpen: number;
     // Callback function to set nav page to access denied
     denyAccess: () => void;
@@ -24,8 +27,9 @@ export default function Unlocked(props: UnlockedProps) {
         <View style={{flex: 1}}>
             <AppText>Unlocked time: {formatTime(props.timeOpen)}</AppText>
             {page === 'NoteList' && <NoteList />}
-            {page === 'Settings' && <Settings />}
             {page === 'NoteView' && <NoteView note={note}/>}
+            {page === 'Settings' && <Settings />}
+            {page === 'ResetPin' && <ResetPin />}
         </View>
     )
 }

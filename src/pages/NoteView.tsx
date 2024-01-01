@@ -28,6 +28,7 @@ export default function NoteView(props: NoteProps) {
                     onChangeText={setTitle}
                     placeholder='Title'
                     placeholderTextColor={darkModeColors.placeholder}
+                    multiline
                     editable={editing}
                 />
                 <TextInput 

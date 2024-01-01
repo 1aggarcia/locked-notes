@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
         color: colorMap.text
     },
     header: {
-        fontSize: 30
+        fontSize: 30,
+        textAlign: 'center'
     },
     noteTitle: {
         fontSize: 20,
@@ -23,10 +24,15 @@ const styles = StyleSheet.create({
     },
     noteBody: {
         flex: 1,
+        fontSize: 18,
         padding: 15,
         paddingTop: 5,
-        textAlignVertical: 'top',
+        verticalAlign: 'top',
         color: colorMap.text
+    },
+    pinContainer: {
+        justifyContent: 'flex-end', 
+        flex: 1
     },
     pinButton: {
         margin: 5,
@@ -52,6 +58,17 @@ const styles = StyleSheet.create({
     },
     pinDotFull: {
         backgroundColor: colorMap.border
+    },
+    keypad: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        margin: 20
+    },
+    backspace: {
+        alignSelf: 'flex-end',
+        padding: 10,
+        borderColor: darkModeColors.border,
+        borderWidth: 1
     }
 });
 

@@ -1,18 +1,17 @@
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useState } from 'react';
 
-import { sha256 } from 'js-sha256';
-
 import PinButton from './PinButton';
-import { darkModeColors } from '../assets/colors';
 import PinVisualizer from './PinVisualizer';
 import AppText from './AppText';
+import { hash256 } from '../modules/file-reader';
+import styles from '../modules/styles';
 
 const maxPinLength = 6;
 
 export interface PinPadProps {
     // Function to execute when the pin is completed
-    onComplete: (pin: string) => any;
+    onComplete: (hashedPin: string) => any;
 
     // Salt should be a 64 character long hexadecimal string
     salt: string;
@@ -40,6 +39,7 @@ export default function PinPad(props: PinPadProps) {
         // Send pin back if max length
         if (newPin.length === maxPinLength) {
             props.onComplete(hash256(newPin, props.salt));
+            setPin('');
         }
     }
 
@@ -81,29 +81,4 @@ export default function PinPad(props: PinPadProps) {
             <AppText style={styles.backspace}>Delete</AppText>
         </Pressable>
     </>)
-}
-
-const styles = StyleSheet.create({ 
-    keypad: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        margin: 20
-    },
-    backspace: {
-        alignSelf: 'flex-end',
-        padding: 10,
-        borderColor: darkModeColors.border,
-        borderWidth: 1
-    }
-});
-
-/**
- * Hash text using SHA-256
- * @param text text to hash
- * @returns hashed text
- */
-function hash256(text: string, salt: string): string {
-    const hash = sha256.create();
-    hash.update(salt + text);
-    return hash.hex();
 }

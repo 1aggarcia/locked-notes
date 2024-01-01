@@ -6,7 +6,7 @@ import Navigation from './wrappers/Navigation';
 import CreatePin from './pages/CreatePin';
 
 export default function App() {
-  const [pinExists, setPinExists] = useState(true);
+  const [pinExists, setPinExists] = useState(false);
 
   return (
     <View style={styles.app}>
