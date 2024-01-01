@@ -1,6 +1,13 @@
 import * as SecureStore from 'expo-secure-store';
+import * as FileSystem from 'expo-file-system';
 
-import { generateSalt, hash256, registerEncryptionKey } from './encryption-service';
+import { 
+    decryptData,
+    encryptData,
+    generateSalt,
+    hash256,
+    registerEncryptionKey
+} from './encryption-service';
 
 const saltLength = 64;
 
@@ -30,4 +37,18 @@ export async function loginExists(): Promise<boolean> {
     const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');
 
     return (loginHash !== null && loginSalt !== null && encryptionSalt !== null);
+}
+
+export async function saveTestFile() {
+    const text = 'Vamos a Dairy Queen porque en Seattle no hay';
+    const fileUri = FileSystem.documentDirectory + "test.enf";
+
+    await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
+}
+
+export async function readTestFile() {
+    const fileUri = FileSystem.documentDirectory + "test.enf";
+    const encryptedFile = await FileSystem.readAsStringAsync(fileUri)
+
+    alert(`Filepath:\n${fileUri}\n\nRaw contents:\n${encryptedFile}\n\nDecrypted:\n${decryptData(encryptedFile)}`);
 }
