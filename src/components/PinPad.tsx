@@ -4,17 +4,13 @@ import { useState } from 'react';
 import PinButton from './PinButton';
 import PinVisualizer from './PinVisualizer';
 import AppText from './AppText';
-import { hash256 } from '../modules/file-service';
 import styles from '../modules/styles';
 
 const maxPinLength = 6;
 
 export interface PinPadProps {
     // Function to execute when the pin is completed
-    onComplete: (hashedPin: string) => any;
-
-    // Salt should be a 64 character long hexadecimal string
-    salt: string;
+    onComplete: (pin: string) => any;
 }
 
 export default function PinPad(props: PinPadProps) {
@@ -38,7 +34,7 @@ export default function PinPad(props: PinPadProps) {
 
         // Send pin back if max length
         if (newPin.length === maxPinLength) {
-            props.onComplete(hash256(newPin, props.salt));
+            props.onComplete(newPin);
             setPin('');
         }
     }

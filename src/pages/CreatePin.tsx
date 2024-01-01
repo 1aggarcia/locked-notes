@@ -3,9 +3,10 @@ import { View } from "react-native";
 import PinPad from "../components/PinPad";
 import AppText from "../components/AppText";
 import styles from "../modules/styles";
-import { generateSalt } from "../modules/file-service";
+import { generateSalt, hash256, registerEncryptionKey } from "../modules/encryption-service";
 
-const salt = generateSalt(64);
+const pinSalt = generateSalt(64);
+const fileSalt = generateSalt(64);
 
 interface CreatePinProps {
     // Callback function to go to navigation page
@@ -13,20 +14,20 @@ interface CreatePinProps {
 }
 
 export default function CreatePin(props: CreatePinProps) {
-    const [hash, setHash] = useState('');
+    const [pin, setPin] = useState('');
     const [error, setError] = useState(false);
 
-    function confirmPin(newHash: string) {
-        if (newHash !== hash) {
-            setHash('');
+    function confirmPin(newPin: string) {
+        if (newPin !== pin) {
+            setPin('');
             setError(true);
         } else {
-            //savePin({ hash: hash, salt: salt });
+            savePin({ pin: pin, pinSalt: pinSalt, fileSalt: fileSalt });
             props.goToNavigation();
         }
     }
 
-    if (hash === '') {
+    if (pin === '') {
         // Pin has not been set
         return (
             <View style={styles.pinContainer}>
@@ -34,7 +35,7 @@ export default function CreatePin(props: CreatePinProps) {
                     The PINs entered did not match. Please try again
                 </AppText>}
                 <AppText style={styles.header}>Create a New PIN</AppText>
-                <PinPad salt={salt} onComplete={setHash} />
+                <PinPad onComplete={setPin} />
             </View>
         )
     } else {
@@ -42,13 +43,16 @@ export default function CreatePin(props: CreatePinProps) {
         return (
             <View style={styles.pinContainer}>
                 <AppText style={styles.header}>Confirm PIN</AppText>
-                <PinPad salt={salt} onComplete={confirmPin} />
+                <PinPad onComplete={confirmPin} />
             </View>
         )
     }
 }
 
-function savePin(data: { hash: string, salt: string }) {
-    console.log(data);
+function savePin(data: { pin: string, pinSalt: string, fileSalt: string }) {
+    const hash = hash256({ text: data.pin, salt: data.pinSalt });
+    console.log(hash);
+
+    registerEncryptionKey({ pin: data.pin, salt: data.fileSalt })
     throw Error('File Saving Unimplemented');
 }
