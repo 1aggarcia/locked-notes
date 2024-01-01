@@ -11,8 +11,11 @@ const styles = StyleSheet.create({
     appText: {
         color: colorMap.text
     },
+    header: {
+        fontSize: 30
+    },
     noteTitle: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         padding: 15,
         paddingBottom: 5,
@@ -20,7 +23,6 @@ const styles = StyleSheet.create({
     },
     noteBody: {
         flex: 1,
-        fontSize: 18,
         padding: 15,
         paddingTop: 5,
         textAlignVertical: 'top',

@@ -1,4 +1,4 @@
-import { TextInput, View } from 'react-native'
+import { TextInput, ScrollView } from 'react-native'
 import { darkModeColors } from '../assets/colors';
 import styles from '../modules/styles';
 
@@ -12,13 +12,14 @@ export interface EditNoteProps {
 
 export default function EditNote(props: EditNoteProps) {
     return(
-        <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
             <TextInput 
                 style={styles.noteTitle}
                 value={props.title}
                 onChangeText={props.setTitle}
                 placeholder='Title'
                 placeholderTextColor={darkModeColors.placeholder}
+                editable={false}
             />
             <TextInput 
                 style={styles.noteBody}
@@ -27,7 +28,8 @@ export default function EditNote(props: EditNoteProps) {
                 placeholder='Body'
                 placeholderTextColor={darkModeColors.placeholder}
                 multiline
+                editable={false}
             />
-        </View>
+        </ScrollView>
     )
 }

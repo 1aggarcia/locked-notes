@@ -1,7 +1,7 @@
 export const darkModeColors = {
     bg: '#000000',
     border: '#ffffff',
-    placeholder: '#222222',
+    placeholder: '#777777',
     text: '#ffffff'
 }
 

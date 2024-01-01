@@ -1,38 +1,21 @@
-import { useState, useEffect } from 'react';
-import {
-  StatusBar,
-  StyleSheet,
-  View
-} from 'react-native';
+import { useState } from 'react';
+import { StatusBar, View } from 'react-native';
 import styles from './modules/styles';
 
-import Pin from './pages/Pin';
-import { darkModeColors } from './assets/colors';
-import Unlocked from './components/Unlocked';
-
-// Max Time app can be open, in seconds. Should be less than 60 minutes
-const maxTime = 300;
+import Navigation from './wrappers/Navigation';
+import CreatePin from './pages/CreatePin';
 
 export default function App() {
-  const [openTime, setOpenTime] = useState(0);
-
-  // Countdown until reaching 0 seconds
-  useEffect(() => {
-    setTimeout(() => {
-      if (openTime > 0) {
-        setOpenTime(openTime - 1);
-      }
-    }, 1000)
-  });
+  const [pinExists, setPinExists] = useState(true);
 
   return (
     <View style={styles.app}>
       <StatusBar />
       {
-        openTime > 0?
-        <Unlocked page='Note' openTime={openTime}/>
+        pinExists?
+        <Navigation goToCreatePin={() => setPinExists(false)} />
         :
-        <Pin unlock={() => setOpenTime(maxTime)}/>
+        <CreatePin goToNavigation={() => setPinExists(true)} />
       }
     </View>
   );
