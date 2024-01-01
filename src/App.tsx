@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { StatusBar, View } from 'react-native';
+
 import styles from './modules/styles';
 
 import Navigation from './wrappers/Navigation';

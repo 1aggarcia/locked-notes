@@ -1,23 +1,33 @@
 import * as SecureStore from 'expo-secure-store';
 
-export async function storeTestData() {
-    const key = 'sampleData';
+import { generateSalt, hash256, registerEncryptionKey } from './encryption-service';
 
-    const data = { firstName: 'Apolo', lastName: 'Garcia-Herrera Gregorio 2024' };
-    await SecureStore.setItemAsync(key, JSON.stringify(data));
-    alert(`data stored to key ${key}`);
+const saltLength = 64;
+
+/**
+ * Hash, salt, and save pin to secure store in local storage
+ * @param pin pin to save
+ */
+export async function savePinAsync(pin: string) {
+    const loginSalt = generateSalt(saltLength);
+    const encryptionSalt = generateSalt(saltLength);
+
+    const hash = hash256({ text: pin, salt: loginSalt });
+    registerEncryptionKey({ pin: pin, salt: encryptionSalt })
+    
+    await SecureStore.setItemAsync('loginHash', hash);
+    await SecureStore.setItemAsync('loginSalt', loginSalt);
+    await SecureStore.setItemAsync('encryptionSalt', encryptionSalt);
 }
 
-export async function getValueFor(key: string) {
-    const data = await SecureStore.getItemAsync(key);
-    if (data) {
-      alert(`Data found under key ${key}:\n${data}`)
-    } else {
-      alert(`No data found for key ${key}`);
-    }
-}
+/**
+ * Check if there is login info saved within secure store in local storage
+ * @returns true iff loginHash, loginSalt and encryptionSalt are saved in local storage
+ */
+export async function loginExists(): Promise<boolean> {
+    const loginHash = await SecureStore.getItemAsync('loginHash');
+    const loginSalt = await SecureStore.getItemAsync('loginSalt');
+    const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');
 
-export async function deleteValue(key: string) {
-    await SecureStore.deleteItemAsync(key);
-    alert(`Deleted data under key ${key}`)
+    return (loginHash !== null && loginSalt !== null && encryptionSalt !== null);
 }

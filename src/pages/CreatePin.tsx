@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { View } from "react-native";
 import PinPad from "../components/PinPad";
 import AppText from "../components/AppText";
 import styles from "../modules/styles";
-import { generateSalt, hash256, registerEncryptionKey } from "../modules/encryption-service";
-
-const pinSalt = generateSalt(64);
-const fileSalt = generateSalt(64);
+import { savePinAsync } from "../modules/file-service";
 
 interface CreatePinProps {
     // Callback function to go to navigation page
@@ -22,7 +19,7 @@ export default function CreatePin(props: CreatePinProps) {
             setPin('');
             setError(true);
         } else {
-            savePin({ pin: pin, pinSalt: pinSalt, fileSalt: fileSalt });
+            savePinAsync(pin);
             props.goToNavigation();
         }
     }
@@ -47,12 +44,4 @@ export default function CreatePin(props: CreatePinProps) {
             </View>
         )
     }
-}
-
-function savePin(data: { pin: string, pinSalt: string, fileSalt: string }) {
-    const hash = hash256({ text: data.pin, salt: data.pinSalt });
-    console.log(hash);
-
-    registerEncryptionKey({ pin: data.pin, salt: data.fileSalt })
-    throw Error('File Saving Unimplemented');
 }
