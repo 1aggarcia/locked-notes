@@ -4,6 +4,7 @@ import styles from './modules/styles';
 
 import Navigation from './wrappers/Navigation';
 import CreatePin from './pages/CreatePin';
+import { deleteValue, getValueFor, storeTestData } from './modules/file-service';
 
 export default function App() {
   const [pinExists, setPinExists] = useState(false);

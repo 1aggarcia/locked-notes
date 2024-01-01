@@ -3,7 +3,7 @@ import { View } from "react-native";
 import PinPad from "../components/PinPad";
 import AppText from "../components/AppText";
 import styles from "../modules/styles";
-import { generateSalt } from "../modules/file-reader";
+import { generateSalt } from "../modules/file-service";
 
 const salt = generateSalt(64);
 

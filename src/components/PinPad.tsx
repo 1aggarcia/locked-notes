@@ -4,7 +4,7 @@ import { useState } from 'react';
 import PinButton from './PinButton';
 import PinVisualizer from './PinVisualizer';
 import AppText from './AppText';
-import { hash256 } from '../modules/file-reader';
+import { hash256 } from '../modules/file-service';
 import styles from '../modules/styles';
 
 const maxPinLength = 6;
