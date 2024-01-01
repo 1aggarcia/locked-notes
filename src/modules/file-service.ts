@@ -1,5 +1,25 @@
 import * as SecureStore from 'expo-secure-store';
 import { sha256 } from 'js-sha256';
+import CryptoJS from 'react-native-crypto-js';
+
+let pin: string | undefined
+let salt: string | undefined
+
+/**
+ * Set pin and salt to use as an encryption key for the file service
+ * @param data pin and salt to register
+ */
+export function registerEncryptionKey(data: { pin: string, salt: string }) {
+    pin = data.pin;
+    salt = data.salt;
+}
+
+function getEncryptionKey() {
+    if (pin === undefined || salt === undefined) {
+        throw Error('Encryption key has not been set');
+    }
+    return salt + pin;
+}
 
 /**
  * Generate random hexadecimal string of length given
@@ -45,4 +65,15 @@ export async function getValueFor(key: string) {
 export async function deleteValue(key: string) {
     await SecureStore.deleteItemAsync(key);
     alert(`Deleted data under key ${key}`)
+}
+
+export function encryptData(data: string) {
+    const key = getEncryptionKey();
+    return CryptoJS.AES.encrypt(data, key).toString();
+}
+
+export function decryptData(ciphertext: string) {
+    const key = getEncryptionKey();
+    const bytes = CryptoJS.AES.decrypt(ciphertext, key);
+    return bytes.toString(CryptoJS.enc.Utf8);
 }
