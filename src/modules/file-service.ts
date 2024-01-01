@@ -10,6 +10,7 @@ import {
 } from './encryption-service';
 
 const saltLength = 64;
+const notesDir = FileSystem.documentDirectory + 'notes/';
 
 /**
  * Hash, salt, and save pin to secure store in local storage
@@ -40,15 +41,41 @@ export async function loginExists(): Promise<boolean> {
 }
 
 export async function saveTestFile() {
-    const text = 'Vamos a Dairy Queen porque en Seattle no hay';
-    const fileUri = FileSystem.documentDirectory + "test.enf";
+    const note = {
+        title: 'ya es hora',
+        body: '"¿Hora de qué?" decís. Pues no sé, inventá algo.',
+        dateCreated: '2024-01-01',
+        dateModified: '2024-01-01'
+    }
+    const text = JSON.stringify(note);
 
-    await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
+    try {
+        await FileSystem.readDirectoryAsync(notesDir);
+    } catch {
+        await FileSystem.makeDirectoryAsync(notesDir);
+    }
+    try {
+        await FileSystem.writeAsStringAsync(notesDir + 'test.enf', encryptData(text));
+    } catch (error) {
+        alert(error);
+    }
 }
 
 export async function readTestFile() {
-    const fileUri = FileSystem.documentDirectory + "test.enf";
-    const encryptedFile = await FileSystem.readAsStringAsync(fileUri)
+    const fileUri = notesDir + "test.enf";
+    try {
+        const encryptedFile = await FileSystem.readAsStringAsync(fileUri)
+        alert(`Filepath:\n${fileUri}\n\nRaw contents:\n${encryptedFile}\n\nDecrypted:\n${decryptData(encryptedFile)}`);
+    } catch (error) {
+        alert(error)
+    }
+}
 
-    alert(`Filepath:\n${fileUri}\n\nRaw contents:\n${encryptedFile}\n\nDecrypted:\n${decryptData(encryptedFile)}`);
+export async function deleteTestFile() {
+    const fileUri = FileSystem.documentDirectory + 'test.enf'
+    try {
+        await FileSystem.deleteAsync(fileUri);
+    } catch (error) {
+        alert(error);
+    }
 }
