@@ -1,9 +1,11 @@
 import { useState } from "react";
+import * as SecureStore from 'expo-secure-store';
+
 import AppText from "../components/AppText";
 import styles from "../modules/styles";
 import { View } from "react-native";
 import PinPad from "../components/PinPad";
-import { hash256 } from "../modules/encryption-service";
+import { hash256, registerEncryptionKey } from "../modules/encryption-service";
 
 interface LockedProps {
     // Callback function to set nav page to unlocked
@@ -25,6 +27,7 @@ export default function Locked(props: LockedProps) {
     function confirmPin(pin: string) {
         const hashedPin = hash256({ text: pin, salt: props.salt})
         if (hashedPin === props.hash) {
+            findEncryptionKey(pin);
             props.unlock();
         } else {
             setError(true);
@@ -45,4 +48,13 @@ export default function Locked(props: LockedProps) {
             <PinPad onComplete={confirmPin}/>
         </View>
     )
+}
+
+async function findEncryptionKey(pin: string) {
+    const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');
+    if (encryptionSalt !== null) {
+        registerEncryptionKey({ pin: pin, salt: encryptionSalt })
+    } else {
+        alert('Encryption key not found');
+    }
 }

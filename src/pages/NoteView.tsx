@@ -3,14 +3,11 @@ import { View, ScrollView, TextInput, Switch } from 'react-native';
 
 import styles from '../modules/styles';
 import { darkModeColors } from '../assets/colors';
+import Note from '../modules/note';
+import { saveNote } from '../modules/file-service';
 
 export interface NoteProps {
-    note: {
-        title: string,
-        body: string,
-        dateCreated: string,
-        dateModified: string,
-    }
+    note: Note
 }
 
 export default function NoteView(props: NoteProps) {
@@ -18,9 +15,20 @@ export default function NoteView(props: NoteProps) {
     const [body, setBody] = useState(props.note.body);
     const [editing, setEditing] = useState(false);
 
+    function updateEditing(value: boolean) {
+        const newNote: Note = {
+            title: title,
+            body: body,
+            dateCreated: props.note.dateCreated,
+            dateModified: props.note.dateModified,
+        }
+        setEditing(value);
+        saveNote('test', newNote);
+    }
+
     return (
         <View style={{flex: 1}}>
-            <Switch value={editing} onValueChange={setEditing}/>
+            <Switch value={editing} onValueChange={updateEditing}/>
             <ScrollView style={{flex: 1}}>
                 <TextInput 
                     style={styles.noteTitle}

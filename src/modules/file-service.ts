@@ -8,9 +8,12 @@ import {
     hash256,
     registerEncryptionKey
 } from './encryption-service';
+import Note, { isNote } from './note';
 
 const saltLength = 64;
 const notesDir = FileSystem.documentDirectory + 'notes/';
+
+// Methods for secure store
 
 /**
  * Hash, salt, and save pin to secure store in local storage
@@ -37,6 +40,10 @@ export async function deletePinAsync() {
     await SecureStore.deleteItemAsync('encryptionSalt');
 }
 
+/**
+ * Retrieve login hash and salt from local storage, if it exists
+ * @returns object containing login hash and salt if it exists, null otherwise
+ */
 export async function getLoginInfo() {
     const loginHash = await SecureStore.getItemAsync('loginHash');
     const loginSalt = await SecureStore.getItemAsync('loginSalt');
@@ -47,8 +54,55 @@ export async function getLoginInfo() {
         return { hash: loginHash, salt: loginSalt }
     }
 }
+ 
+// Methods for external file storage
 
-export async function saveTestFile() {
+/**
+ * Saves and encrypts given note to given filename in notes directory of external storage
+ * @param filename name of the note file, without extension
+ * @param note note to save to file
+ */
+export async function saveNote(filename: string, note: Note) {
+    const text = JSON.stringify(note);
+
+    try {
+        await FileSystem.readDirectoryAsync(notesDir);
+    } catch {
+        await FileSystem.makeDirectoryAsync(notesDir);
+    }
+    try {
+        const fileUri = notesDir + filename + '.enf'
+        await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
+    } catch (error) {
+        alert(error);
+    }
+}
+
+/**
+ * Retreives the note with the given filename, if it exists
+ * @param fileName name of the note file, without the extension
+ * @returns note as an object if there is a correspondind file, null otherwise
+ */
+export async function getNote(filename: string): Promise<Note | null> {
+    const fileUri = notesDir + filename + '.enf';
+    try {
+        const rawFile = await FileSystem.readAsStringAsync(fileUri)
+        const decrypted = JSON.parse(decryptData(rawFile));
+
+        if (isNote(decrypted)) {
+            return decrypted
+        } else {
+            throw TypeError('Object in file is not a note');
+        }
+    } catch (error) {
+        alert(error)
+        return null;
+    }
+}
+
+// Not for production
+
+async function saveTestFile() {
     const note = {
         title: 'ya es hora',
         body: '"¿Hora de qué?" decís. Pues no sé, inventá algo.',
@@ -69,7 +123,7 @@ export async function saveTestFile() {
     }
 }
 
-export async function readTestFile() {
+async function readTestFile() {
     const fileUri = notesDir + "test.enf";
     try {
         const encryptedFile = await FileSystem.readAsStringAsync(fileUri)
@@ -79,7 +133,7 @@ export async function readTestFile() {
     }
 }
 
-export async function deleteTestFile() {
+async function deleteTestFile() {
     const fileUri = FileSystem.documentDirectory + 'test.enf'
     try {
         await FileSystem.deleteAsync(fileUri);

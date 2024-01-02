@@ -7,12 +7,11 @@ import NoteView from '../pages/NoteView';
 import NoteList from '../pages/NoteList';
 import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
+import Note from '../modules/note';
+import { getNote } from '../modules/file-service';
 
-const secondsInMinute = 60;
-const maxTime = 5;
-const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
-
-const note = {title: 'Título', body: newLines, dateCreated: '', dateModified: ''}
+// Maximum time a the app can be unlocked, in seconds
+const maxTime = 300;
 
 export interface UnlockedProps {
     page: 'NoteList' | 'NoteView' | 'Settings' | 'ResetPin';
@@ -27,6 +26,15 @@ export interface UnlockedProps {
 export default function Unlocked(props: UnlockedProps) {
     const [page, setPage] = useState(props.page);
     const [timeOpen, setTimeOpen] = useState(maxTime)
+    const [note, setNote] = useState<Note | null>(null);
+
+    // Retreive note from external storage
+    useEffect(() => {
+        async function loadNote() {
+            setNote(await getNote('test'));
+        }
+        loadNote();
+    }, [])
 
     // Countdown until reaching 0 seconds
     useEffect(() => {
@@ -43,7 +51,7 @@ export default function Unlocked(props: UnlockedProps) {
         <View style={{flex: 1}}>
             <AppText>Unlocked time: {formatTime(timeOpen)}</AppText>
             {page === 'NoteList' && <NoteList />}
-            {page === 'NoteView' && <NoteView note={note}/>}
+            {page === 'NoteView' && note !== null && <NoteView note={note}/>}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
         </View>
@@ -58,9 +66,8 @@ function formatTime(seconds: number): string {
     if (seconds >= 3600) {
         throw RangeError(`seconds >= 3600: ${seconds}`);
     }
-
-    const minutes = Math.floor(seconds / secondsInMinute);
-    const leftOver = seconds % secondsInMinute;
+    const minutes = Math.floor(seconds / 60);
+    const leftOver = seconds % 60;
 
     // account for leading zero    
     if (leftOver < 10) {
