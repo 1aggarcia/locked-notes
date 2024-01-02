@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { darkModeColors, lightModeColors } from "../assets/colors";
 
-let colorMap = lightModeColors;
+let colorMap = darkModeColors;
 
 const styles = StyleSheet.create({
     app: {
@@ -29,6 +29,14 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         verticalAlign: 'top',
         color: colorMap.text
+    },
+    notePreview: {
+        backgroundColor: colorMap.fg,
+        padding: 15,
+        fontWeight: 'bold',
+        borderRadius: 10,
+        marginBottom: 15,
+        fontSize: 20
     },
     pinContainer: {
         justifyContent: 'flex-end', 

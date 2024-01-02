@@ -1,6 +1,7 @@
 import { Pressable } from "react-native";
 import Note from "../modules/note";
 import AppText from "./AppText";
+import styles from "../modules/styles";
 
 interface NotePreviewProps {
     note: Note
@@ -12,7 +13,9 @@ interface NotePreviewProps {
 export default function NotePreview(props: NotePreviewProps) {
     return (
         <Pressable onPress={() => props.openNote(props.note)}>
-            <AppText style={{fontWeight: 'bold'}}>- {props.note.title}</AppText>
+            <AppText style={styles.notePreview}>
+                {props.note.title}
+            </AppText>
         </Pressable>
     )
 }

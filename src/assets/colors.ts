@@ -3,7 +3,8 @@ export const darkModeColors = {
     border: '#ffffff',
     placeholder: '#777777',
     text: '#ffffff',
-    buttonBg: 'blue'
+    buttonBg: 'blue',
+    fg: '#222222'
 }
 
 export const lightModeColors = {
@@ -11,5 +12,6 @@ export const lightModeColors = {
     border: '#000000',
     placeholder: '#bbbbbb',
     text: '#000000',
-    buttonBg: 'blue'
+    buttonBg: 'blue',
+    fg: '#eeeeee'
 }
