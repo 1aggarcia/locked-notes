@@ -100,6 +100,10 @@ export async function getNote(filename: string): Promise<Note | null> {
     }
 }
 
+/**
+ * Retrieves list of all notes in external storage
+ * @returns list of notes currently in external storage
+ */
 export async function getNoteList(): Promise<Note[]> {
     try {
         const filenames = await FileSystem.readDirectoryAsync(notesDir);
@@ -112,10 +116,22 @@ export async function getNoteList(): Promise<Note[]> {
             }
         }
         return result;
-    } catch (error) {
-        // Directory not found
-        alert(error);
+    } catch {
+        // Directory not found or empty
         return [];
+    }
+}
+
+/**
+ * Deletes note with given filename from the notes directory in external storage
+ * @param filename filename of note, with extension
+ */
+export async function deleteNote(filename: string) {
+    const fileUri = notesDir + filename;
+    try {
+        await FileSystem.deleteAsync(notesDir);
+    } catch (error) {
+        alert(error);
     }
 }
 

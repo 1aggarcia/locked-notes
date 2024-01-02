@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     appText: {
         color: colorMap.text
     },
+    placeholder: {
+        color: colorMap.placeholder
+    },
     header: {
         fontSize: 30,
         textAlign: 'center'

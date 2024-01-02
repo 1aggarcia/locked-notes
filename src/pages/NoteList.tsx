@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ScrollView } from "react-native";
-import AppText from "../components/AppText";
 import Note from '../modules/note';
-import { getNoteList } from '../modules/file-service';
+import { deleteNote, getNoteList } from '../modules/file-service';
 import Loading from './Loading';
 import NotePreview from '../components/NotePreview';
+import AppText from '../components/AppText';
+import styles from '../modules/styles';
 
 interface NoteListProps {
     // Callback function to open note passed in
@@ -24,6 +25,8 @@ export default function NoteList(props: NoteListProps) {
 
     if (noteList === undefined) {
         return <Loading />
+    } else if (noteList.length === 0) {
+        return <AppText style={styles.placeholder}>No Notes Yet</AppText>
     } else {
         return (
             <ScrollView style={{flex: 1, padding: 10}}>
