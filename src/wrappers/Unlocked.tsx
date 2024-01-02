@@ -54,7 +54,7 @@ export default function Unlocked(props: UnlockedProps) {
                 </Pressable>
             </View>
             {page === 'NoteList' && <NoteList openNote={openNote} />}
-            {page === 'NoteView' && note !== null && <NoteView note={note}/>}
+            {page === 'NoteView' && note !== null && <NoteView note={note} goBack={() => setPage('NoteList')}/>}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
         </View>

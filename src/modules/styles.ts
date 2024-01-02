@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 10,
-        backgroundColor: colorMap.buttonBg
+        borderColor: colorMap.buttonBg,
+        borderWidth: 1
     }
 });
 

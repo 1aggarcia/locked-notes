@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { View, ScrollView, TextInput, Switch } from 'react-native';
+import { View, ScrollView, TextInput, Switch, Pressable } from 'react-native';
 
 import styles from '../modules/styles';
 import { darkModeColors } from '../assets/colors';
 import Note from '../modules/note';
 import { saveNote } from '../modules/file-service';
+import AppText from '../components/AppText';
 
-export interface NoteProps {
+export interface NoteViewProps {
     note: Note
+
+    // Callback function to go back to note list
+    goBack: () => void
 }
 
-export default function NoteView(props: NoteProps) {
+export default function NoteView(props: NoteViewProps) {
     const [title, setTitle] = useState(props.note.title);
     const [body, setBody] = useState(props.note.body);
     const [editing, setEditing] = useState(false);
@@ -23,12 +27,14 @@ export default function NoteView(props: NoteProps) {
             dateModified: props.note.dateModified,
         }
         setEditing(value);
-        saveNote('test.enf', newNote);
+        saveNote(`${props.note.title[0]}.enf`, newNote);
     }
 
     return (
         <View style={{flex: 1}}>
-            <Switch value={editing} onValueChange={updateEditing}/>
+            <Pressable onPress={props.goBack}>
+                <AppText style={styles.button}>Go back</AppText>
+            </Pressable>
             <ScrollView style={{flex: 1}}>
                 <TextInput 
                     style={styles.noteTitle}
@@ -49,6 +55,7 @@ export default function NoteView(props: NoteProps) {
                     editable={editing}
                 />
             </ScrollView>
+            <Switch value={editing} onValueChange={updateEditing}/>
         </View>
     )
 }

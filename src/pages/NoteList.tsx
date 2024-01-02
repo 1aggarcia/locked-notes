@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ScrollView } from "react-native";
 import Note from '../modules/note';
-import { deleteNote, getNoteList } from '../modules/file-service';
+import { deleteNote, getNoteList, saveNote } from '../modules/file-service';
 import Loading from './Loading';
 import NotePreview from '../components/NotePreview';
 import AppText from '../components/AppText';
