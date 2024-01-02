@@ -13,6 +13,7 @@ type Window = 'Loading' | 'Navigation' | 'CreatePin'
 export default function App() {
   const [window, setWindow] = useState<Window>('Loading');
 
+  // Find out if pin has been previously created
   useEffect(
     () => {
       async function loadLogin() {
