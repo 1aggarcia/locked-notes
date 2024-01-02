@@ -3,7 +3,6 @@ import { Pressable, View } from 'react-native';
 
 import AppText from '../components/AppText';
 
-import EditNote from '../pages/EditNote';
 import NoteList from '../pages/NoteList';
 import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
@@ -14,7 +13,7 @@ import styles from '../modules/styles';
 const maxTime = 300;
 
 export interface UnlockedProps {
-    page: 'NoteList' | 'EditNote' | 'Settings' | 'ResetPin';
+    page: 'NoteList' | 'Settings' | 'ResetPin';
 
     // Callback function to lock application
     lock: () => void;
@@ -26,8 +25,6 @@ export interface UnlockedProps {
 export default function Unlocked(props: UnlockedProps) {
     const [page, setPage] = useState(props.page);
     const [timeOpen, setTimeOpen] = useState(maxTime)
-    const [note, setNote] = useState<Note>();
-    const [noteFilename, setNoteFilename] = useState<string>();
 
     // Countdown until reaching 0 seconds
     useEffect(() => {
@@ -40,12 +37,6 @@ export default function Unlocked(props: UnlockedProps) {
         }, 1000)
     });
 
-    function openNote(filename: string, note: Note) {
-        setNote(note);
-        setNoteFilename(filename);
-        setPage('EditNote');
-    }
-
     return (
         <View style={{flex: 1}}>
             <View style={{flexDirection: 'row',}}>
@@ -54,8 +45,8 @@ export default function Unlocked(props: UnlockedProps) {
                     <AppText style={styles.button}>Lock</AppText>
                 </Pressable>
             </View>
-            {page === 'NoteList' && <NoteList openNote={openNote} />}
-            {page === 'EditNote' && note && noteFilename && <EditNote filename={noteFilename} note={note} goBack={() => setPage('NoteList')}/>}
+            {page === 'NoteList' && <NoteList />}
+            {/* {page === 'EditNote' && note && noteFilename && <EditNote filename={noteFilename} note={note} goBack={() => setPage('NoteList')}/>} */}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
         </View>

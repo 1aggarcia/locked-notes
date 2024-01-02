@@ -45,7 +45,7 @@ export default function EditNote(props: EditNoteProps) {
     return (
         <View style={{flex: 1}}>
             <Pressable onPress={goBack}>
-                <AppText style={styles.button}>Go back</AppText>
+                <AppText style={styles.button}>Save & Close</AppText>
             </Pressable>
             <Pressable onPress={async () => await deleteNote(props.filename)}>
                 <AppText style={styles.button}>Delete Note</AppText>
