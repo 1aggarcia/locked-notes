@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StatusBar, View } from 'react-native';
+import { SafeAreaView, StatusBar, View } from 'react-native';
 
 import styles from './modules/styles';
 
@@ -14,8 +14,10 @@ export default function App() {
   return (
     <View style={styles.app}>
       <StatusBar />
-      {window === 'Navigation' && <Navigation goToCreatePin={() => setWindow('CreatePin')} />}
-      {window === 'CreatePin' && <CreatePin goToNavigation={() => setWindow('Navigation')} />}
+      <SafeAreaView style={styles.app}>
+        {window === 'Navigation' && <Navigation goToCreatePin={() => setWindow('CreatePin')} />}
+        {window === 'CreatePin' && <CreatePin goToNavigation={() => setWindow('Navigation')} />}
+      </SafeAreaView>
     </View>
   );
 }

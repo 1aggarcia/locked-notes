@@ -87,12 +87,13 @@ export async function getNote(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
         const rawFile = await FileSystem.readAsStringAsync(fileUri)
-        const decrypted = JSON.parse(decryptData(rawFile));
+        let decrypted = JSON.parse(decryptData(rawFile));
 
         if (isNote(decrypted)) {
-            return decrypted
+            decrypted.filename = filename;
+            return decrypted;
         } else {
-            throw TypeError('Object in file is not a note');
+            return null;
         }
     } catch (error) {
         alert(error)
@@ -101,24 +102,24 @@ export async function getNote(filename: string): Promise<Note | null> {
 }
 
 /**
- * Retrieves list of all notes in external storage
- * @returns list of notes currently in external storage
+ * Retrieves map of all notes in external storage with key=filename, value=note
+ * @returns map of notes currently in external storage
  */
-export async function getNoteList(): Promise<Note[]> {
+export async function getNotes(): Promise<Map<string, Note>> {
+    const result = new Map<string, Note>();
     try {
         const filenames = await FileSystem.readDirectoryAsync(notesDir);
-        let result: Note[] = [];
 
         for (const filename of filenames) {
             const note = await getNote(filename);
             if (note !== null) {
-                result.push(note);
+                result.set(filename, note);
             }
         }
         return result;
     } catch {
         // Directory not found or empty
-        return [];
+        return result
     }
 }
 
@@ -128,8 +129,9 @@ export async function getNoteList(): Promise<Note[]> {
  */
 export async function deleteNote(filename: string) {
     const fileUri = notesDir + filename;
+    alert(`Deleting note at path ${fileUri}`);
     try {
-        await FileSystem.deleteAsync(notesDir);
+        await FileSystem.deleteAsync(fileUri);
     } catch (error) {
         alert(error);
     }

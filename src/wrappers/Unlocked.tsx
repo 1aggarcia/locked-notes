@@ -3,19 +3,18 @@ import { Pressable, View } from 'react-native';
 
 import AppText from '../components/AppText';
 
-import NoteView from '../pages/NoteView';
+import EditNote from '../pages/EditNote';
 import NoteList from '../pages/NoteList';
 import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
 import Note from '../modules/note';
-import { getNote } from '../modules/file-service';
 import styles from '../modules/styles';
 
 // Maximum time a the app can be unlocked, in seconds
 const maxTime = 300;
 
 export interface UnlockedProps {
-    page: 'NoteList' | 'NoteView' | 'Settings' | 'ResetPin';
+    page: 'NoteList' | 'EditNote' | 'Settings' | 'ResetPin';
 
     // Callback function to lock application
     lock: () => void;
@@ -27,7 +26,8 @@ export interface UnlockedProps {
 export default function Unlocked(props: UnlockedProps) {
     const [page, setPage] = useState(props.page);
     const [timeOpen, setTimeOpen] = useState(maxTime)
-    const [note, setNote] = useState<Note | null>(null);
+    const [note, setNote] = useState<Note>();
+    const [noteFilename, setNoteFilename] = useState<string>();
 
     // Countdown until reaching 0 seconds
     useEffect(() => {
@@ -40,9 +40,10 @@ export default function Unlocked(props: UnlockedProps) {
         }, 1000)
     });
 
-    function openNote(note: Note) {
+    function openNote(filename: string, note: Note) {
         setNote(note);
-        setPage('NoteView');
+        setNoteFilename(filename);
+        setPage('EditNote');
     }
 
     return (
@@ -54,7 +55,7 @@ export default function Unlocked(props: UnlockedProps) {
                 </Pressable>
             </View>
             {page === 'NoteList' && <NoteList openNote={openNote} />}
-            {page === 'NoteView' && note !== null && <NoteView note={note} goBack={() => setPage('NoteList')}/>}
+            {page === 'EditNote' && note && noteFilename && <EditNote filename={noteFilename} note={note} goBack={() => setPage('NoteList')}/>}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
         </View>

@@ -4,7 +4,6 @@
  * `dateCreated` and `dateModified` must be ISO formatted timestamps
  */
 type Note = {
-
     title: string,
     body: string,
     dateCreated: string,

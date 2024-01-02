@@ -4,17 +4,18 @@ import { View, ScrollView, TextInput, Switch, Pressable } from 'react-native';
 import styles from '../modules/styles';
 import { darkModeColors } from '../assets/colors';
 import Note from '../modules/note';
-import { saveNote } from '../modules/file-service';
+import { deleteNote, saveNote } from '../modules/file-service';
 import AppText from '../components/AppText';
 
-export interface NoteViewProps {
-    note: Note
+export interface EditNoteProps {
+    filename: string;
+    note: Note;
 
     // Callback function to go back to note list
-    goBack: () => void
+    goBack: () => void;
 }
 
-export default function NoteView(props: NoteViewProps) {
+export default function EditNote(props: EditNoteProps) {
     const [title, setTitle] = useState(props.note.title);
     const [body, setBody] = useState(props.note.body);
     const [editing, setEditing] = useState(false);
@@ -27,13 +28,27 @@ export default function NoteView(props: NoteViewProps) {
             dateModified: props.note.dateModified,
         }
         setEditing(value);
-        saveNote(`${props.note.title[0]}.enf`, newNote);
+        saveNote(props.filename, newNote);
+    }
+
+    function goBack() {
+        const newNote: Note = {
+            title: title,
+            body: body,
+            dateCreated: props.note.dateCreated,
+            dateModified: props.note.dateModified,
+        }
+        saveNote(props.filename, newNote);
+        props.goBack();
     }
 
     return (
         <View style={{flex: 1}}>
-            <Pressable onPress={props.goBack}>
+            <Pressable onPress={goBack}>
                 <AppText style={styles.button}>Go back</AppText>
+            </Pressable>
+            <Pressable onPress={async () => await deleteNote(props.filename)}>
+                <AppText style={styles.button}>Delete Note</AppText>
             </Pressable>
             <ScrollView style={{flex: 1}}>
                 <TextInput 
