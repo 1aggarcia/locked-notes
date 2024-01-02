@@ -29,10 +29,19 @@ export async function savePinAsync(pin: string) {
 }
 
 /**
+ * Remove login information from local storage
+ */
+export async function deletePinAsync() {
+    await SecureStore.deleteItemAsync('loginHash');
+    await SecureStore.deleteItemAsync('loginSalt');
+    await SecureStore.deleteItemAsync('encryptionSalt');
+}
+
+/**
  * Check if there is login info saved within secure store in local storage
  * @returns true iff loginHash, loginSalt and encryptionSalt are saved in local storage
  */
-export async function loginExists(): Promise<boolean> {
+export async function loginExistsAsync(): Promise<boolean> {
     const loginHash = await SecureStore.getItemAsync('loginHash');
     const loginSalt = await SecureStore.getItemAsync('loginSalt');
     const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');

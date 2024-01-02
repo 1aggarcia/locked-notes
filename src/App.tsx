@@ -1,23 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
 
 import styles from './modules/styles';
 
 import Navigation from './wrappers/Navigation';
 import CreatePin from './pages/CreatePin';
+import Loading from './pages/Loading';
+import { loginExistsAsync } from './modules/file-service';
+
+type Window = 'Loading' | 'Navigation' | 'CreatePin'
 
 export default function App() {
-  const [pinExists, setPinExists] = useState(false);
+  const [window, setWindow] = useState<Window>('Loading');
+
+  useEffect(
+    () => {
+      async function loadLogin() {
+        if (await loginExistsAsync()) {
+          setWindow('Navigation');
+        } else {
+          setWindow('CreatePin');
+        }
+      }
+      loadLogin();
+    }
+  , [])
 
   return (
     <View style={styles.app}>
       <StatusBar />
-      {
-        pinExists?
-        <Navigation goToCreatePin={() => setPinExists(false)} />
-        :
-        <CreatePin goToNavigation={() => setPinExists(true)} />
-      }
+      {window === 'Loading' && <Loading />}
+      {window === 'Navigation' && <Navigation goToCreatePin={() => setWindow('CreatePin')} />}
+      {window === 'CreatePin' && <CreatePin goToNavigation={() => setWindow('Navigation')} />}
     </View>
   );
 }
