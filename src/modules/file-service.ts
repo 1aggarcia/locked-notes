@@ -59,7 +59,7 @@ export async function getLoginInfo() {
 
 /**
  * Saves and encrypts given note to given filename in notes directory of external storage
- * @param filename name of the note file, without extension
+ * @param filename name of the note file with extension
  * @param note note to save to file
  */
 export async function saveNote(filename: string, note: Note) {
@@ -71,7 +71,7 @@ export async function saveNote(filename: string, note: Note) {
         await FileSystem.makeDirectoryAsync(notesDir);
     }
     try {
-        const fileUri = notesDir + filename + '.enf'
+        const fileUri = notesDir + filename
         await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
     } catch (error) {
         alert(error);
@@ -80,11 +80,11 @@ export async function saveNote(filename: string, note: Note) {
 
 /**
  * Retreives the note with the given filename, if it exists
- * @param fileName name of the note file, without the extension
+ * @param fileName name of the note file with extension
  * @returns note as an object if there is a correspondind file, null otherwise
  */
 export async function getNote(filename: string): Promise<Note | null> {
-    const fileUri = notesDir + filename + '.enf';
+    const fileUri = notesDir + filename;
     try {
         const rawFile = await FileSystem.readAsStringAsync(fileUri)
         const decrypted = JSON.parse(decryptData(rawFile));
@@ -97,6 +97,25 @@ export async function getNote(filename: string): Promise<Note | null> {
     } catch (error) {
         alert(error)
         return null;
+    }
+}
+
+export async function getNoteList(): Promise<Note[]> {
+    try {
+        const filenames = await FileSystem.readDirectoryAsync(notesDir);
+        let result: Note[] = [];
+
+        for (const filename of filenames) {
+            const note = await getNote(filename);
+            if (note !== null) {
+                result.push(note);
+            }
+        }
+        return result;
+    } catch (error) {
+        // Directory not found
+        alert(error);
+        return [];
     }
 }
 

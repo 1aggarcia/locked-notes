@@ -49,7 +49,7 @@ export default function Navigation(props: NavigationProps) {
         }
         {page === 'Unlocked' &&
             <Unlocked 
-                page='NoteView'
+                page='NoteList'
                 lock={() => setPage('Locked')}
                 denyAccess={() => setPage('Denied')}
             />

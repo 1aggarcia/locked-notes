@@ -32,7 +32,7 @@ export default function Unlocked(props: UnlockedProps) {
     // Retreive note from external storage
     useEffect(() => {
         async function loadNote() {
-            setNote(await getNote('test'));
+            setNote(await getNote('test.enf'));
         }
         loadNote();
     }, [])
