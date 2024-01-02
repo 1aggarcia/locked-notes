@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import AppText from '../components/AppText';
 
@@ -9,6 +9,7 @@ import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
 import Note from '../modules/note';
 import { getNote } from '../modules/file-service';
+import styles from '../modules/styles';
 
 // Maximum time a the app can be unlocked, in seconds
 const maxTime = 300;
@@ -49,7 +50,12 @@ export default function Unlocked(props: UnlockedProps) {
 
     return (
         <View style={{flex: 1}}>
+            <View style={{flexDirection: 'row',}}>
             <AppText>Unlocked time: {formatTime(timeOpen)}</AppText>
+                <Pressable onPress={props.lock}>
+                    <AppText style={styles.button}>Lock</AppText>
+                </Pressable>
+            </View>
             {page === 'NoteList' && <NoteList />}
             {page === 'NoteView' && note !== null && <NoteView note={note}/>}
             {page === 'Settings' && <Settings />}

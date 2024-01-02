@@ -67,8 +67,12 @@ const styles = StyleSheet.create({
     backspace: {
         alignSelf: 'flex-end',
         padding: 10,
-        borderColor: darkModeColors.border,
+        borderColor: colorMap.border,
         borderWidth: 1
+    },
+    button: {
+        padding: 10,
+        backgroundColor: colorMap.buttonBg
     }
 });
 
