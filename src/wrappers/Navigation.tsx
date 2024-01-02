@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 
-import { deletePinAsync, getLoginInfo } from '../modules/file-service';
+import { getLoginInfo } from '../modules/file-service';
 
 import Unlocked from "./Unlocked";
 import Locked from '../pages/Locked';
 import Denied from '../pages/Denied';
 import Loading from '../pages/Loading';
-
-const maxTime = 5;
 
 type Page = 'Denied' | 'Locked' | 'Unlocked' | 'Loading'
 
@@ -18,7 +16,6 @@ interface NavigationProps {
 
 export default function Navigation(props: NavigationProps) {
     const [page, setPage] = useState<Page>('Loading');
-    const [timeOpen, setTimeOpen] = useState(maxTime);
     const [hash, setHash] = useState<string>();
     const [salt, setSalt] = useState<string>();
 
@@ -28,7 +25,7 @@ export default function Navigation(props: NavigationProps) {
             const loginInfo = await getLoginInfo();
 
             if (loginInfo === null) {
-                // Pin does not exists: send user to make one
+                // Pin does not exist: send user to make one
                 props.goToCreatePin();
             } else {
                 setHash(loginInfo.hash);
@@ -38,17 +35,6 @@ export default function Navigation(props: NavigationProps) {
         }
         loadLogin();
     }, [])
-
-    // Countdown until reaching 0 seconds
-    useEffect(() => {
-        setTimeout(() => {
-        if (timeOpen > 0) {
-            setTimeOpen(timeOpen - 1);
-        } else {
-            setPage('Locked')
-        }
-        }, 1000)
-    });
 
     return (<>
         {page === 'Loading' && <Loading />}
@@ -63,8 +49,8 @@ export default function Navigation(props: NavigationProps) {
         }
         {page === 'Unlocked' &&
             <Unlocked 
-                page='NoteView' 
-                timeOpen={timeOpen} 
+                page='NoteView'
+                lock={() => setPage('Locked')}
                 denyAccess={() => setPage('Denied')}
             />
         }

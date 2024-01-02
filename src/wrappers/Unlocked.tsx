@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View } from 'react-native';
 
 import AppText from '../components/AppText';
@@ -9,23 +9,39 @@ import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
 
 const secondsInMinute = 60;
+const maxTime = 5;
 const newLines = 'top\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nas\nbottom'
 
 const note = {title: 'Título', body: newLines, dateCreated: '', dateModified: ''}
 
 export interface UnlockedProps {
     page: 'NoteList' | 'NoteView' | 'Settings' | 'ResetPin';
-    timeOpen: number;
+
+    // Callback function to lock application
+    lock: () => void;
+
     // Callback function to set nav page to access denied
     denyAccess: () => void;
 }
 
 export default function Unlocked(props: UnlockedProps) {
     const [page, setPage] = useState(props.page);
+    const [timeOpen, setTimeOpen] = useState(maxTime)
+
+    // Countdown until reaching 0 seconds
+    useEffect(() => {
+        setTimeout(() => {
+        if (timeOpen > 1) {
+            setTimeOpen(timeOpen - 1);
+        } else {
+            props.lock()
+        }
+        }, 1000)
+    });
 
     return (
         <View style={{flex: 1}}>
-            <AppText>Unlocked time: {formatTime(props.timeOpen)}</AppText>
+            <AppText>Unlocked time: {formatTime(timeOpen)}</AppText>
             {page === 'NoteList' && <NoteList />}
             {page === 'NoteView' && <NoteView note={note}/>}
             {page === 'Settings' && <Settings />}

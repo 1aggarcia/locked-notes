@@ -16,7 +16,7 @@ interface LockedProps {
     salt: string
 }
 
-const maxAttempts = 3;
+const maxAttempts = 5;
 
 export default function Locked(props: LockedProps) {
     const [attempts, setAttempts] = useState(0);

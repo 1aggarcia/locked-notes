@@ -5,7 +5,6 @@ import styles from './modules/styles';
 
 import Navigation from './wrappers/Navigation';
 import CreatePin from './pages/CreatePin';
-import Loading from './pages/Loading';
 
 type Window = 'Navigation' | 'CreatePin'
 
