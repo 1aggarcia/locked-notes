@@ -23,7 +23,7 @@ export default function NoteView(props: NoteProps) {
             dateModified: props.note.dateModified,
         }
         setEditing(value);
-        saveNote('test', newNote);
+        saveNote('test.enf', newNote);
     }
 
     return (

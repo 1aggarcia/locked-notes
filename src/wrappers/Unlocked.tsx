@@ -29,14 +29,6 @@ export default function Unlocked(props: UnlockedProps) {
     const [timeOpen, setTimeOpen] = useState(maxTime)
     const [note, setNote] = useState<Note | null>(null);
 
-    // Retreive note from external storage
-    useEffect(() => {
-        async function loadNote() {
-            setNote(await getNote('test.enf'));
-        }
-        loadNote();
-    }, [])
-
     // Countdown until reaching 0 seconds
     useEffect(() => {
         setTimeout(() => {
@@ -48,6 +40,11 @@ export default function Unlocked(props: UnlockedProps) {
         }, 1000)
     });
 
+    function openNote(note: Note) {
+        setNote(note);
+        setPage('NoteView');
+    }
+
     return (
         <View style={{flex: 1}}>
             <View style={{flexDirection: 'row',}}>
@@ -56,7 +53,7 @@ export default function Unlocked(props: UnlockedProps) {
                     <AppText style={styles.button}>Lock</AppText>
                 </Pressable>
             </View>
-            {page === 'NoteList' && <NoteList />}
+            {page === 'NoteList' && <NoteList openNote={openNote} />}
             {page === 'NoteView' && note !== null && <NoteView note={note}/>}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
