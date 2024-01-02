@@ -1,5 +1,9 @@
 import { useState } from "react";
 import AppText from "../components/AppText";
+import styles from "../modules/styles";
+import { View } from "react-native";
+import PinPad from "../components/PinPad";
+import { hash256 } from "../modules/encryption-service";
 
 interface LockedProps {
     // Callback function to set nav page to unlocked
@@ -7,15 +11,38 @@ interface LockedProps {
     
     // Callback function to set nav page to access denied
     denyAccess: () => void;
+
+    hash: string,
+    salt: string
 }
 
 const maxAttempts = 3;
 
 export default function Locked(props: LockedProps) {
-    const [inputHash, setInputHash] = useState();
     const [attempts, setAttempts] = useState(0);
+    const [error, setError] = useState(false);
+
+    function confirmPin(pin: string) {
+        const hashedPin = hash256({ text: pin, salt: props.salt})
+        if (hashedPin === props.hash) {
+            props.unlock();
+        } else {
+            setError(true);
+            if (attempts + 1 === maxAttempts) {
+                props.denyAccess()
+            } else {
+                setAttempts(attempts + 1)
+            }
+        }
+    }
 
     return (
-        <AppText>Locked</AppText>
+        <View style={styles.pinContainer}>
+            {error && <AppText style={{color: 'red', textAlign: 'center'}}>
+                    Incorrect PIN entered. {maxAttempts - attempts} attempts remaining.
+                </AppText>}
+            <AppText style={styles.header}>Enter PIN to unlock</AppText>
+            <PinPad onComplete={confirmPin}/>
+        </View>
     )
 }
