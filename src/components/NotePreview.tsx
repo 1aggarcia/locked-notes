@@ -12,11 +12,32 @@ interface NotePreviewProps {
 }
 
 export default function NotePreview(props: NotePreviewProps) {
+    const dateString = formateDate(props.note.dateModified);
+
     return (
-        <Pressable onPress={() => props.openNote(props.filename, props.note)}>
-            <AppText style={styles.notePreview}>
+        <Pressable style={styles.notePreview} onPress={() => props.openNote(props.filename, props.note)}>
+            <AppText style={styles.notePreviewHeader}>
                 {props.note.title}
+            </AppText>
+            <AppText>
+                Modified: {dateString}
             </AppText>
         </Pressable>
     )
+}
+
+/**
+ * Convert timestamp in form of seconds since epoch to formatted datetime
+ * @param seconds number of seconds since the epoch (1970-01-01 00:00:00)
+ * @returns string representation of date
+ */
+function formateDate(seconds: number) {
+    const date = new Date(seconds);
+    return date.toLocaleString(undefined, {
+        day: 'numeric',
+        year: 'numeric',
+        month: 'short',
+        hour: 'numeric',
+        minute: '2-digit'
+    });
 }

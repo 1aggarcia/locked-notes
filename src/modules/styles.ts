@@ -37,9 +37,11 @@ const styles = StyleSheet.create({
         borderColor: colorMap.weakBorder,
         borderWidth: 2,
         padding: 15,
-        fontWeight: 'bold',
         borderRadius: 10,
         marginBottom: 15,
+    },
+    notePreviewHeader: {
+        fontWeight: 'bold',
         fontSize: 20
     },
     pinContainer: {

@@ -1,13 +1,13 @@
 /**
- * Template for a note
+ * Object representing a note
  * 
- * `dateCreated` and `dateModified` must be ISO formatted timestamps
+ * `dateCreated` and `dateModified` represent seconds elapsed since the epoch (1970-01-01  00:00:00)
  */
 type Note = {
     title: string,
     body: string,
-    dateCreated: string,
-    dateModified: string
+    dateCreated: number,
+    dateModified: number
 }
 
 /**
@@ -20,8 +20,8 @@ export function isNote(obj: object): boolean {
         typeof obj === 'object' &&
         'title' in obj && typeof obj.title === 'string' &&
         'body' in obj && typeof obj.body === 'string' &&
-        'dateCreated' in obj && typeof obj.dateCreated === 'string' &&
-        'dateModified' in obj && typeof obj.dateModified === 'string'
+        'dateCreated' in obj && typeof obj.dateCreated === 'number' &&
+        'dateModified' in obj && typeof obj.dateModified === 'number'
     )
 }
 

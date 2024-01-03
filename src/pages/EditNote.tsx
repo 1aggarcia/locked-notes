@@ -25,7 +25,7 @@ export default function EditNote(props: EditNoteProps) {
             title: title,
             body: body,
             dateCreated: props.note.dateCreated,
-            dateModified: props.note.dateModified,
+            dateModified: Date.now(),
         }
         setEditing(value);
         saveNote(props.filename, newNote);
@@ -36,7 +36,7 @@ export default function EditNote(props: EditNoteProps) {
             title: title,
             body: body,
             dateCreated: props.note.dateCreated,
-            dateModified: props.note.dateModified,
+            dateModified: Date.now(),
         }
         saveNote(props.filename, newNote);
         props.goBack();
