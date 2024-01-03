@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
 
-import styles from './modules/styles';
+import styles from './src/modules/styles';
 
-import Navigation from './wrappers/Navigation';
-import CreatePin from './pages/CreatePin';
+import Navigation from './src/wrappers/Navigation';
+import CreatePin from './src/pages/CreatePin';
 
 type Window = 'Navigation' | 'CreatePin'
 

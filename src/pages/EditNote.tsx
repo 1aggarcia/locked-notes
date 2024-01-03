@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, ScrollView, TextInput, Switch, Pressable } from 'react-native';
 
 import styles from '../modules/styles';
-import { darkModeColors } from '../assets/colors';
+import { darkModeColors } from '../../assets/colors';
 import Note from '../modules/note';
 import { deleteNote, saveNote } from '../modules/file-service';
 import AppText from '../components/AppText';
