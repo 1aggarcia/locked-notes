@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { darkModeColors, lightModeColors } from "../assets/colors";
 
-let colorMap = lightModeColors;
+let colorMap = darkModeColors;
 
 const styles = StyleSheet.create({
     app: {

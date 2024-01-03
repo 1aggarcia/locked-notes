@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ScrollView } from "react-native";
-import Note from '../modules/note';
-import { getNotes, saveNote } from '../modules/file-service';
+import { Pressable, ScrollView, View } from "react-native";
+import Note, { blankNote } from '../modules/note';
+import { getNotes } from '../modules/file-service';
 import Loading from './Loading';
 import NotePreview from '../components/NotePreview';
 import AppText from '../components/AppText';
@@ -27,12 +27,23 @@ export default function NoteList() {
         setNoteFile(filename);
     }
     
-    function closeNote() {
+    function closeNote(newNote: Note) {
+        if (noteFile && noteMap) {
+            // We copy the map to prevent direct state editing
+            const noteMapCopy = new Map(noteMap)
+            noteMapCopy.set(noteFile, newNote)
+            setNoteMap(noteMapCopy);
+        }
         setNote(undefined);
         setNoteFile(undefined);
     }
 
-    function generateList() {
+    function createNote() {
+        const filename = `note_${Date.now()}.ejn`;
+        openNote(filename, blankNote());
+    }
+
+    function generatePreviewList() {
         let result: JSX.Element[] = [];
         if (noteMap) {
             noteMap.forEach((note, filename) => {
@@ -41,6 +52,8 @@ export default function NoteList() {
                 />)
             })
         }
+        // Sort by date modified
+        result.sort((a, b) => b.props.note.dateModified - a.props.note.dateModified)
         return result;
     }
 
@@ -49,14 +62,19 @@ export default function NoteList() {
     } else if (noteMap.size === 0) {
         return <AppText style={styles.placeholder}>No Notes Yet</AppText>
     } else {
-        return (<>
+        return (<View style={{flex: 1}}>
             {
                 note && noteFile? <EditNote note={note} filename={noteFile} goBack={closeNote} />
                 :
+                <>
                 <ScrollView style={{flex: 1, padding: 10}}>
-                    {generateList()}
+                    {generatePreviewList()}
                 </ScrollView>
+                <Pressable style={styles.button} onPress={createNote}>
+                    <AppText>Create New</AppText>
+                </Pressable>
+                </>
             }
-        </>)
+        </View>)
     }
 }

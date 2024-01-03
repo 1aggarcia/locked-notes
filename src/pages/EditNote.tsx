@@ -12,40 +12,53 @@ export interface EditNoteProps {
     note: Note;
 
     // Callback function to go back to note list
-    goBack: () => void;
+    goBack: (note: Note) => void;
 }
 
 export default function EditNote(props: EditNoteProps) {
     const [title, setTitle] = useState(props.note.title);
     const [body, setBody] = useState(props.note.body);
-    const [editing, setEditing] = useState(false);
+    const [dateModified, setDateModified] = useState(props.note.dateModified);
+    const [editing, setEditing] = useState(true);
 
-    function updateEditing(value: boolean) {
-        const newNote: Note = {
-            title: title,
+    function saveTitle(newTitle: string) {
+        setTitle(newTitle);
+        setDateModified(Date.now());
+        // Save note to external storage
+        saveNote(props.filename, {
+            title: newTitle,
             body: body,
             dateCreated: props.note.dateCreated,
             dateModified: Date.now(),
-        }
-        setEditing(value);
-        saveNote(props.filename, newNote);
+        });
+    }
+
+    function saveBody(newBody: string) {
+        setBody(newBody)
+        setDateModified(Date.now());
+        // Save note to external storage
+        saveNote(props.filename, {
+            title: title,
+            body: newBody,
+            dateCreated: props.note.dateCreated,
+            dateModified: Date.now(),
+        });
     }
 
     function goBack() {
-        const newNote: Note = {
+        // Save note to external storage
+        props.goBack({
             title: title,
             body: body,
             dateCreated: props.note.dateCreated,
-            dateModified: Date.now(),
-        }
-        saveNote(props.filename, newNote);
-        props.goBack();
+            dateModified: dateModified,
+        });
     }
 
     return (
         <View style={{flex: 1}}>
             <Pressable onPress={goBack}>
-                <AppText style={styles.button}>Save & Close</AppText>
+                <AppText style={styles.button}>Go Back</AppText>
             </Pressable>
             <Pressable onPress={() => deleteNote(props.filename)}>
                 <AppText style={styles.button}>Delete Note</AppText>
@@ -54,7 +67,7 @@ export default function EditNote(props: EditNoteProps) {
                 <TextInput 
                     style={styles.noteTitle}
                     value={title}
-                    onChangeText={setTitle}
+                    onChangeText={saveTitle}
                     placeholder='Title'
                     placeholderTextColor={darkModeColors.placeholder}
                     multiline
@@ -63,14 +76,14 @@ export default function EditNote(props: EditNoteProps) {
                 <TextInput 
                     style={styles.noteBody}
                     value={body}
-                    onChangeText={setBody}
+                    onChangeText={saveBody}
                     placeholder='Write something here...'
                     placeholderTextColor={darkModeColors.placeholder}
                     multiline
                     editable={editing}
                 />
             </ScrollView>
-            <Switch value={editing} onValueChange={updateEditing}/>
+            <Switch value={editing} onValueChange={setEditing}/>
         </View>
     )
 }

@@ -11,6 +11,19 @@ type Note = {
 }
 
 /**
+ * Create and return a new blank note
+ * @returns note with no title, no body, and dateCreated/dateModified set to current time
+ */
+export function blankNote(): Note {
+    return {
+        title: '',
+        body: '',
+        dateCreated: Date.now(),
+        dateModified: Date.now()
+    }
+}
+
+/**
  * Determine if the given object is a valid note
  * @param obj object to check
  * @returns true iff obj contains all the properties of a note
