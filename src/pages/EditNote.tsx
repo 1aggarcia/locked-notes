@@ -47,7 +47,7 @@ export default function EditNote(props: EditNoteProps) {
             <Pressable onPress={goBack}>
                 <AppText style={styles.button}>Save & Close</AppText>
             </Pressable>
-            <Pressable onPress={async () => await deleteNote(props.filename)}>
+            <Pressable onPress={() => deleteNote(props.filename)}>
                 <AppText style={styles.button}>Delete Note</AppText>
             </Pressable>
             <ScrollView style={{flex: 1}}>

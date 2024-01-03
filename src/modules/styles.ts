@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { darkModeColors, lightModeColors } from "../assets/colors";
 
-let colorMap = darkModeColors;
+let colorMap = lightModeColors;
 
 const styles = StyleSheet.create({
     app: {
@@ -27,14 +27,15 @@ const styles = StyleSheet.create({
     },
     noteBody: {
         flex: 1,
-        fontSize: 18,
+        fontSize: 17,
         padding: 15,
         paddingTop: 5,
         verticalAlign: 'top',
         color: colorMap.text
     },
     notePreview: {
-        backgroundColor: colorMap.fg,
+        borderColor: colorMap.weakBorder,
+        borderWidth: 2,
         padding: 15,
         fontWeight: 'bold',
         borderRadius: 10,
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 50,
-        borderColor: colorMap.border,
+        borderColor: colorMap.strongBorder,
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center'
@@ -64,11 +65,11 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         borderRadius: 20,
-        borderColor: colorMap.border,
+        borderColor: colorMap.strongBorder,
         borderWidth: 2,
     },
     pinDotFull: {
-        backgroundColor: colorMap.border
+        backgroundColor: colorMap.strongBorder
     },
     keypad: {
         flexDirection: 'row',
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     backspace: {
         alignSelf: 'flex-end',
         padding: 10,
-        borderColor: colorMap.border,
+        borderColor: colorMap.strongBorder,
         borderWidth: 1
     },
     button: {
