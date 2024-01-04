@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Pressable, ScrollView, View } from "react-native";
+
 import Note, { blankNote } from '../modules/note';
 import { getNotes } from '../modules/file-service';
+
 import Loading from './Loading';
+import EditNote from './EditNote';
+
 import NotePreview from '../components/NotePreview';
 import AppText from '../components/AppText';
 import styles from '../modules/styles';
-import EditNote from './EditNote';
 
 export default function NoteList() {
     // map of notes where key=filename, value=note
@@ -63,18 +66,19 @@ export default function NoteList() {
     if (noteMap === undefined) {
         return <Loading />
     }
-    return (<View style={{flex: 1}}>
-        {
-            note && noteFile? <EditNote note={note} filename={noteFile} goBack={closeNote} />
-            :
-            <>
-            <ScrollView style={{flex: 1, padding: 10}}>
+    else if (note && noteFile) {
+        return <EditNote note={note} filename={noteFile} goBack={closeNote} />
+    }
+    else {
+        return (
+            <View style={{flex: 1}}>
+                <ScrollView style={{flex: 1, padding: 10}}>
                 {generatePreviewList()}
-            </ScrollView>
-            <Pressable style={styles.button} onPress={createNote}>
-                <AppText>Create New</AppText>
-            </Pressable>
-            </>
-        }
-    </View>)
+                </ScrollView>
+                <Pressable style={styles.button} onPress={createNote}>
+                    <AppText>Create New</AppText>
+                </Pressable>
+            </View>
+        );
+    }
 }
