@@ -5,7 +5,7 @@ import {
     decryptData,
     encryptData,
     generateSalt,
-    hash256,
+    saltAndSha256,
     registerEncryptionKey
 } from './encryption-service';
 import Note, { isNote } from './note';
@@ -23,8 +23,8 @@ export async function savePinAsync(pin: string) {
     const loginSalt = generateSalt(saltLength);
     const encryptionSalt = generateSalt(saltLength);
 
-    const hash = hash256({ text: pin, salt: loginSalt });
-    registerEncryptionKey({ pin: pin, salt: encryptionSalt })
+    const hash = saltAndSha256({ text: pin, salt: loginSalt });
+    registerEncryptionKey(encryptionSalt + pin);
     
     await SecureStore.setItemAsync('loginHash', hash);
     await SecureStore.setItemAsync('loginSalt', loginSalt);

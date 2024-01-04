@@ -1,14 +1,16 @@
-import { sha256 } from 'js-sha256';
+import { Hasher, sha256 } from 'js-sha256';
 import CryptoJS from 'react-native-crypto-js';
 
+// Number of times to run hash algorithm
+const hashIterations = 1000;
 let encryptionKey: string | undefined;
 
 /**
  * Register pin and salt to use as an encryption key for the encryption service
  * @param data pin and salt to register
  */
-export function registerEncryptionKey(data: { pin: string, salt: string }) {
-    encryptionKey = data.salt + data.pin
+export function registerEncryptionKey(key: string) {
+    encryptionKey = key;
 }
 
 /**
@@ -45,10 +47,32 @@ export function decryptData(ciphertext: string): string {
  * @param data text and salt to hash
  * @returns hashed text in hexadecimal
  */
-export function hash256(data: { text: string, salt: string }): string {
+export function saltAndSha256(data: { text: string, salt: string }): string {
     const hash = sha256.create();
     hash.update(data.salt + data.text);
     return hash.hex();
+}
+
+/**
+ * Hashes data 1000 times using SHA-256. Data is reversed before each hash.
+ * @param data text to hash
+ * @returns hashed text in hexadecimal
+ */
+export function sha256Hash1000(data: string): string {
+    let result = data;
+    let hasher: Hasher;
+
+    // set i to 1 since previous statement performs the first hash
+    for (let i = 0; i < 1000; i++) {
+        // Reverse result before hashing
+        result = result.split('').reverse().join();
+
+        // Rehash result
+        hasher = sha256.create()
+        hasher.update(result);
+        result = hasher.hex();
+    }
+    return result;
 }
 
 /**
