@@ -90,7 +90,6 @@ export async function getNote(filename: string): Promise<Note | null> {
         let decrypted = JSON.parse(decryptData(rawFile));
 
         if (isNote(decrypted)) {
-            decrypted.filename = filename;
             return decrypted;
         } else {
             return null;
@@ -112,7 +111,7 @@ export async function getNotes(): Promise<Map<string, Note>> {
 
         for (const filename of filenames) {
             const note = await getNote(filename);
-            if (note !== null) {
+            if (note) {
                 result.set(filename, note);
             }
         }
@@ -129,7 +128,6 @@ export async function getNotes(): Promise<Map<string, Note>> {
  */
 export async function deleteNote(filename: string) {
     const fileUri = notesDir + filename;
-    alert(`Deleting note at path ${fileUri}`);
     try {
         await FileSystem.deleteAsync(fileUri);
     } catch (error) {

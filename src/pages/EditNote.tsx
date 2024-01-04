@@ -46,6 +46,10 @@ export default function EditNote(props: EditNoteProps) {
     }
 
     function goBack() {
+        if (title.length === 0) {
+            alert('Title cannot be blank, please give this note a title.');
+            return;
+        }
         // Save note to external storage
         props.goBack({
             title: title,

@@ -52,6 +52,9 @@ export default function NoteList() {
                 />)
             })
         }
+        if (result.length === 0) {
+            return <AppText style={styles.placeholder}>No Notes Yet</AppText>;
+        }
         // Sort by date modified
         result.sort((a, b) => b.props.note.dateModified - a.props.note.dateModified)
         return result;
@@ -59,22 +62,19 @@ export default function NoteList() {
 
     if (noteMap === undefined) {
         return <Loading />
-    } else if (noteMap.size === 0) {
-        return <AppText style={styles.placeholder}>No Notes Yet</AppText>
-    } else {
-        return (<View style={{flex: 1}}>
-            {
-                note && noteFile? <EditNote note={note} filename={noteFile} goBack={closeNote} />
-                :
-                <>
-                <ScrollView style={{flex: 1, padding: 10}}>
-                    {generatePreviewList()}
-                </ScrollView>
-                <Pressable style={styles.button} onPress={createNote}>
-                    <AppText>Create New</AppText>
-                </Pressable>
-                </>
-            }
-        </View>)
     }
+    return (<View style={{flex: 1}}>
+        {
+            note && noteFile? <EditNote note={note} filename={noteFile} goBack={closeNote} />
+            :
+            <>
+            <ScrollView style={{flex: 1, padding: 10}}>
+                {generatePreviewList()}
+            </ScrollView>
+            <Pressable style={styles.button} onPress={createNote}>
+                <AppText>Create New</AppText>
+            </Pressable>
+            </>
+        }
+    </View>)
 }

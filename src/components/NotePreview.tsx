@@ -22,6 +22,9 @@ export default function NotePreview(props: NotePreviewProps) {
             <AppText>
                 Modified: {dateString}
             </AppText>
+            <AppText style={styles.placeholder}>
+                Filename: {props.filename}
+            </AppText>
         </Pressable>
     )
 }
