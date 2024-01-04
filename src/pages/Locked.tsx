@@ -5,7 +5,7 @@ import AppText from "../components/AppText";
 import styles from "../modules/styles";
 import { View } from "react-native";
 import PinPad from "../components/PinPad";
-import { registerEncryptionKey, saltAndSha256 } from "../modules/encryption-service";
+import { registerPinAsEncryptionKey, saltAndSha256 } from "../modules/encryption-service";
 
 interface LockedProps {
     // Callback function to set nav page to unlocked
@@ -27,7 +27,8 @@ export default function Locked(props: LockedProps) {
     function confirmPin(pin: string) {
         const hashedPin = saltAndSha256({ text: pin, salt: props.salt})
         if (hashedPin === props.hash) {
-            findEncryptionKey(pin);
+            // Correct login info, set encryption key and unlock
+            registerPinAsEncryptionKey(pin);
             props.unlock();
         } else {
             setError(true);
@@ -50,11 +51,11 @@ export default function Locked(props: LockedProps) {
     )
 }
 
-async function findEncryptionKey(pin: string) {
-    const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');
-    if (encryptionSalt !== null) {
-        registerEncryptionKey(encryptionSalt + pin);
-    } else {
-        alert('Encryption key not found');
-    }
-}
+// async function findEncryptionKey(pin: string) {
+//     const encryptionSalt = await SecureStore.getItemAsync('encryptionSalt');
+//     if (encryptionSalt !== null) {
+//         registerEncryptionKey(encryptionSalt + pin);
+//     } else {
+//         alert('Encryption key not found');
+//     }
+// }

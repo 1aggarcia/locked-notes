@@ -6,7 +6,7 @@ import {
     encryptData,
     generateSalt,
     saltAndSha256,
-    registerEncryptionKey
+    registerPinAsEncryptionKey,
 } from './encryption-service';
 import Note, { isNote } from './note';
 
@@ -21,14 +21,12 @@ const notesDir = FileSystem.documentDirectory + 'notes/';
  */
 export async function savePinAsync(pin: string) {
     const loginSalt = generateSalt(saltLength);
-    const encryptionSalt = generateSalt(saltLength);
+    const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
-    const hash = saltAndSha256({ text: pin, salt: loginSalt });
-    registerEncryptionKey(encryptionSalt + pin);
+    registerPinAsEncryptionKey(pin);
     
-    await SecureStore.setItemAsync('loginHash', hash);
+    await SecureStore.setItemAsync('loginHash', loginHash);
     await SecureStore.setItemAsync('loginSalt', loginSalt);
-    await SecureStore.setItemAsync('encryptionSalt', encryptionSalt);
 }
 
 /**
@@ -72,7 +70,7 @@ export async function saveNote(filename: string, note: Note) {
     }
     try {
         const fileUri = notesDir + filename
-        await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
+        await FileSystem.writeAsStringAsync(fileUri, text); // encrypt later
     } catch (error) {
         alert(error);
     }
@@ -87,7 +85,7 @@ export async function getNote(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
         const rawFile = await FileSystem.readAsStringAsync(fileUri)
-        let decrypted = JSON.parse(decryptData(rawFile));
+        let decrypted = JSON.parse(rawFile); // decrypt later
 
         if (isNote(decrypted)) {
             return decrypted;

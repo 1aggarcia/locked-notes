@@ -1,16 +1,14 @@
 import { Hasher, sha256 } from 'js-sha256';
 import CryptoJS from 'react-native-crypto-js';
 
-// Number of times to run hash algorithm
-const hashIterations = 1000;
 let encryptionKey: string | undefined;
 
 /**
- * Register pin and salt to use as an encryption key for the encryption service
- * @param data pin and salt to register
+ * Hash and register pin to use as an encryption eky
+ * @param pin to hash and register
  */
-export function registerEncryptionKey(key: string) {
-    encryptionKey = key;
+export function registerPinAsEncryptionKey(pin: string) {
+    encryptionKey = sha256Hash1000(pin);
 }
 
 /**
@@ -54,11 +52,23 @@ export function saltAndSha256(data: { text: string, salt: string }): string {
 }
 
 /**
+ * Generate random hexadecimal string of length given
+ * @param length - length of string
+ * @returns random hexadecimal string
+ */
+export function generateSalt(length: number): string {
+    const chars = '0123456789ABCDEF'
+    let result = '';
+    for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+}
+
+/**
  * Hashes data 1000 times using SHA-256. Data is reversed before each hash.
  * @param data text to hash
  * @returns hashed text in hexadecimal
  */
-export function sha256Hash1000(data: string): string {
+function sha256Hash1000(data: string): string {
     let result = data;
     let hasher: Hasher;
 
@@ -72,17 +82,5 @@ export function sha256Hash1000(data: string): string {
         hasher.update(result);
         result = hasher.hex();
     }
-    return result;
-}
-
-/**
- * Generate random hexadecimal string of length given
- * @param length - length of string
- * @returns random hexadecimal string
- */
-export function generateSalt(length: number): string {
-    const chars = '0123456789ABCDEF'
-    let result = '';
-    for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
     return result;
 }
