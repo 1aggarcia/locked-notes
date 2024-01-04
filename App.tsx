@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <View style={styles.app}>
-      <StatusBar />
+      <StatusBar barStyle='default' />
       <SafeAreaView style={styles.app}>
         {window === 'Navigation' && <Navigation goToCreatePin={() => setWindow('CreatePin')} />}
         {window === 'CreatePin' && <CreatePin goToNavigation={() => setWindow('Navigation')} />}

@@ -36,23 +36,26 @@ export default function Navigation(props: NavigationProps) {
         loadLogin();
     }, [])
 
-    return (<>
-        {page === 'Loading' && <Loading />}
-        {page === 'Denied' && <Denied />}
-        {page === 'Locked' && hash !== undefined && salt !== undefined &&
-            <Locked 
+    switch(page) {
+        case 'Loading':
+            return <Loading />;
+        case 'Denied':
+            return <Denied />;
+        case 'Locked':
+            if (hash === undefined || salt === undefined) {
+                throw Error('Bad state: hash or salt missing');
+            }
+            return <Locked
                 hash={hash}
                 salt={salt}
-                unlock={() => setPage('Unlocked')} 
-                denyAccess={() => setPage('Denied')} 
+                unlock={() => setPage('Unlocked')}
+                denyAccess={() => setPage('Denied')}
             />
-        }
-        {page === 'Unlocked' &&
-            <Unlocked 
+        case 'Unlocked':
+            return <Unlocked 
                 page='NoteList'
                 lock={() => setPage('Locked')}
                 denyAccess={() => setPage('Denied')}
             />
-        }
-    </>)
+    }
 }
