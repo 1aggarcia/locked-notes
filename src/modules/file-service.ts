@@ -70,7 +70,7 @@ export async function saveNote(filename: string, note: Note) {
     }
     try {
         const fileUri = notesDir + filename
-        await FileSystem.writeAsStringAsync(fileUri, text); // encrypt later
+        await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
     } catch (error) {
         alert(error);
     }
@@ -85,7 +85,7 @@ export async function getNote(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
         const rawFile = await FileSystem.readAsStringAsync(fileUri)
-        let decrypted = JSON.parse(rawFile); // decrypt later
+        const decrypted = JSON.parse(decryptData(rawFile));
 
         if (isNote(decrypted)) {
             return decrypted;
