@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Note from "../modules/note";
 import AppText from "./AppText";
 import styles from "../modules/styles";
@@ -15,7 +15,11 @@ export default function NotePreview(props: NotePreviewProps) {
     const dateString = formateDate(props.note.dateModified);
 
     return (
-        <Pressable style={styles.notePreview} onPress={() => props.openNote(props.filename, props.note)}>
+        <TouchableOpacity
+                style={styles.notePreview} 
+                onPress={() => props.openNote(props.filename, props.note)}
+                onLongPress={() => alert('I got long pressed')}
+        >
             <AppText style={styles.notePreviewHeader}>
                 {props.note.title}
             </AppText>
@@ -25,7 +29,7 @@ export default function NotePreview(props: NotePreviewProps) {
             <AppText style={styles.placeholder}>
                 Filename: {props.filename}
             </AppText>
-        </Pressable>
+        </TouchableOpacity>
     )
 }
 

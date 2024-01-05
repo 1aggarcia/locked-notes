@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import AppText from '../components/AppText';
 
@@ -8,6 +9,8 @@ import Settings from '../pages/Settings';
 import ResetPin from '../pages/ResetPin';
 import Note from '../modules/note';
 import styles from '../modules/styles';
+
+const Stack = createNativeStackNavigator();
 
 // Maximum time a the app can be unlocked, in seconds
 const maxTime = 300;
@@ -41,12 +44,11 @@ export default function Unlocked(props: UnlockedProps) {
         <View style={{flex: 1}}>
             <View style={{flexDirection: 'row',}}>
             <AppText>Unlocked time: {formatTime(timeOpen)}</AppText>
-                <Pressable onPress={props.lock}>
-                    <AppText style={styles.button}>Lock</AppText>
-                </Pressable>
+                <TouchableOpacity style={styles.button} onPress={props.lock}>
+                    <AppText>Lock</AppText>
+                </TouchableOpacity>
             </View>
             {page === 'NoteList' && <NoteList />}
-            {/* {page === 'EditNote' && note && noteFilename && <EditNote filename={noteFilename} note={note} goBack={() => setPage('NoteList')}/>} */}
             {page === 'Settings' && <Settings />}
             {page === 'ResetPin' && <ResetPin />}
         </View>

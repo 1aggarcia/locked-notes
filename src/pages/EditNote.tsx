@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, ScrollView, TextInput, Switch, Pressable } from 'react-native';
+import { View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
 
 import styles from '../modules/styles';
 import { darkModeColors } from '../../assets/colors';
@@ -61,12 +61,12 @@ export default function EditNote(props: EditNoteProps) {
 
     return (
         <View style={{flex: 1}}>
-            <Pressable onPress={goBack}>
-                <AppText style={styles.button}>Go Back</AppText>
-            </Pressable>
-            <Pressable onPress={() => deleteNote(props.filename)}>
-                <AppText style={styles.button}>Delete Note</AppText>
-            </Pressable>
+            <TouchableOpacity style={styles.button} onPress={goBack}>
+                <AppText>Go Back</AppText>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => deleteNote(props.filename)}>
+                <AppText>Delete Note</AppText>
+            </TouchableOpacity>
             <ScrollView style={{flex: 1}}>
                 <TextInput 
                     style={styles.noteTitle}

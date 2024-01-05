@@ -1,4 +1,4 @@
-import { Pressable } from "react-native"
+import { TouchableOpacity } from "react-native"
 import styles from "../modules/styles";
 import AppText from "./AppText";
 
@@ -13,8 +13,8 @@ export default function PinButton(props: PinButtonProps) {
     }
 
     return (
-        <Pressable onPress={handlePress} style={styles.pinButton}>
+        <TouchableOpacity onPress={handlePress} style={styles.pinButton}>
             <AppText style={{fontSize: 25}}>{props.digit}</AppText>
-        </Pressable>
+        </TouchableOpacity>
     )
 }

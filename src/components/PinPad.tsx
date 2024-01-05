@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useState } from 'react';
 
 import PinButton from './PinButton';
@@ -73,8 +73,8 @@ export default function PinPad(props: PinPadProps) {
                 <PinButton digit={9} onPress={updatePin}/>
             </View>
         </View>
-        <Pressable onPress={backspace}>
-            <AppText style={styles.backspace}>Delete</AppText>
-        </Pressable>
+        <TouchableOpacity style={styles.backspace} onPress={backspace}>
+            <AppText>Delete</AppText>
+        </TouchableOpacity>
     </>)
 }

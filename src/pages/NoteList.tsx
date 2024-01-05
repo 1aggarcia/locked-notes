@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Pressable, ScrollView, View } from "react-native";
+import { TouchableOpacity, ScrollView, View } from "react-native";
 
 import Note, { blankNote } from '../modules/note';
 import { getNotes } from '../modules/file-service';
@@ -75,9 +75,9 @@ export default function NoteList() {
                 <ScrollView style={{flex: 1, padding: 10}}>
                 {generatePreviewList()}
                 </ScrollView>
-                <Pressable style={styles.button} onPress={createNote}>
+                <TouchableOpacity style={styles.button} onPress={createNote}>
                     <AppText>Create New</AppText>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         );
     }
