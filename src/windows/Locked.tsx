@@ -6,6 +6,7 @@ import styles from "../modules/styles";
 
 import AppText from "../components/AppText";
 import PinPad from "../components/PinPad";
+import { LoginInfo } from "../modules/file-service";
 
 interface LockedProps {
     // Callback function to unlock the app
@@ -14,8 +15,7 @@ interface LockedProps {
     // Callback function to permanently lock the app
     denyAccess: () => void;
 
-    hash: string,
-    salt: string
+    login: LoginInfo
 }
 
 const maxAttempts = 5;
@@ -25,8 +25,8 @@ export default function Locked(props: LockedProps) {
     const [error, setError] = useState(false);
 
     function confirmPin(pin: string) {
-        const hashedPin = saltAndSha256({ text: pin, salt: props.salt})
-        if (hashedPin === props.hash) {
+        const hashedPin = saltAndSha256({ text: pin, salt: props.login.salt})
+        if (hashedPin === props.login.hash) {
             // Correct login info, set encryption key and unlock
             registerPinAsEncryptionKey(pin);
             props.unlock();

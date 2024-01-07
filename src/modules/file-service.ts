@@ -10,6 +10,11 @@ import {
 } from './encryption-service';
 import Note, { isNote } from './note';
 
+export type LoginInfo = {
+    hash: string,
+    salt: string,
+}
+
 const saltLength = 64;
 const notesDir = FileSystem.documentDirectory + 'notes/';
 
@@ -25,33 +30,40 @@ export async function savePinAsync(pin: string) {
 
     registerPinAsEncryptionKey(pin);
     
-    await SecureStore.setItemAsync('loginHash', loginHash);
-    await SecureStore.setItemAsync('loginSalt', loginSalt);
+    try {
+        await SecureStore.setItemAsync('loginHash', loginHash);
+        await SecureStore.setItemAsync('loginSalt', loginSalt);
+    } catch (error) {
+        alert(error);
+    }
 }
 
 /**
  * Remove login information from local storage
  */
 export async function deletePinAsync() {
-    await SecureStore.deleteItemAsync('loginHash');
-    await SecureStore.deleteItemAsync('loginSalt');
-    await SecureStore.deleteItemAsync('encryptionSalt');
+    try {
+        await SecureStore.deleteItemAsync('loginHash');
+        await SecureStore.deleteItemAsync('loginSalt');
+        await SecureStore.deleteItemAsync('encryptionSalt');
+    } catch (error) {
+        alert(error);
+    }
 }
 
 /**
  * Retrieve login hash and salt from local storage, if it exists
  * @returns object containing login hash and salt if it exists, null otherwise
  */
-export async function getLoginInfo() {
+export async function getLogin(): Promise<LoginInfo | null> {
     try {
         const loginHash = await SecureStore.getItemAsync('loginHash');
         const loginSalt = await SecureStore.getItemAsync('loginSalt');
 
         if (loginHash === null || loginSalt === null) {
-            return null
-        } else {
-            return { hash: loginHash, salt: loginSalt }
+            return null;
         }
+        return { hash: loginHash, salt: loginSalt };
     } catch {
         return null;
     }

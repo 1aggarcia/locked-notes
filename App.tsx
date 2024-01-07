@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { StatusBar } from 'react-native';
 
-import { getLoginInfo } from './src/modules/file-service';
+import { LoginInfo, getLogin } from './src/modules/file-service';
+
 import Loading from './src/windows/Loading';
 import CreatePin from './src/windows/CreatePin';
 import Locked from './src/windows/Locked';
@@ -12,47 +12,44 @@ type Window = 'Loading' | 'CreatePin' | 'Denied' | 'Locked' | 'Unlocked';
 
 export default function App() {
   const [window, setWindow] = useState<Window>('Loading');
-  const [loginHash, setLoginHash] = useState<string>();
-  const [loginSalt, setLoginSalt] = useState<string>();
+  const [login, setLogin] = useState<LoginInfo>();
 
-  async function loadLogin() {
-    const loginInfo = await getLoginInfo();
-
-    if (loginInfo === null) {
-        // Pin does not exist: send user to make one
-        setWindow('CreatePin');
-    } else {
-      setLoginHash(loginInfo.hash);
-      setLoginSalt(loginInfo.salt);
+  function loadLogin(login: LoginInfo | null) {
+    if (login) {
+      setLogin(login);
       setWindow('Locked');
+    } else {
+      // Login info was not found: send user to make a PIN
+      setWindow('CreatePin');
     }
   }
 
-  // Load hash and salt from local storage
-  useEffect(() => { 
-    loadLogin();
+  // Load login details from local storage
+  useEffect(() => {
+    getLogin()
+      .then(loadLogin)
+      .catch(error => alert(error));
   }, [])
 
   switch (window) {
     case 'Loading':
       return <Loading />;
-    case 'CreatePin':
-      return <CreatePin unlock={() => setWindow('Unlocked')} />;
     case 'Denied':
       return <Denied />;
+    case 'CreatePin':
+      return <CreatePin unlock={() => setWindow('Unlocked')} />;
+    case 'Unlocked':
+      return <Unlocked lock={() => setWindow('Locked')}/>;
     case 'Locked':
-      if (loginHash === undefined || loginSalt === undefined) {
+      if (login === undefined) {
         throw Error("Bad state: missing login info");
       }
       return (
         <Locked 
-          hash={loginHash}
-          salt={loginSalt}
+          login={login}
           unlock={() => setWindow('Unlocked')}
           denyAccess={() => setWindow('Denied')}
         />
       );
-    case 'Unlocked':
-      return <Unlocked lock={() => setWindow('Locked')}/>;
   }
 }

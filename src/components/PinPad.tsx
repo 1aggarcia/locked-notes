@@ -10,7 +10,7 @@ const maxPinLength = 6;
 
 export interface PinPadProps {
     // Function to execute when the pin is completed
-    onComplete: (pin: string) => any;
+    onComplete: (pin: string) => void;
 }
 
 export default function PinPad(props: PinPadProps) {
@@ -34,8 +34,8 @@ export default function PinPad(props: PinPadProps) {
 
         // Send pin back if max length
         if (newPin.length === maxPinLength) {
-            props.onComplete(newPin);
             setPin('');
+            props.onComplete(newPin);
         }
     }
 
