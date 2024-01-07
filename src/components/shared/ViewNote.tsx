@@ -1,5 +1,6 @@
 import { ScrollView } from 'react-native'
-import styles from '../modules/styles'
+
+import styles from '../../util/styles'
 import AppText from './AppText'
 
 export interface ViewNoteProps {

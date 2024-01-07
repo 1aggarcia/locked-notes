@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { registerPinAsEncryptionKey, saltAndSha256 } from "../modules/encryption-service";
-import styles from "../modules/styles";
+import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/encryption-service";
+import { LoginInfo } from "../../util/file-service";
+import styles from "../../util/styles";
 
-import AppText from "../components/AppText";
-import PinPad from "../components/PinPad";
-import { LoginInfo } from "../modules/file-service";
+import AppText from "../shared/AppText";
+import PinPad from "../shared/PinPad";
 
 interface LockedProps {
     // Callback function to unlock the app

@@ -1,6 +1,7 @@
 import { View, ActivityIndicator } from "react-native";
-import AppText from "../components/AppText";
-import styles from "../modules/styles";
+
+import styles from "../../util/styles";
+import AppText from "../shared/AppText";
 
 export default function Loading() {
     return (

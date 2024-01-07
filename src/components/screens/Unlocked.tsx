@@ -3,12 +3,12 @@ import { Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Note from "../modules/note";
+import Note from "../../util/note";
 
-import NoteList from "../pages/NoteList";
-import EditNote from "../pages/EditNote";
-import Settings from "../pages/Settings";
-import ResetPin from "../pages/ResetPin";
+import NoteList from "../nav/NoteList";
+import EditNote from "../nav/EditNote";
+import Settings from "../nav/Settings";
+import ResetPin from "../nav/ResetPin";
 
 export type Params = {
     NoteList: undefined;

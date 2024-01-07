@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { Button, ScrollView, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { deleteNote, saveNote } from "../modules/file-service";
-import { Params } from "../windows/Unlocked";
+import { deleteNote, saveNote } from "../../util/file-service";
+import { Params } from "../screens/Unlocked";
 
-import styles, { colorMap } from "../modules/styles";
+import styles, { colorMap } from "../../util/styles";
 
 
 export default function EditNote({ route, navigation }: NativeStackScreenProps<Params, 'EditNote'>) {

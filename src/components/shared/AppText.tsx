@@ -1,6 +1,7 @@
-import { StyleProp, Text, TextStyle } from "react-native"
-import styles from "../modules/styles"
 import { PropsWithChildren } from "react";
+import { StyleProp, Text, TextStyle } from "react-native"
+
+import styles from "../../util/styles"
 
 export interface AppTextProps {
     style?: StyleProp<TextStyle>;

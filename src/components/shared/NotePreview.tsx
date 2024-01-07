@@ -1,7 +1,8 @@
 import { TouchableOpacity } from "react-native";
-import Note from "../modules/note";
+
+import Note from "../../util/note";
+import styles from "../../util/styles";
 import AppText from "./AppText";
-import styles from "../modules/styles";
 
 interface NotePreviewProps {
     filename: string

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { LoginInfo, getLogin } from './src/modules/file-service';
+import { LoginInfo, getLogin } from './util/file-service';
 
-import Loading from './src/windows/Loading';
-import CreatePin from './src/windows/CreatePin';
-import Locked from './src/windows/Locked';
-import Denied from './src/windows/Denied';
-import Unlocked from './src/windows/Unlocked';
+import Loading from './components/screens/Loading';
+import CreatePin from './components/screens/CreatePin';
+import Locked from './components/screens/Locked';
+import Denied from './components/screens/Denied';
+import Unlocked from './components/screens/Unlocked';
 
 type Window = 'Loading' | 'CreatePin' | 'Denied' | 'Locked' | 'Unlocked';
 

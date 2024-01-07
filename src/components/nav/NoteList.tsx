@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Button, ScrollView, View } from "react-native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNotes } from "../modules/file-service";
-import styles from "../modules/styles";
-import Note, { blankNote } from "../modules/note";
-import { Params } from "../windows/Unlocked";
+import { getNotes } from "../../util/file-service";
+import styles from "../../util/styles";
+import Note, { blankNote } from "../../util/note";
+import { Params } from "../screens/Unlocked";
 
-import AppText from "../components/AppText";
-import NotePreview from "../components/NotePreview";
-import Loading from "../windows/Loading";
+import AppText from "../shared/AppText";
+import NotePreview from "../shared/NotePreview";
+import Loading from "../screens/Loading";
 
 export default function NoteList({ route, navigation }: NativeStackScreenProps<Params>) {
     // map of notes where key=filename, value=note

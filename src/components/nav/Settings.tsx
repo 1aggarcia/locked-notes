@@ -1,9 +1,9 @@
 import { Button, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import AppText from "../components/AppText";
-import styles from "../modules/styles";
-import { Params } from "../windows/Unlocked";
+import AppText from "../shared/AppText";
+import styles from "../../util/styles";
+import { Params } from "../screens/Unlocked";
 
 export default function Settings({ route, navigation }: NativeStackScreenProps<Params>) {
     return (
