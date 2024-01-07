@@ -15,12 +15,11 @@ export default function NoteList({ route, navigation }: NativeStackScreenProps<P
     // map of notes where key=filename, value=note
     const [noteMap, setNoteMap] = useState<Map<string, Note>>();
 
-    // Retreive note from external storage
+    // Retreive notes from external storage
     useEffect(() => {
-        async function loadNoteList() {
-            setNoteMap(await getNotes());
-        }
-        loadNoteList();
+        getNotes()
+            .then(notes => setNoteMap(notes))
+            .catch(error => alert(error));
     })
 
     function openNote(filename: string, note: Note) {

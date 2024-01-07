@@ -18,7 +18,8 @@ export type LoginInfo = {
 const saltLength = 64;
 const notesDir = FileSystem.documentDirectory + 'notes/';
 
-// Methods for secure store
+
+// Functions to interact with secure store
 
 /**
  * Hash, salt, and save pin to secure store in local storage
@@ -68,8 +69,9 @@ export async function getLogin(): Promise<LoginInfo | null> {
         return null;
     }
 }
- 
-// Methods for external file storage
+
+
+// Functions to interact with external file storage
 
 /**
  * Saves and encrypts given note to given filename in notes directory of external storage
@@ -142,48 +144,6 @@ export async function getNotes(): Promise<Map<string, Note>> {
  */
 export async function deleteNote(filename: string) {
     const fileUri = notesDir + filename;
-    try {
-        await FileSystem.deleteAsync(fileUri);
-    } catch (error) {
-        alert(error);
-    }
-}
-
-// Not for production
-
-async function saveTestFile() {
-    const note = {
-        title: 'ya es hora',
-        body: '"¿Hora de qué?" decís. Pues no sé, inventá algo.',
-        dateCreated: '2024-01-01',
-        dateModified: '2024-01-01'
-    }
-    const text = JSON.stringify(note);
-
-    try {
-        await FileSystem.readDirectoryAsync(notesDir);
-    } catch {
-        await FileSystem.makeDirectoryAsync(notesDir);
-    }
-    try {
-        await FileSystem.writeAsStringAsync(notesDir + 'test.enf', encryptData(text));
-    } catch (error) {
-        alert(error);
-    }
-}
-
-async function readTestFile() {
-    const fileUri = notesDir + "test.enf";
-    try {
-        const encryptedFile = await FileSystem.readAsStringAsync(fileUri)
-        alert(`Filepath:\n${fileUri}\n\nRaw contents:\n${encryptedFile}\n\nDecrypted:\n${decryptData(encryptedFile)}`);
-    } catch (error) {
-        alert(error)
-    }
-}
-
-async function deleteTestFile() {
-    const fileUri = FileSystem.documentDirectory + 'test.enf'
     try {
         await FileSystem.deleteAsync(fileUri);
     } catch (error) {

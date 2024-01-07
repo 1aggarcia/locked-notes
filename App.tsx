@@ -14,7 +14,7 @@ export default function App() {
   const [window, setWindow] = useState<Window>('Loading');
   const [login, setLogin] = useState<LoginInfo>();
 
-  function loadLogin(login: LoginInfo | null) {
+  function loginHandler(login: LoginInfo | null) {
     if (login) {
       setLogin(login);
       setWindow('Locked');
@@ -27,7 +27,7 @@ export default function App() {
   // Load login details from local storage
   useEffect(() => {
     getLogin()
-      .then(loadLogin)
+      .then(loginHandler)
       .catch(error => alert(error));
   }, [])
 
