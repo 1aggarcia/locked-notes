@@ -12,22 +12,29 @@ interface NotePreviewProps {
 }
 
 export default function NotePreview(props: NotePreviewProps) {
-    const dateString = formateDate(props.note.dateModified);
+    const dateCreatedString = formateDate(props.note.dateCreated);
+    const dateModifiedString = formateDate(props.note.dateModified);
+
+    function showDetails() {
+        alert(
+            `Title:\n${props.note.title}\n\n` +
+            `Created:\n${dateCreatedString}\n\n` +
+            `Modified:\n${dateModifiedString}\n\n` +
+            `Filename:\n${props.filename}`
+        )
+    }
 
     return (
         <TouchableOpacity
-                style={styles.notePreview} 
-                onPress={() => props.openNote(props.filename, props.note)}
-                onLongPress={() => alert('I got long pressed')}
+            style={styles.notePreview} 
+            onPress={() => props.openNote(props.filename, props.note)}
+            onLongPress={showDetails}
         >
             <AppText style={styles.notePreviewHeader}>
                 {props.note.title}
             </AppText>
-            <AppText>
-                Modified: {dateString}
-            </AppText>
             <AppText style={styles.placeholder}>
-                Filename: {props.filename}
+                Modified: {dateModifiedString}
             </AppText>
         </TouchableOpacity>
     )

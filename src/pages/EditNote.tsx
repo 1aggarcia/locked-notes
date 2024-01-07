@@ -1,25 +1,30 @@
-import { useState } from 'react';
-import { View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from "react";
 
-import styles from '../modules/styles';
-import { darkModeColors } from '../../assets/colors';
-import Note from '../modules/note';
-import { deleteNote, saveNote } from '../modules/file-service';
-import AppText from '../components/AppText';
+import { Button, ScrollView, TextInput, View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export interface EditNoteProps {
-    filename: string;
-    note: Note;
+import { deleteNote, saveNote } from "../modules/file-service";
+import { Params } from "../windows/Unlocked";
 
-    // Callback function to go back to note list
-    goBack: (note: Note) => void;
-}
+import styles, { colorMap } from "../modules/styles";
 
-export default function EditNote(props: EditNoteProps) {
+
+export default function EditNote({ route, navigation }: NativeStackScreenProps<Params, 'EditNote'>) {
+    const props = route.params;
+
     const [title, setTitle] = useState(props.note.title);
     const [body, setBody] = useState(props.note.body);
     const [dateModified, setDateModified] = useState(props.note.dateModified);
-    const [editing, setEditing] = useState(true);
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            if (title.length > 0) {
+                return;
+            }
+            // e.preventDefault();
+            alert('No creás notas blancas');
+        })
+    }, [navigation, title])
 
     function saveTitle(newTitle: string) {
         setTitle(newTitle);
@@ -45,49 +50,32 @@ export default function EditNote(props: EditNoteProps) {
         });
     }
 
-    function goBack() {
-        if (title.length === 0) {
-            alert('Title cannot be blank, please give this note a title.');
-            return;
-        }
-        // Save note to external storage
-        props.goBack({
-            title: title,
-            body: body,
-            dateCreated: props.note.dateCreated,
-            dateModified: dateModified,
-        });
+    function deleteSelf() {
+        deleteNote(props.filename);
+        navigation.goBack();
     }
 
     return (
-        <View style={{flex: 1}}>
-            <TouchableOpacity style={styles.button} onPress={goBack}>
-                <AppText>Go Back</AppText>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => deleteNote(props.filename)}>
-                <AppText>Delete Note</AppText>
-            </TouchableOpacity>
+        <View style={styles.app}>
+            {/* <Button title='Delete Note' onPress={deleteSelf} /> */}
             <ScrollView style={{flex: 1}}>
                 <TextInput 
                     style={styles.noteTitle}
                     value={title}
                     onChangeText={saveTitle}
                     placeholder='Title'
-                    placeholderTextColor={darkModeColors.placeholder}
+                    placeholderTextColor={colorMap.placeholder}
                     multiline
-                    editable={editing}
                 />
                 <TextInput 
                     style={styles.noteBody}
                     value={body}
                     onChangeText={saveBody}
                     placeholder='Write something here...'
-                    placeholderTextColor={darkModeColors.placeholder}
+                    placeholderTextColor={colorMap.placeholder}
                     multiline
-                    editable={editing}
                 />
             </ScrollView>
-            <Switch value={editing} onValueChange={setEditing}/>
         </View>
     )
 }

@@ -3,7 +3,7 @@ import { darkModeColors, lightModeColors } from "../../assets/colors";
 
 const useDarkMode = true;
 
-const colorMap = useDarkMode ? darkModeColors : lightModeColors;
+export const colorMap = useDarkMode ? darkModeColors : lightModeColors;
 
 const styles = StyleSheet.create({
     app: {
@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
     },
     appText: {
         color: colorMap.text
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     placeholder: {
         color: colorMap.placeholder

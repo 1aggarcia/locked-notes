@@ -1,21 +1,19 @@
-import { useState, useEffect } from 'react';
-import { TouchableOpacity, ScrollView, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Button, ScrollView, View } from "react-native";
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import Note, { blankNote } from '../modules/note';
-import { getNotes } from '../modules/file-service';
+import { getNotes } from "../modules/file-service";
+import styles from "../modules/styles";
+import Note, { blankNote } from "../modules/note";
+import { Params } from "../windows/Unlocked";
 
-import Loading from './Loading';
-import EditNote from './EditNote';
+import AppText from "../components/AppText";
+import NotePreview from "../components/NotePreview";
+import Loading from "../windows/Loading";
 
-import NotePreview from '../components/NotePreview';
-import AppText from '../components/AppText';
-import styles from '../modules/styles';
-
-export default function NoteList() {
+export default function NoteList({ route, navigation }: NativeStackScreenProps<Params>) {
     // map of notes where key=filename, value=note
     const [noteMap, setNoteMap] = useState<Map<string, Note>>();
-    const [note, setNote] = useState<Note>();
-    const [noteFile, setNoteFile] = useState<string>();
 
     // Retreive note from external storage
     useEffect(() => {
@@ -23,22 +21,11 @@ export default function NoteList() {
             setNoteMap(await getNotes());
         }
         loadNoteList();
-    }, [])
+    })
 
     function openNote(filename: string, note: Note) {
-        setNote(note);
-        setNoteFile(filename);
-    }
-    
-    function closeNote(newNote: Note) {
-        if (noteFile && noteMap) {
-            // We copy the map to prevent direct state editing
-            const noteMapCopy = new Map(noteMap)
-            noteMapCopy.set(noteFile, newNote)
-            setNoteMap(noteMapCopy);
-        }
-        setNote(undefined);
-        setNoteFile(undefined);
+        const noteProps = { filename: filename, note: note };
+        navigation.navigate('EditNote', noteProps);
     }
 
     function createNote() {
@@ -65,20 +52,15 @@ export default function NoteList() {
 
     if (noteMap === undefined) {
         return <Loading />
-    }
-    else if (note && noteFile) {
-        return <EditNote note={note} filename={noteFile} goBack={closeNote} />
-    }
-    else {
+    } else {
         return (
-            <View style={{flex: 1}}>
+            <View style={styles.app}>
                 <ScrollView style={{flex: 1, padding: 10}}>
-                {generatePreviewList()}
+                    {generatePreviewList()}
                 </ScrollView>
-                <TouchableOpacity style={styles.button} onPress={createNote}>
-                    <AppText>Create New</AppText>
-                </TouchableOpacity>
+                <Button title='Create New Note' onPress={createNote}/>
+                <Button title='Go to Settings' onPress={() => navigation.navigate('Settings')}/>
             </View>
-        );
+        )
     }
 }

@@ -4,7 +4,7 @@ import styles from "../modules/styles";
 
 export default function Denied() {
     return (
-        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+        <View style={[styles.app, styles.centered]}>
             <AppText style={styles.header}>Access Denied</AppText>
             <AppText>Too many failed attempts</AppText>
         </View>

@@ -43,13 +43,17 @@ export async function deletePinAsync() {
  * @returns object containing login hash and salt if it exists, null otherwise
  */
 export async function getLoginInfo() {
-    const loginHash = await SecureStore.getItemAsync('loginHash');
-    const loginSalt = await SecureStore.getItemAsync('loginSalt');
+    try {
+        const loginHash = await SecureStore.getItemAsync('loginHash');
+        const loginSalt = await SecureStore.getItemAsync('loginSalt');
 
-    if (loginHash === null || loginSalt === null) {
-        return null
-    } else {
-        return { hash: loginHash, salt: loginSalt }
+        if (loginHash === null || loginSalt === null) {
+            return null
+        } else {
+            return { hash: loginHash, salt: loginSalt }
+        }
+    } catch {
+        return null;
     }
 }
  

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { View } from "react-native";
+
 import PinPad from "../components/PinPad";
 import AppText from "../components/AppText";
 import styles from "../modules/styles";

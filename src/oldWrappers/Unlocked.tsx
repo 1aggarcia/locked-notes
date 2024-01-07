@@ -4,9 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import AppText from '../components/AppText';
 
-import NoteList from '../pages/NoteList';
-import Settings from '../pages/Settings';
-import ResetPin from '../pages/ResetPin';
+import NoteList from '../oldPages/NoteList';
 import Note from '../modules/note';
 import styles from '../modules/styles';
 
@@ -49,8 +47,6 @@ export default function Unlocked(props: UnlockedProps) {
                 </TouchableOpacity>
             </View>
             {page === 'NoteList' && <NoteList />}
-            {page === 'Settings' && <Settings />}
-            {page === 'ResetPin' && <ResetPin />}
         </View>
     )
 }

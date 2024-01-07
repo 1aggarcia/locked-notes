@@ -1,5 +1,6 @@
 import { useState } from "react";
-import * as SecureStore from 'expo-secure-store';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ParamListBase } from '@react-navigation/native';
 
 import AppText from "../components/AppText";
 import styles from "../modules/styles";
@@ -7,7 +8,7 @@ import { View } from "react-native";
 import PinPad from "../components/PinPad";
 import { registerPinAsEncryptionKey, saltAndSha256 } from "../modules/encryption-service";
 
-interface LockedProps {
+type LockedProps = {
     // Callback function to set nav page to unlocked
     unlock: () => void;
     
@@ -41,11 +42,16 @@ export default function Locked(props: LockedProps) {
     }
 
     return (
-        <View style={styles.pinContainer}>
-            {error && <AppText style={{color: 'red', textAlign: 'center'}}>
-                    Incorrect PIN entered. {maxAttempts - attempts} attempts remaining.
-                </AppText>}
-            <AppText style={styles.header}>Enter PIN to unlock</AppText>
+        <View style={{flex: 1}}>
+            <View style={{flex: 1}}>
+                <AppText style={[{flex: 1, justifyContent: 'center'}, styles.header]}>Enter PIN to unlock</AppText>
+                <View style={{flex: 1, backgroundColor: 'blue'}}>
+                    {error && <AppText style={{color: 'red', textAlign: 'center'}}>
+                        Incorrect PIN entered. {`${maxAttempts - attempts}`} attempts remaining.
+                    </AppText>
+                    }
+                </View>
+            </View>
             <PinPad onComplete={confirmPin}/>
         </View>
     )
