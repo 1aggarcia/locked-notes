@@ -7,8 +7,8 @@ import styles from "../../util/styles";
 import Note, { blankNote } from "../../util/note";
 import { Params } from "../screens/Unlocked";
 
-import AppText from "../shared/AppText";
-import NotePreview from "../shared/NotePreview";
+import AppText from "../common/AppText";
+import NotePreview from "../common/NotePreview";
 import Loading from "../screens/Loading";
 
 export default function NoteList({ route, navigation }: NativeStackScreenProps<Params>) {

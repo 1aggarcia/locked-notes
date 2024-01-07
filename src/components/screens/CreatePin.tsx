@@ -4,8 +4,8 @@ import { View } from "react-native";
 import styles from "../../util/styles";
 import { savePinAsync } from "../../util/file-service";
 
-import AppText from "../shared/AppText";
-import PinPad from "../shared/PinPad";
+import AppText from "../common/AppText";
+import PinPad from "../common/PinPad";
 
 interface CreatePinProps {
     // Callback function to unlock the app after pin creation

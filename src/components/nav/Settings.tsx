@@ -1,7 +1,7 @@
 import { Button, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import AppText from "../shared/AppText";
+import AppText from "../common/AppText";
 import styles from "../../util/styles";
 import { Params } from "../screens/Unlocked";
 
