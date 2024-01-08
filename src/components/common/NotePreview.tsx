@@ -30,7 +30,8 @@ export default function NotePreview(props: NotePreviewProps) {
             style={styles.notePreview} 
             onPress={() => props.openNote(props.filename, props.note)}
             onLongPress={showDetails}
-        >
+            activeOpacity={0.7}
+        >   
             <AppText style={styles.notePreviewHeader}>
                 {props.note.title}
             </AppText>

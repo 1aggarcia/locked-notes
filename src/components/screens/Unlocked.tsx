@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "react-native";
-import { DarkTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/note";
+import { isDarkMode } from "../../util/styles";
 
 import NoteList from "../nav/NoteList";
 import EditNote from "../nav/EditNote";
@@ -47,7 +48,7 @@ export default function Unlocked(props: UnlockedProps) {
     });
 
     return (
-        <NavigationContainer theme={DarkTheme}>
+        <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions}>
                 <Stack.Screen name={'NoteList'} component={NoteList} />
                 <Stack.Screen name={'EditNote'} component={EditNote} />

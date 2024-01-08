@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
 import { darkModeColors, lightModeColors } from "../assets/colors";
 
-const useDarkMode = true;
+// Eventually will need to pull this from app settings
+export const isDarkMode = true;
 
-export const colorMap = useDarkMode ? darkModeColors : lightModeColors;
+export const colorMap = isDarkMode ? darkModeColors : lightModeColors;
 
 const styles = StyleSheet.create({
     app: {
@@ -63,6 +64,13 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    pinBackspace: {
+        margin: 5,
+        width: 80,
+        height: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     pinDots: {
         display: 'flex',

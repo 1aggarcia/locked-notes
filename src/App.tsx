@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LoginInfo, getLogin } from './util/file-service';
+import { isDarkMode } from './util/styles';
 
 import Loading from './components/screens/Loading';
 import CreatePin from './components/screens/CreatePin';
@@ -9,7 +10,6 @@ import Locked from './components/screens/Locked';
 import Denied from './components/screens/Denied';
 import Unlocked from './components/screens/Unlocked';
 import { StatusBar } from 'expo-status-bar';
-import AppText from './components/common/AppText';
 
 type Window = 'Loading' | 'CreatePin' | 'Denied' | 'Locked' | 'Unlocked';
 
@@ -61,7 +61,7 @@ export default function App() {
   return (<>
     <SafeAreaProvider>
       {Screens()}
-      <StatusBar style='light'/>
+      <StatusBar style={isDarkMode? 'light' : 'dark'}/>
     </SafeAreaProvider>
   </>)
 }

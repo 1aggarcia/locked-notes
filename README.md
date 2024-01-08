@@ -8,7 +8,7 @@ In the unlocked state, a list of all notes is shown. Tapping a note opens the ed
 
 ## Source Code
 
-This app built in TypeScript using the React Native framework and the Expo platform.
+This app is built in TypeScript using the React Native framework and the Expo platform.
 
 ### Software Setup
 

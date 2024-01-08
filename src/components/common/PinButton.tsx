@@ -1,21 +1,21 @@
-import { TouchableOpacity } from "react-native"
+import { TouchableHighlight } from "react-native"
 
-import styles from "../../util/styles";
+import styles, { colorMap } from "../../util/styles";
 import AppText from "./AppText";
 
-export interface PinButtonProps {
+interface PinButtonProps {
     digit: number,
     onPress: (digit: number) => void
 }
 
 export default function PinButton(props: PinButtonProps) {
-    function handlePress() {
-        props.onPress(props.digit);
-    }
-
     return (
-        <TouchableOpacity onPress={handlePress} style={styles.pinButton}>
-            <AppText style={{fontSize: 25}}>{props.digit}</AppText>
-        </TouchableOpacity>
+        <TouchableHighlight 
+            onPress={() => props.onPress(props.digit)}
+            style={styles.pinButton}
+            underlayColor={colorMap.placeholder}
+        >   
+            <AppText style={{fontSize: 25, fontWeight: 'bold'}}>{props.digit}</AppText>
+        </TouchableHighlight>
     )
 }

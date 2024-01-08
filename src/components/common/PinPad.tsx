@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import styles from '../../util/styles';
+
 import PinButton from './PinButton';
 import PinVisualizer from './PinVisualizer';
 import AppText from './AppText';
@@ -71,10 +72,23 @@ export default function PinPad(props: PinPadProps) {
                 <PinButton digit={3} onPress={updatePin}/>
                 <PinButton digit={6} onPress={updatePin}/>
                 <PinButton digit={9} onPress={updatePin}/>
+                <PinBackspace onPress={backspace} />
             </View>
         </View>
-        <TouchableOpacity style={styles.backspace} onPress={backspace}>
-            <AppText>Delete</AppText>
-        </TouchableOpacity>
     </>)
+}
+
+interface PinBackspaceProps {
+    onPress: () => void
+}
+
+function PinBackspace(props: PinBackspaceProps) {
+    return (
+        <TouchableOpacity
+            style={styles.pinBackspace}
+            onPress={props.onPress}
+        >
+            <AppText style={{fontSize: 50}}>{'<'}</AppText>
+        </TouchableOpacity>
+    )
 }
