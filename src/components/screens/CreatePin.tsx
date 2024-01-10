@@ -2,14 +2,14 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import styles from "../../util/styles";
-import { savePinAsync } from "../../util/file-service";
+import { LoginInfo, savePinAsync } from "../../util/file-service";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";
 
 interface CreatePinProps {
-    // Callback function to unlock the app after pin creation
-    unlock: () => void
+    /** Set the app's login state & unlock the app */
+    updateLogin: (login: LoginInfo) => void
 }
 
 export default function CreatePin(props: CreatePinProps) {
@@ -17,13 +17,23 @@ export default function CreatePin(props: CreatePinProps) {
     const [error, setError] = useState(false);
 
     function confirmPin(newPin: string) {
-        if (newPin !== pin) {
+        if (newPin === pin) {
+            savePinAsync(pin)
+                .then(props.updateLogin)
+                .catch(handleSaveError);
+        } else {
             setPin('');
             setError(true);
-        } else {
-            savePinAsync(pin);
-            props.unlock()
         }
+    }
+
+    function handleSaveError(reason: any) {
+        console.error(reason);
+        alert('Something went wrong, please try again.');
+        setPin('');
+        // We want to reset the screen to simulate a new attempt,
+        // i.e. remove any error messages from the last attempt
+        setError(false);
     }
 
     if (pin === '') {

@@ -1,3 +1,8 @@
+/** 
+ * Creates and manages a navigator for the app's unlocked mode.
+ * All the screens used in the navigator are contained within the "nav" folder.
+ */
+
 import { useState, useEffect } from "react";
 import { Button } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
@@ -20,11 +25,10 @@ export type Params = {
   
 const Stack = createNativeStackNavigator<Params>();
 
-// Maximum time a the app can be unlocked, in seconds
-const maxTime = 300;
+// Maximum time the app can be unlocked, in seconds
+const maxTime = 599;
 
 interface UnlockedProps {
-    // Callback function to lock the app
     lock: () => void;
 }
 
@@ -70,7 +74,7 @@ function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const leftOver = seconds % 60;
 
-    // account for leading zero    
+    // account for leading zero
     if (leftOver < 10) {
         return `${minutes}:0${leftOver}`
     } else {

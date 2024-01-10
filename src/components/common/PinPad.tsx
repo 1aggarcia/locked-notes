@@ -10,7 +10,7 @@ import AppText from './AppText';
 const maxPinLength = 6;
 
 export interface PinPadProps {
-    // Function to execute when the pin is completed
+    /** External accion to execute once the full pin has been entered */
     onComplete: (pin: string) => void;
 }
 

@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { darkModeColors, lightModeColors } from "../assets/colors";
 
 // Eventually will need to pull this from app settings
-export const isDarkMode = true;
+export const isDarkMode = false;
 
 export const colorMap = isDarkMode ? darkModeColors : lightModeColors;
 

@@ -22,41 +22,37 @@ const notesDir = FileSystem.documentDirectory + 'notes/';
 // Functions to interact with secure store
 
 /**
- * Hash, salt, and save pin to secure store in local storage
+ * Hash, salt, and save pin to secure store in local storage.
  * @param pin pin to save
+ * @returns Promise with new login info saved. Will reject promise if data cannot be saved.
  */
-export async function savePinAsync(pin: string) {
+export async function savePinAsync(pin: string): Promise<LoginInfo> {
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
     registerPinAsEncryptionKey(pin);
-    
-    try {
-        await SecureStore.setItemAsync('loginHash', loginHash);
-        await SecureStore.setItemAsync('loginSalt', loginSalt);
-    } catch (error) {
-        alert(error);
-    }
+
+    await SecureStore.setItemAsync('loginHash', loginHash);
+    await SecureStore.setItemAsync('loginSalt', loginSalt);
+
+    return { hash: loginHash, salt: loginSalt };
 }
 
 /**
  * Remove login information from local storage
+ * Will reject promise if data cannot be deleted.
  */
 export async function deletePinAsync() {
-    try {
-        await SecureStore.deleteItemAsync('loginHash');
-        await SecureStore.deleteItemAsync('loginSalt');
-        await SecureStore.deleteItemAsync('encryptionSalt');
-    } catch (error) {
-        alert(error);
-    }
+    await SecureStore.deleteItemAsync('loginHash');
+    await SecureStore.deleteItemAsync('loginSalt');
+    await SecureStore.deleteItemAsync('encryptionSalt');
 }
 
 /**
  * Retrieve login hash and salt from local storage, if it exists
  * @returns object containing login hash and salt if it exists, null otherwise
  */
-export async function getLogin(): Promise<LoginInfo | null> {
+export async function getLoginAsync(): Promise<LoginInfo | null> {
     try {
         const loginHash = await SecureStore.getItemAsync('loginHash');
         const loginSalt = await SecureStore.getItemAsync('loginSalt');

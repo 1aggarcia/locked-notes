@@ -9,13 +9,12 @@ import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";
 
 interface LockedProps {
-    // Callback function to unlock the app
     unlock: () => void;
 
-    // Callback function to permanently lock the app
+    /** Lock the app without a way to unlock it */
     denyAccess: () => void;
 
-    login: LoginInfo
+    login: LoginInfo;
 }
 
 const maxAttempts = 5;

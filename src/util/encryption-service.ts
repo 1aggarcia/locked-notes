@@ -72,7 +72,6 @@ function sha256Hash1000(data: string): string {
     let result = data;
     let hasher: Hasher;
 
-    // set i to 1 since previous statement performs the first hash
     for (let i = 0; i < 1000; i++) {
         // Reverse result before hashing
         result = result.split('').reverse().join();
