@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, ScrollView, View } from "react-native";
+import { Button, ScrollView, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getNotes } from "../../util/file-service";
-import styles from "../../util/styles";
+import styles, { colorMap } from "../../util/styles";
 import Note, { blankNote } from "../../util/note";
 import { Params } from "../screens/Unlocked";
 
@@ -20,7 +20,7 @@ export default function NoteList({ route, navigation }: NativeStackScreenProps<P
         getNotes()
             .then(notes => setNoteMap(notes))
             .catch(error => alert(error));
-    })
+    }, [])
 
     function openNote(filename: string, note: Note) {
         const noteProps = { filename: filename, note: note };
@@ -54,11 +54,15 @@ export default function NoteList({ route, navigation }: NativeStackScreenProps<P
     } else {
         return (
             <View style={styles.app}>
+                <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+                    <AppText style={{textAlign: 'center'}}>Settings</AppText>
+                </TouchableOpacity>
                 <ScrollView style={{flex: 1, padding: 10}}>
                     {generatePreviewList()}
                 </ScrollView>
-                <Button title='Create New Note' onPress={createNote}/>
-                <Button title='Go to Settings' onPress={() => navigation.navigate('Settings')}/>
+                <TouchableOpacity style={styles.createButton} onPress={createNote}>
+                    <AppText style={styles.createButtonText}>+</AppText>
+                </TouchableOpacity>
             </View>
         )
     }

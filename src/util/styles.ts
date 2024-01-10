@@ -51,6 +51,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20
     },
+    createButton: {
+        position: 'absolute',
+        bottom: 15,
+        right: 15,
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colorMap.buttonBg,
+    },
+    createButtonText: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: colorMap.bg
+    },
     pinContainer: {
         justifyContent: 'flex-end', 
         flex: 1

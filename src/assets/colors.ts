@@ -4,7 +4,7 @@ export const darkModeColors = {
     weakBorder: '#444444',
     placeholder: '#777777',
     text: '#ffffff',
-    buttonBg: 'blue',
+    buttonBg: '#dda6ff',
 }
 
 export const lightModeColors = {
@@ -13,5 +13,5 @@ export const lightModeColors = {
     weakBorder: '#cccccc',
     placeholder: '#bbbbbb',
     text: '#000000',
-    buttonBg: 'blue',
+    buttonBg: '#61009e',
 }

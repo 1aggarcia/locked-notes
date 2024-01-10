@@ -22,7 +22,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
                 return;
             }
             // e.preventDefault();
-            alert('No creás notas blancas');
+            // alert('No creás notas blancas');
         })
     }, [navigation, title])
 
