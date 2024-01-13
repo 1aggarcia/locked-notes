@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { LoginInfo, getLoginAsync } from './util/file-service';
 import { isDarkMode } from './util/styles';
+import showErrorDialog from './util/error';
 
 import Authenticator from './components/screens/Authenticator';
 import Loading from './components/screens/Loading';
@@ -23,7 +24,7 @@ export default function App() {
   useEffect(() => {
     getLoginAsync()
       .then(handleGetLogin)
-      .catch(error => alert(error));
+      .catch(showErrorDialog);
   }, [])
 
   return (<>

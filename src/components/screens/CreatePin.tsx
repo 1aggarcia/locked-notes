@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import styles from "../../util/styles";
 import { LoginInfo, savePinAsync } from "../../util/file-service";
+import showErrorDialog from "../../util/error";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";
@@ -27,9 +28,10 @@ export default function CreatePin(props: CreatePinProps) {
         }
     }
 
+    // the promise reject gives us "any" type for `reason` so we are forced to use it here
     function handleSaveError(reason: any) {
         console.error(reason);
-        alert('Something went wrong, please try again.');
+        showErrorDialog(reason);
         setPin('');
         // We want to reset the screen to simulate a new attempt,
         // i.e. remove any error messages from the last attempt

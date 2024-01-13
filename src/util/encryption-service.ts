@@ -1,10 +1,17 @@
+/** 
+ * Hash login PINs, encrypt and decrypt .ejn files.
+ * Intended for use primarily with `file-service.ts`
+ */
+
 import { Hasher, sha256 } from 'js-sha256';
 import CryptoJS from 'react-native-crypto-js';
 
-let encryptionKey: string | undefined;
+// starts as undefined, app must handle finding the PIN from local storage
+// or creating a new pin to register a key
+let encryptionKey: string;
 
 /**
- * Hash and register pin to use as an encryption eky
+ * Hash and register pin to use as an encryption key
  * @param pin to hash and register
  */
 export function registerPinAsEncryptionKey(pin: string) {
@@ -19,9 +26,9 @@ export function registerPinAsEncryptionKey(pin: string) {
  * @returns encrypted data as text
  */
 export function encryptData(data: string): string {
-    if (encryptionKey === undefined) {
+    if (encryptionKey === undefined)
         throw Error('Encryption key has not been registered');
-    }
+
     return CryptoJS.AES.encrypt(data, encryptionKey).toString();
 }
 
@@ -33,9 +40,9 @@ export function encryptData(data: string): string {
  * @returns original text data, if the correct key was registered
  */
 export function decryptData(ciphertext: string): string {
-    if (encryptionKey === undefined) {
+    if (encryptionKey === undefined)
         throw Error('Encryption key has not been registered');
-    }
+
     const bytes = CryptoJS.AES.decrypt(ciphertext, encryptionKey);
     return bytes.toString(CryptoJS.enc.Utf8);
 }

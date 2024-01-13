@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-
-import { Button, ScrollView, TextInput, View } from "react-native";
+import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { deleteNote, saveNote } from "../../util/file-service";
+import showErrorDialog from "../../util/error";
+import { saveNoteAsync } from "../../util/file-service";
 import { Params } from "../screens/Unlocked";
 
 import styles, { colorMap } from "../../util/styles";
@@ -30,29 +30,28 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
         setTitle(newTitle);
         setDateModified(Date.now());
         // Save note to external storage
-        saveNote(props.filename, {
-            title: newTitle,
-            body: body,
-            dateCreated: props.note.dateCreated,
-            dateModified: Date.now(),
-        });
+        saveNoteAsync(
+            props.filename, {
+                title: newTitle,
+                body: body,
+                dateCreated: props.note.dateCreated,
+                dateModified: Date.now(),
+            }
+        ).catch(showErrorDialog);
     }
 
     function saveBody(newBody: string) {
         setBody(newBody)
         setDateModified(Date.now());
         // Save note to external storage
-        saveNote(props.filename, {
-            title: title,
-            body: newBody,
-            dateCreated: props.note.dateCreated,
-            dateModified: Date.now(),
-        });
-    }
-
-    function deleteSelf() {
-        deleteNote(props.filename);
-        navigation.goBack();
+        saveNoteAsync(
+            props.filename, {
+                title: title,
+                body: newBody,
+                dateCreated: props.note.dateCreated,
+                dateModified: Date.now(),
+            }
+        ).catch(showErrorDialog);
     }
 
     return (

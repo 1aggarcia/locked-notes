@@ -1,10 +1,11 @@
 import { Pressable, TouchableOpacity, View, Alert } from "react-native";
 
+import showErrorDialog from "../../util/error";
 import styles from "../../util/styles";
 import Note, { formateDate } from "../../util/note";
 
 import AppText from "./AppText";
-import { deleteNote } from "../../util/file-service";
+import { deleteNoteAsync } from "../../util/file-service";
 
 interface NoteOptionProps {
     /** The note we will show the options for */
@@ -23,7 +24,7 @@ export default function NoteOptions(props: NoteOptionProps) {
     const deleteButton = {
         text: 'Delete',
         onPress: () => {
-            deleteNote(props.filename)
+            deleteNoteAsync(props.filename)
                 .then(handleDelete)
                 .catch(handleDeleteError);
         }
@@ -42,10 +43,10 @@ export default function NoteOptions(props: NoteOptionProps) {
         Alert.alert('Success!', 'Note has been deleted.')
     }
 
-    // the promise gives us "any" type for `reason` so we are forced to use it here
+    // the promise reject gives us "any" type for `reason` so we are forced to use it here
     function handleDeleteError(reason: any) {
         props.close();
-        Alert.alert('Internal Error', reason.toString())
+        showErrorDialog(reason);
     }
 
     return (

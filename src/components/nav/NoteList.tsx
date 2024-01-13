@@ -1,29 +1,37 @@
 import { useEffect, useState } from "react";
-import { Button, ScrollView, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNotes } from "../../util/file-service";
+import { getNotesAsync } from "../../util/file-service";
 import styles from "../../util/styles";
 import Note, { blankNote } from "../../util/note";
 import { Params } from "../screens/Unlocked";
+import showErrorDialog from "../../util/error";
 
 import AppText from "../common/AppText";
 import NotePreview from "../common/NotePreview";
 import Loading from "../screens/Loading";
 import NoteOptions from "../common/NoteOptions";
 
-export default function NoteList({ route, navigation }: NativeStackScreenProps<Params>) {
+export default function NoteList({ navigation }: NativeStackScreenProps<Params>) {
     // map of notes where key=filename, value=note
     const [noteMap, setNoteMap] = useState<Map<string, Note>>();
+
+    // note for which the options menu is shown. Undefined means no menu shown
     const [noteOptions, setNoteOptions] = useState<Note>();
     const [noteOptionsFilename, setNoteOptionsFilename] = useState<string>();
 
+    // changing this value toggles the note list to re-fetch notes from disk
+    const [refresh, setRefresh] = useState(false);
+
     // Retreive notes from external storage
     useEffect(() => {
-        getNotes()
-            .then(notes => setNoteMap(notes))
-            .catch(error => alert(error));
-    }, [])
+        getNotesAsync()
+            .then(setNoteMap)
+            .catch(showErrorDialog);
+    }, [refresh])
+
+    function toggleRefresh() { setRefresh(!refresh); }
 
     function openNote(filename: string, note: Note) {
         const noteProps = { filename: filename, note: note };
@@ -43,6 +51,7 @@ export default function NoteList({ route, navigation }: NativeStackScreenProps<P
     function clearOptions() {
         setNoteOptions(undefined);
         setNoteOptionsFilename(undefined);
+        toggleRefresh();
     }
 
     function generatePreviewList() {
