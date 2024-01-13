@@ -135,14 +135,11 @@ export async function getNotes(): Promise<Map<string, Note>> {
 }
 
 /**
- * Deletes note with given filename from the notes directory in external storage
+ * Deletes note with given filename from the notes directory in external storage.
+ * Promise will reject if there the note cannot be deleted
  * @param filename filename of note, with extension
  */
 export async function deleteNote(filename: string) {
     const fileUri = notesDir + filename;
-    try {
-        await FileSystem.deleteAsync(fileUri);
-    } catch (error) {
-        alert(error);
-    }
+    await FileSystem.deleteAsync(fileUri);
 }

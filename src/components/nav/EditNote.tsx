@@ -57,8 +57,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
 
     return (
         <View style={styles.app}>
-            {/* <Button title='Delete Note' onPress={deleteSelf} /> */}
-            <ScrollView style={{flex: 1}}>
+            <ScrollView style={styles.editNote}>
                 <TextInput 
                     style={styles.noteTitle}
                     value={title}

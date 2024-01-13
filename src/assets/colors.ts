@@ -1,5 +1,6 @@
 export const darkModeColors = {
-    bg: '#000000',
+    bg: '#121212',
+    fg: '#000000',
     strongBorder: '#ffffff',
     weakBorder: '#444444',
     placeholder: '#777777',
@@ -8,7 +9,8 @@ export const darkModeColors = {
 }
 
 export const lightModeColors = {
-    bg: '#ffffff',
+    bg: '#eeeeee',
+    fg: '#ffffff',
     strongBorder: '#000000',
     weakBorder: '#cccccc',
     placeholder: '#bbbbbb',

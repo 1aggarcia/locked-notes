@@ -23,12 +23,11 @@ export default function PinPad(props: PinPadProps) {
      */
     function updatePin(digit: number) {
         // Check validity
-        if (pin.length >= maxPinLength) {
+        if (pin.length >= maxPinLength)
             return;
-        }
-        if (0 > digit || digit > 9) {
+
+        if (0 > digit || digit > 9)
             throw RangeError('Digit Must be between 0-9');
-        }
 
         const newPin = pin + digit;
         setPin(newPin);
@@ -40,13 +39,11 @@ export default function PinPad(props: PinPadProps) {
         }
     }
 
-    /**
-     * Remove last digit from pin, given pin is not empty
-     */
+    /** Remove last digit from pin, given pin is not empty  */
     function backspace() {
-        if (pin.length === 0) {
+        if (pin.length === 0)
             return;
-        }
+
         const newPin = pin.slice(0, -1);
         setPin(newPin);
     }
@@ -77,6 +74,8 @@ export default function PinPad(props: PinPadProps) {
         </View>
     </>)
 }
+
+// One-time-use small component for the backspace button, so we define it here
 
 interface PinBackspaceProps {
     onPress: () => void

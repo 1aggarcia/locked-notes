@@ -26,9 +26,8 @@ export default function Authenticator(props: AuthenticatorProps) {
         setMode('Unlocked');
     }
 
-    if (login === undefined) {
+    if (login === undefined)
         return <CreatePin updateLogin={updateLogin} />;
-    }
     
     switch (mode) {
         case 'Denied':

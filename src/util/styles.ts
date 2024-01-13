@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     notePreview: {
         borderColor: colorMap.weakBorder,
         borderWidth: 2,
+        backgroundColor: colorMap.fg,
         padding: 15,
         borderRadius: 10,
         marginBottom: 15,
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         borderColor: colorMap.strongBorder,
         borderWidth: 2,
+        backgroundColor: colorMap.fg,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -118,6 +120,44 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: colorMap.buttonBg,
         borderWidth: 1
+    },
+    editNote: {
+        flex: 1,
+        backgroundColor: colorMap.fg,
+    },
+    noteOptions: {
+        backgroundColor: colorMap.fg,
+        borderColor: colorMap.strongBorder,
+        borderRadius: 10,
+        borderWidth: 1,
+        padding: 10,
+        opacity: 1,
+    },
+    noteOptionsBg: {
+        position: "absolute",
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+    },
+    deleteButton: {
+        borderColor: 'red',
+        borderWidth: 1,
+        borderRadius: 10,
+        margin: 5,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        color: 'red',
+        fontWeight: 'bold'
+    },
+    noteListEmpty: {
+        flex: 1,
+        textAlign: 'center',
+        padding: 10,
+        color: colorMap.placeholder,
+        fontSize: 20,
+        fontWeight: 'bold',
     }
 });
 

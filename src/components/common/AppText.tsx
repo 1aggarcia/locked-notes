@@ -9,6 +9,8 @@ export interface AppTextProps {
 
 export default function AppText(props: PropsWithChildren<AppTextProps>) {
     return (
-        <Text style={[styles.appText, props.style]}>{props.children}</Text>
-    )
+        <Text style={[styles.appText, props.style]}>
+            {props.children}
+        </Text>
+    );
 }

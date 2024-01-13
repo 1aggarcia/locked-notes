@@ -13,12 +13,13 @@ export default function App() {
   const [login, setLogin] = useState<LoginInfo>();
   
   function handleGetLogin(login: LoginInfo | null) {
-    if (login) {
+    if (login)
       setLogin(login);
-    }
+
     setLoaded(true);
   }
   
+  // Load login from device secure store on app start
   useEffect(() => {
     getLoginAsync()
       .then(handleGetLogin)

@@ -44,8 +44,10 @@ export default function Unlocked(props: UnlockedProps) {
     useEffect(() => {
         setTimeout(() => {
         if (timeOpen > 1) {
+            // still time left, just keep counting
             setTimeOpen(timeOpen - 1);
         } else {
+            // time is up
             props.lock()
         }
         }, 1000)

@@ -38,4 +38,20 @@ export function isNote(obj: object): boolean {
     )
 }
 
+/**
+ * Convert timestamp in form of seconds since epoch to formatted datetime
+ * @param seconds number of seconds since the epoch (1970-01-01 00:00:00)
+ * @returns string representation of date
+ */
+export function formateDate(seconds: number) {
+    const date = new Date(seconds);
+    return date.toLocaleString(undefined, {
+        day: 'numeric',
+        year: 'numeric',
+        month: 'short',
+        hour: 'numeric',
+        minute: '2-digit'
+    });
+}
+
 export default Note
