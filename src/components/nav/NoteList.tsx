@@ -17,21 +17,20 @@ export default function NoteList({ navigation }: NativeStackScreenProps<Params>)
     // map of notes where key=filename, value=note
     const [noteMap, setNoteMap] = useState<Map<string, Note>>();
 
-    // note for which the options menu is shown. Undefined means no menu shown
-    const [noteOptions, setNoteOptions] = useState<Note>();
-    const [noteOptionsFilename, setNoteOptionsFilename] = useState<string>();
+    // note for which the properties menu is shown. Undefined means no menu shown
+    const [noteOptions, setNoteOptions] = useState<{
+        filename: string,
+        note: Note
+    }>();
 
-    // changing this value toggles the note list to re-fetch notes from disk
-    const [refresh, setRefresh] = useState(false);
+    useEffect(refreshList, [])
 
     // Retreive notes from external storage
-    useEffect(() => {
+    function refreshList() {
         getNotesAsync()
             .then(setNoteMap)
             .catch(showErrorDialog);
-    }, [refresh])
-
-    function toggleRefresh() { setRefresh(!refresh); }
+     }
 
     function openNote(filename: string, note: Note) {
         const noteProps = { filename: filename, note: note };
@@ -43,29 +42,23 @@ export default function NoteList({ navigation }: NativeStackScreenProps<Params>)
         openNote(filename, blankNote());
     }
 
-    function setOptions(note: Note, filename: string) {
-        setNoteOptions(note);
-        setNoteOptionsFilename(filename);
-    }
-
     function clearOptions() {
         setNoteOptions(undefined);
-        setNoteOptionsFilename(undefined);
-        toggleRefresh();
+        refreshList();
     }
 
     function generatePreviewList() {
-        let result: JSX.Element[] = [];
+        const result: JSX.Element[] = [];
         if (noteMap) {
-            noteMap.forEach((note, filename) => {
-                result.push(<NotePreview 
+            noteMap.forEach((note, filename) => {result.push(
+                <NotePreview 
                     key={filename}
                     filename={filename}
                     note={note}
                     openNote={openNote}
-                    openNoteOptions={() => setOptions(note, filename)}
-                />)
-            })
+                    setNoteOptions={setNoteOptions}
+                />
+            )});
         }
         if (result.length === 0)
             return <AppText style={styles.noteListEmpty}>No Notes Yet</AppText>
@@ -89,10 +82,10 @@ export default function NoteList({ navigation }: NativeStackScreenProps<Params>)
                 <TouchableOpacity style={styles.createButton} onPress={createNote}>
                     <AppText style={styles.createButtonText}>+</AppText>
                 </TouchableOpacity>
-                {noteOptions && noteOptionsFilename &&
+                {noteOptions &&
                     <NoteOptions
-                        note={noteOptions}
-                        filename={noteOptionsFilename}
+                        note={noteOptions.note}
+                        filename={noteOptions.filename}
                         close={clearOptions}
                     />
                 }

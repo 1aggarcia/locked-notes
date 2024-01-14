@@ -1,3 +1,5 @@
+/** Wrap all text in a custom text component to standardize styling */
+
 import { PropsWithChildren } from "react";
 import { StyleProp, Text, TextStyle } from "react-native"
 

@@ -27,7 +27,7 @@ export default function App() {
       .catch(showErrorDialog);
   }, [])
 
-  return (<>
+  return (
     <SafeAreaProvider>
       {loaded?
         <Authenticator login={login} />
@@ -36,5 +36,5 @@ export default function App() {
       }
       <StatusBar style={isDarkMode? 'light' : 'dark'}/>
     </SafeAreaProvider>
-  </>)
+  )
 }
