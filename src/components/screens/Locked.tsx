@@ -28,7 +28,7 @@ export default function Locked(props: LockedProps) {
         if (hashedPin === props.login.hash) {
             // Correct login info, set encryption key and unlock
             registerPinAsEncryptionKey(pin);
-            props.unlock();
+            props.unlock()
         } else {
             setError(true);
             if (attempts + 1 === maxAttempts) {

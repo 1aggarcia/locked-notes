@@ -1,5 +1,5 @@
 /** 
- * Read, write, and delete login details from Secure Store and 
+ * Read, write, and delete settings from Secure Store and 
  * notes from external storage
  * */
 
@@ -53,7 +53,7 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
  * Remove login information from local storage
  * Will reject promise if data cannot be deleted.
  */
-export async function deletePinAsync() {
+export async function deletePinAsync(): Promise<void> {
     try {
         await SecureStore.deleteItemAsync('loginHash');
         await SecureStore.deleteItemAsync('loginSalt');
@@ -83,6 +83,36 @@ export async function getLoginAsync(): Promise<LoginInfo | null> {
     }
 }
 
+// /**
+//  * Set a date and time that the app will be unlocked, i.e, the app will be
+//  * locked until the given timestamp, in Secure Store
+//  * Rejects promise if the timestamp cannot be saved.
+//  * @param timestamp The date and time to unlock the app, as the number of
+//  *      miliseconds since the epoch (1970-01-01  00:00:00).
+//  */
+// export async function setUnlockTimeAsync(timestamp: number): Promise<void> {
+//     try {
+//         await SecureStore.setItemAsync('unlockTime', timestamp.toString());
+//     } catch (error) {
+//         console.error("An error occured in setUnlockTime:", error);
+//         throw error;
+//     }
+// }
+
+// /**
+//  * Gets the timestamp after which the app is unlocked from Secure Store.
+//  * @returns Promise with timestamp as the number of miliseconds since the
+//  *      epoch, or null if it is not in Secure Store
+//  */
+// export async function getUnlockTimeAsync(): Promise<number> {
+//     try {
+//         const item = Number(await SecureStore.getItemAsync('unlockTime'));
+//         return item;
+//     } catch (error) {
+//         console.error("An error occured in getUnlockTime:", error);
+//         return 0;
+//     }
+// }
 
 // Functions to interact with external file storage
 

@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/note";
 import { isDarkMode } from "../../util/styles";
+import { formatTime } from "../../util/encryption-service";
 
 import NoteList from "../nav/NoteList";
 import EditNote from "../nav/EditNote";
@@ -22,18 +23,17 @@ export type Params = {
     Settings: undefined;
     ResetPin: undefined;
 };
-  
 const Stack = createNativeStackNavigator<Params>();
-
-// Maximum time the app can be unlocked, in seconds
-const maxTime = 599;
 
 interface UnlockedProps {
     lock: () => void;
+
+    // The timestamp when access to the app wil expire
+    expirationTime: number;
 }
 
 export default function Unlocked(props: UnlockedProps) {
-    const [timeOpen, setTimeOpen] = useState(maxTime)
+    const [timeOpen, setTimeOpen] = useState(secondsUntil(props.expirationTime));
 
     const screenOptions = {
         headerRight: () => <Button title='Lock' onPress={props.lock} />,
@@ -43,9 +43,9 @@ export default function Unlocked(props: UnlockedProps) {
     // Countdown until reaching 0 seconds
     useEffect(() => {
         setTimeout(() => {
-        if (timeOpen > 1) {
+        if (props.expirationTime > Date.now()) {
             // still time left, just keep counting
-            setTimeOpen(timeOpen - 1);
+            setTimeOpen(secondsUntil(props.expirationTime));
         } else {
             // time is up
             props.lock()
@@ -66,20 +66,14 @@ export default function Unlocked(props: UnlockedProps) {
 }
 
 /**
- * Convert seconds to string representing MM:SS
- * @param seconds number of seconds to count. Must be < 3600
+ * Given a timestamp as the number of miliseconds since the epoch, determine the number of seconds
+ * until that time arrives.
+ * @param timestamp date and time as the number of miliseconds since the epoch.
+ * @returns number of seconds until given timestamp, or 0 if date is in the past.
  */
-function formatTime(seconds: number): string {
-    if (seconds >= 3600) {
-        throw RangeError(`seconds >= 3600: ${seconds}`);
-    }
-    const minutes = Math.floor(seconds / 60);
-    const leftOver = seconds % 60;
+function secondsUntil(timestamp: number) {
+    const msPerSecond = 1000;
+    const difference = Math.floor((timestamp - Date.now()) / msPerSecond);
 
-    // account for leading zero
-    if (leftOver < 10) {
-        return `${minutes}:0${leftOver}`
-    } else {
-        return `${minutes}:${leftOver}`
-    }
+    return (difference > 0)? difference : 0
 }

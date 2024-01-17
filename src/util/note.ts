@@ -1,7 +1,7 @@
 /**
  * Object representing a note
  * 
- * `dateCreated` and `dateModified` represent seconds elapsed since the epoch (1970-01-01  00:00:00)
+ * `dateCreated` and `dateModified` represent miliseconds elapsed since the epoch (1970-01-01  00:00:00)
  */
 type Note = {
     title: string,
