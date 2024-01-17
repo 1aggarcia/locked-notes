@@ -1,6 +1,6 @@
 /** Manage PIN creation & authentication */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { LoginInfo } from "../../util/file-service";
 
@@ -9,10 +9,10 @@ import Denied from './Denied';
 import Locked from './Locked';
 import Unlocked from './Unlocked';
 
-const maxSeconds = 30;
-const msPerSecond = 1000;
-
 type Mode = 'Denied' | 'Locked' | 'Unlocked';
+
+// Maximum number of seconds for which the app may be unlocked
+const maxSeconds = 599;
 
 interface AuthenticatorProps {
     // We allow an undefined login to signal that
@@ -23,16 +23,10 @@ interface AuthenticatorProps {
 export default function Authenticator(props: AuthenticatorProps) {
     const [mode, setMode] = useState<Mode>('Locked');
     const [login, setLogin] = useState(props.login);
-    const [expirationTime, setExpirationTime] = useState(0);
 
     function updateLogin(newLogin: LoginInfo) {
         setLogin(newLogin);
-        unlock();
-    }
-
-    function unlock() {
-        setExpirationTime(Date.now() + maxSeconds * msPerSecond);
-        setMode('Unlocked');
+        setMode('Denied');
     }
 
     if (login === undefined)
@@ -44,13 +38,26 @@ export default function Authenticator(props: AuthenticatorProps) {
         case 'Unlocked':
             return <Unlocked 
                 lock={() => setMode('Locked')}
-                expirationTime={expirationTime}
+                expiryTime={calculateExpiryTime(maxSeconds)}
             />;
         case 'Locked':
             return <Locked 
                 login={login}
-                unlock={unlock}
+                unlock={() => setMode('Unlocked')}
                 denyAccess={() => setMode('Denied')}
             />;
       }
+}
+
+/**
+ * Generate a timestamp a given number of seconds in the future
+ * @param seconds the number of seconds from now to generate timestamp
+ * @returns timestamp with given number of seconds from now
+ */
+function calculateExpiryTime(seconds: number): Date {
+    const msPerSec = 1000;
+    const seconds_int = Math.floor(seconds);
+    const timestamp = Date.now() + seconds_int * msPerSec;
+
+    return new Date(timestamp);
 }

@@ -10,7 +10,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/note";
 import { isDarkMode } from "../../util/styles";
-import { formatTime } from "../../util/encryption-service";
 
 import NoteList from "../nav/NoteList";
 import EditNote from "../nav/EditNote";
@@ -28,30 +27,31 @@ const Stack = createNativeStackNavigator<Params>();
 interface UnlockedProps {
     lock: () => void;
 
-    // The timestamp when access to the app wil expire
-    expirationTime: number;
+    /** Timestamp when the app should expire and lock itself */
+    expiryTime: Date;
 }
 
 export default function Unlocked(props: UnlockedProps) {
-    const [timeOpen, setTimeOpen] = useState(secondsUntil(props.expirationTime));
+    // number of seconds until the app closes
+    const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
 
     const screenOptions = {
         headerRight: () => <Button title='Lock' onPress={props.lock} />,
-        title: `Unlocked Time: ${formatTime(timeOpen)}`
+        title: `Unlocked Time: ${formatTime(timeLeft)}`
     }
 
-    // Countdown until reaching 0 seconds
+    // Countdown until expireTime goes into the past
     useEffect(() => {
         setTimeout(() => {
-        if (props.expirationTime > Date.now()) {
-            // still time left, just keep counting
-            setTimeOpen(secondsUntil(props.expirationTime));
-        } else {
-            // time is up
-            props.lock()
-        }
+            if (Date.now() < props.expiryTime.getTime()) {
+                // still time left, just keep counting
+                setTimeLeft(secondsUntil(props.expiryTime) + 1);
+            } else {
+                // time is up
+                props.lock()
+            }
         }, 1000)
-    });
+    }, [timeLeft]);
 
     return (
         <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
@@ -66,14 +66,29 @@ export default function Unlocked(props: UnlockedProps) {
 }
 
 /**
- * Given a timestamp as the number of miliseconds since the epoch, determine the number of seconds
- * until that time arrives.
- * @param timestamp date and time as the number of miliseconds since the epoch.
+ * Determine the number of seconds until the diven date
+ * @param timestamp date and time to calculate the difference for
  * @returns number of seconds until given timestamp, or 0 if date is in the past.
  */
-function secondsUntil(timestamp: number) {
-    const msPerSecond = 1000;
-    const difference = Math.floor((timestamp - Date.now()) / msPerSecond);
+function secondsUntil(timestamp: Date): number {
+    const msPerSec = 1000;
+    const difference = Math.floor((timestamp.getTime() - Date.now()) / msPerSec);
 
     return (difference > 0)? difference : 0
+}
+
+/**
+ * Convert seconds to string representing MM:SS
+ * @param seconds number of seconds to count.
+ */
+function formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const leftOver = Math.floor(seconds % 60);
+
+    // account for leading zero
+    if (leftOver < 10) {
+        return `${minutes}:0${leftOver}`
+    } else {
+        return `${minutes}:${leftOver}`
+    }
 }

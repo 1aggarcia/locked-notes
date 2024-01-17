@@ -71,22 +71,6 @@ export function generateSalt(length: number): string {
 }
 
 /**
- * Convert seconds to string representing MM:SS
- * @param seconds number of seconds to count.
- */
-export function formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const leftOver = Math.floor(seconds % 60);
-
-    // account for leading zero
-    if (leftOver < 10) {
-        return `${minutes}:0${leftOver}`
-    } else {
-        return `${minutes}:${leftOver}`
-    }
-}
-
-/**
  * Hashes data 1000 times using SHA-256. Data is reversed before each hash.
  * @param data text to hash
  * @returns hashed text in hexadecimal
