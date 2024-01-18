@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { Button } from "react-native";
+import { Button, TouchableOpacity } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -12,17 +12,19 @@ import Note from "../../util/note";
 import { isDarkMode } from "../../util/styles";
 import { formatTime } from "../../util/datetime";
 
-import NoteList from "../nav/NoteList";
+import NotesView from "../nav/NotesView";
 import EditNote from "../nav/EditNote";
 import Settings from "../nav/Settings";
 import ResetPin from "../nav/ResetPin";
+import AppText from "../common/AppText";
 
 export type Params = {
-    NoteList: undefined;
+    NotesView: undefined;
     EditNote: { filename: string, note: Note };
     Settings: undefined;
     ResetPin: undefined;
 };
+
 const Stack = createNativeStackNavigator<Params>();
 
 interface UnlockedProps {
@@ -37,7 +39,11 @@ export default function Unlocked(props: UnlockedProps) {
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
 
     const screenOptions = {
-        headerRight: () => <Button title='Lock' onPress={props.lock} />,
+        headerRight: () => (
+            <TouchableOpacity onPress={props.lock}>
+                <AppText>Lock</AppText>
+            </TouchableOpacity>
+        ),
         title: `Unlocked Time: ${formatTime(timeLeft)}`
     }
 
@@ -57,7 +63,7 @@ export default function Unlocked(props: UnlockedProps) {
     return (
         <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions}>
-                <Stack.Screen name={'NoteList'} component={NoteList} />
+                <Stack.Screen name={'NotesView'} component={NotesView} />
                 <Stack.Screen name={'EditNote'} component={EditNote} />
                 <Stack.Screen name={'Settings'} component={Settings} />
                 <Stack.Screen name={'ResetPin'} component={ResetPin} />
