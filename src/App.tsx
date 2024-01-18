@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { LoginInfo, getLoginAsync } from './util/file-service';
+import { LoginInfo, getLoginAsync } from './util/files';
 import { isDarkMode } from './util/styles';
 import showErrorDialog from './util/error';
 
@@ -32,7 +32,7 @@ export default function App() {
       {loaded?
         <Authenticator login={login} />
         :
-        <Loading />
+        <Loading message='Fetching login info...' />
       }
       <StatusBar style={isDarkMode? 'light' : 'dark'}/>
     </SafeAreaProvider>

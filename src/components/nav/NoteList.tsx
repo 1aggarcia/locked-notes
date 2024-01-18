@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNotesAsync } from "../../util/file-service";
+import { getNotesAsync } from "../../util/files";
 import styles from "../../util/styles";
 import Note, { blankNote } from "../../util/note";
 import { Params } from "../screens/Unlocked";
@@ -69,7 +69,7 @@ export default function NoteList({ navigation }: NativeStackScreenProps<Params>)
     }
 
     if (noteMap === undefined) {
-        return <Loading />
+        return <Loading message='Fetching notes...'/>
     } else {
         return (
             <View style={styles.app}>

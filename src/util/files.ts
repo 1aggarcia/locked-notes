@@ -12,7 +12,7 @@ import {
     generateSalt,
     saltAndSha256,
     registerPinAsEncryptionKey,
-} from './encryption-service';
+} from './encryption';
 
 import Note, { isNote } from './note';
 
@@ -21,6 +21,7 @@ export type LoginInfo = {
     salt: string,
 }
 
+const maxStringLength = 1 << 16; // 2^16
 const saltLength = 64;
 const notesDir = FileSystem.documentDirectory + 'notes/';
 
@@ -30,9 +31,14 @@ const notesDir = FileSystem.documentDirectory + 'notes/';
 /**
  * Hash, salt, and save pin to secure store in local storage.
  * @param pin pin to save
- * @returns Promise with new login info saved. Will reject promise if data cannot be saved.
+ * @returns Promise with new login info saved.
+ *      Will reject promise if data cannot be saved,
+ *      or if string is too long (cap: 2^16 chars)
  */
 export async function savePinAsync(pin: string): Promise<LoginInfo> {
+    if (pin.length > maxStringLength)
+        throw new RangeError(`pin is too long: ${pin}`);
+
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
@@ -83,46 +89,56 @@ export async function getLoginAsync(): Promise<LoginInfo | null> {
     }
 }
 
-// /**
-//  * Set a date and time that the app will be unlocked, i.e, the app will be
-//  * locked until the given timestamp, in Secure Store
-//  * Rejects promise if the timestamp cannot be saved.
-//  * @param timestamp The date and time to unlock the app, as the number of
-//  *      miliseconds since the epoch (1970-01-01  00:00:00).
-//  */
-// export async function setUnlockTimeAsync(timestamp: number): Promise<void> {
-//     try {
-//         await SecureStore.setItemAsync('unlockTime', timestamp.toString());
-//     } catch (error) {
-//         console.error("An error occured in setUnlockTime:", error);
-//         throw error;
-//     }
-// }
+/**
+ * Save a timestamp to Secure Store before which the app will not be accessible.
+ * Rejects promise if there is an error in saving.
+ * @param timestamp The date and time when access should be permitted.
+ * 
+ */
+export async function setAccessTimeAsync(timestamp: Date): Promise<void> {
+    try {
+        // The timestamp is stored as a plain number to
+        // make decoding easier and more reliable
+        const timestamp_ms: number = timestamp.getTime();
 
-// /**
-//  * Gets the timestamp after which the app is unlocked from Secure Store.
-//  * @returns Promise with timestamp as the number of miliseconds since the
-//  *      epoch, or null if it is not in Secure Store
-//  */
-// export async function getUnlockTimeAsync(): Promise<number> {
-//     try {
-//         const item = Number(await SecureStore.getItemAsync('unlockTime'));
-//         return item;
-//     } catch (error) {
-//         console.error("An error occured in getUnlockTime:", error);
-//         return 0;
-//     }
-// }
+        await SecureStore.setItemAsync('accessTime', timestamp_ms.toString());
+    } catch (error) {
+        console.error("An error occured in setAccessTimeAsync:", error);
+        throw error;
+    }
+}
+
+/**
+ * Gets the timestamp from Secure Store before which the app
+ * will not be accessible.
+ * 
+ * @returns Promise with timestamp from Secure Store as a Date object.
+ *      If none is found, the epoch time (1970-01-01 00:00:00) is returned.
+ */
+export async function getAccessTimeAsync(): Promise<Date> {
+    try {
+        const timestamp_ms = Number(await SecureStore.getItemAsync('accessTime'));
+        return new Date(timestamp_ms);
+    } catch (error) {
+        console.error("An error occured in getAccessTimeAsync:", error);
+        return new Date(0);
+    }
+}
 
 // Functions to interact with external file storage
 
 /**
- * Saves and encrypts given note to given filename in notes directory of external storage.
- * Rejects promise if file cannot be saved.
+ * Saves and encrypts given note to given filename in notes
+ * directory of external storage. Will reject promise if data
+ * cannot be saved, or if the note title/body is too long (cap: 2^16 chars)
+ * 
  * @param filename name of the note file with extension
  * @param note note to save to file
  */
 export async function saveNoteAsync(filename: string, note: Note) {
+    if (note.title.length > maxStringLength || note.body.length > maxStringLength)
+        throw new RangeError(`note is too long: ${note}`);
+
     const text = JSON.stringify(note);
 
     try {

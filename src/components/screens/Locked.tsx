@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/encryption-service";
-import { LoginInfo } from "../../util/file-service";
+import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/encryption";
+import { LoginInfo } from "../../util/files";
 import styles from "../../util/styles";
 
 import AppText from "../common/AppText";

@@ -3,10 +3,16 @@ import { View, ActivityIndicator } from "react-native";
 import styles from "../../util/styles";
 import AppText from "../common/AppText";
 
-export default function Loading() {
+interface LoadingProps {
+    /** Give the user some helpful information about what is loading */
+    message: string
+}
+
+export default function Loading(props: LoadingProps) {
     return (
         <View style={[styles.app, styles.centered]}>
             <AppText style={styles.header}>Loading</AppText>
+            <AppText>{props.message}</AppText>
             <ActivityIndicator size='large'/>
         </View>
     )

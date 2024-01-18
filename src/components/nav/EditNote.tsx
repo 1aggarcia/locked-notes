@@ -3,11 +3,14 @@ import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
-import { saveNoteAsync } from "../../util/file-service";
+import { saveNoteAsync } from "../../util/files";
 import { Params } from "../screens/Unlocked";
 
 import styles, { colorMap } from "../../util/styles";
 
+// Maximum number of characters permitted in the title and body
+const maxTitleLength = 128;  // 2^7
+const maxBodyLength = 16384;  // 2^14
 
 export default function EditNote({ route, navigation }: NativeStackScreenProps<Params, 'EditNote'>) {
     const props = route.params;
@@ -27,6 +30,10 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
     }, [navigation, title])
 
     function saveTitle(newTitle: string) {
+        // If title is too long, don't save it
+        if (newTitle.length > maxTitleLength)
+            return;
+
         setTitle(newTitle);
         setDateModified(Date.now());
         // Save note to external storage
@@ -41,6 +48,10 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
     }
 
     function saveBody(newBody: string) {
+        // If body is too long, don't save it
+        if (newBody.length > maxBodyLength)
+            return;
+
         setBody(newBody)
         setDateModified(Date.now());
         // Save note to external storage
@@ -60,6 +71,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
                 <TextInput 
                     style={styles.noteTitle}
                     value={title}
+                    maxLength={maxTitleLength}
                     onChangeText={saveTitle}
                     placeholder='Title'
                     placeholderTextColor={colorMap.placeholder}
@@ -68,6 +80,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
                 <TextInput 
                     style={styles.noteBody}
                     value={body}
+                    maxLength={maxBodyLength}
                     onChangeText={saveBody}
                     placeholder='Write something here...'
                     placeholderTextColor={colorMap.placeholder}

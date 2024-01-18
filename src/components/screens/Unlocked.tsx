@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/note";
 import { isDarkMode } from "../../util/styles";
+import { formatTime } from "../../util/datetime";
 
 import NoteList from "../nav/NoteList";
 import EditNote from "../nav/EditNote";
@@ -75,20 +76,4 @@ function secondsUntil(timestamp: Date): number {
     const difference = Math.floor((timestamp.getTime() - Date.now()) / msPerSec);
 
     return (difference > 0)? difference : 0
-}
-
-/**
- * Convert seconds to string representing MM:SS
- * @param seconds number of seconds to count.
- */
-function formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const leftOver = Math.floor(seconds % 60);
-
-    // account for leading zero
-    if (leftOver < 10) {
-        return `${minutes}:0${leftOver}`
-    } else {
-        return `${minutes}:${leftOver}`
-    }
 }

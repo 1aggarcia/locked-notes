@@ -2,10 +2,11 @@ import { Pressable, TouchableOpacity, View, Alert } from "react-native";
 
 import showErrorDialog from "../../util/error";
 import styles from "../../util/styles";
-import Note, { formateDate } from "../../util/note";
+import Note from "../../util/note";
+import { formatDate } from "../../util/datetime";
 
 import AppText from "./AppText";
-import { deleteNoteAsync } from "../../util/file-service";
+import { deleteNoteAsync } from "../../util/files";
 
 interface NoteOptionProps {
     /** The note we will show the options for */
@@ -18,8 +19,8 @@ interface NoteOptionProps {
 }
 
 export default function NoteOptions(props: NoteOptionProps) {
-    const dateCreatedString = formateDate(props.note.dateCreated);
-    const dateModifiedString = formateDate(props.note.dateModified);
+    const dateCreatedString = formatDate(props.note.dateCreated);
+    const dateModifiedString = formatDate(props.note.dateModified);
 
     const deleteButton = {
         text: 'Delete',

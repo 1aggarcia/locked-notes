@@ -1,18 +1,24 @@
 /** Manage PIN creation & authentication */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { LoginInfo } from "../../util/file-service";
+import { LoginInfo, getAccessTimeAsync, setAccessTimeAsync } from "../../util/files";
+import { calculateExpiryTime } from "../../util/datetime";
+import showErrorDialog from "../../util/error";
 
 import CreatePin from './CreatePin';
 import Denied from './Denied';
 import Locked from './Locked';
 import Unlocked from './Unlocked';
+import Loading from "./Loading";
 
-type Mode = 'Denied' | 'Locked' | 'Unlocked';
+type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
 // Maximum number of seconds for which the app may be unlocked
 const maxSeconds = 599;
+
+// Number of seconds to deny access for
+const denyAccessSeconds = 299;
 
 interface AuthenticatorProps {
     // We allow an undefined login to signal that
@@ -21,18 +27,45 @@ interface AuthenticatorProps {
 }
 
 export default function Authenticator(props: AuthenticatorProps) {
-    const [mode, setMode] = useState<Mode>('Locked');
+    const [mode, setMode] = useState<Mode>('Loading');
     const [login, setLogin] = useState(props.login);
 
     function updateLogin(newLogin: LoginInfo) {
         setLogin(newLogin);
-        setMode('Denied');
+        setMode('Unlocked');
     }
+
+    /** Set the access time to a future time, then lock the user out */
+    function denyAccess() {
+        setAccessTimeAsync(calculateExpiryTime(denyAccessSeconds))
+            .catch(showErrorDialog)
+            // Doesn't matter if the expiry time was properly saved or not,
+            // locally the user should still be locked out
+            .finally(() => setMode('Denied'))
+    }
+    
+    /** Deny or allow user access based on the given timestamp */
+    function verifyAccess(timestamp: Date) {
+        if (Date.now() < timestamp.getTime())
+            setMode('Denied');
+        else
+            setMode('Locked');
+    }
+
+    // Deny access to the app if the current time is before
+    // the access time
+    useEffect(() => {
+        getAccessTimeAsync()
+            .then(verifyAccess)
+            .catch(showErrorDialog);
+    }, [])
 
     if (login === undefined)
         return <CreatePin updateLogin={updateLogin} />;
     
     switch (mode) {
+        case 'Loading':
+            return <Loading message='Verifying access...' />;
         case 'Denied':
             return <Denied />;
         case 'Unlocked':
@@ -44,20 +77,7 @@ export default function Authenticator(props: AuthenticatorProps) {
             return <Locked 
                 login={login}
                 unlock={() => setMode('Unlocked')}
-                denyAccess={() => setMode('Denied')}
+                denyAccess={denyAccess}
             />;
       }
-}
-
-/**
- * Generate a timestamp a given number of seconds in the future
- * @param seconds the number of seconds from now to generate timestamp
- * @returns timestamp with given number of seconds from now
- */
-function calculateExpiryTime(seconds: number): Date {
-    const msPerSec = 1000;
-    const seconds_int = Math.floor(seconds);
-    const timestamp = Date.now() + seconds_int * msPerSec;
-
-    return new Date(timestamp);
 }
