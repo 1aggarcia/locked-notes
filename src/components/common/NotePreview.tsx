@@ -1,8 +1,8 @@
 import { TouchableOpacity } from "react-native";
 
-import Note from "../../util/note";
-import { formatDate } from "../../util/datetime";
-import styles from "../../util/styles";
+import Note from "../../util/types/note";
+import { formatDate } from "../../util/services/datetime";
+import styles from "../../util/services/styles";
 import AppText from "./AppText";
 
 interface NotePreviewProps {

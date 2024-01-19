@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { LoginInfo, getLoginAsync } from './util/files';
-import { isDarkMode } from './util/styles';
+import { LoginInfo, getLoginAsync } from './util/services/files';
+import { isDarkMode } from './util/services/styles';
 import showErrorDialog from './util/error';
 
 import Authenticator from './components/screens/Authenticator';

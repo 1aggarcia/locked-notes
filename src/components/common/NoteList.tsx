@@ -1,7 +1,7 @@
 import { ScrollView } from "react-native";
 
-import Note from "../../util/note";
-import styles from "../../util/styles";
+import Note from "../../util/types/note";
+import styles from "../../util/services/styles";
 
 import AppText from "./AppText";
 import NotePreview from "./NotePreview";

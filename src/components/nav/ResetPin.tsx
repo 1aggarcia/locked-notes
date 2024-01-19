@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import AppText from "../common/AppText";
-import styles from "../../util/styles";
+import styles from "../../util/services/styles";
 
 export default function ResetPin() {
     return (

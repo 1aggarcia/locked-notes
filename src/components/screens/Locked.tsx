@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
-import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/encryption";
-import { LoginInfo, testSafAsync } from "../../util/files";
-import styles from "../../util/styles";
+import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/services/encryption";
+import { LoginInfo, testSafAsync } from "../../util/services/files";
+import styles from "../../util/services/styles";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";

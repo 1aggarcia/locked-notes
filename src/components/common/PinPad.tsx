@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
-import styles from '../../util/styles';
+import styles from '../../util/services/styles';
 
 import PinButton from './PinButton';
 import PinVisualizer from './PinVisualizer';

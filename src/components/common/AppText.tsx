@@ -3,7 +3,7 @@
 import { PropsWithChildren } from "react";
 import { StyleProp, Text, TextStyle } from "react-native"
 
-import styles from "../../util/styles"
+import styles from "../../util/services/styles"
 
 export interface AppTextProps {
     style?: StyleProp<TextStyle>;

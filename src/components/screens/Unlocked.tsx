@@ -8,9 +8,9 @@ import { Button, TouchableOpacity } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Note from "../../util/note";
-import { isDarkMode } from "../../util/styles";
-import { formatTime } from "../../util/datetime";
+import Note from "../../util/types/note";
+import { isDarkMode } from "../../util/services/styles";
+import { formatTime } from "../../util/services/datetime";
 
 import NotesView from "../nav/NotesView";
 import EditNote from "../nav/EditNote";

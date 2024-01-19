@@ -1,6 +1,6 @@
 import { TouchableHighlight } from "react-native"
 
-import styles, { colorMap } from "../../util/styles";
+import styles, { colorMap } from "../../util/services/styles";
 import AppText from "./AppText";
 
 interface PinButtonProps {

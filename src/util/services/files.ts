@@ -14,7 +14,8 @@ import {
     registerPinAsEncryptionKey,
 } from './encryption';
 
-import Note, { isNote } from './note';
+import Note, { isNote } from '../types/note';
+import Settings, { defaultSettings, isSettings } from '../types/settings';
 
 export type LoginInfo = {
     hash: string,
@@ -26,7 +27,9 @@ const saltLength = 64;
 const notesDir = FileSystem.documentDirectory + 'notes/';
 
 
-// Functions to interact with secure store
+// -------------------------------------------------------- //
+//                  Secure Score functions
+// -------------------------------------------------------- //
 
 /**
  * Hash, salt, and save pin to secure store in local storage.
@@ -56,21 +59,6 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
 }
 
 /**
- * Remove login information from local storage
- * Will reject promise if data cannot be deleted.
- */
-export async function deletePinAsync(): Promise<void> {
-    try {
-        await SecureStore.deleteItemAsync('loginHash');
-        await SecureStore.deleteItemAsync('loginSalt');
-        await SecureStore.deleteItemAsync('encryptionSalt');
-    } catch (error) {
-        console.error("An error occured in deletePinAsync:", error);
-        throw error;
-    }
-}
-
-/**
  * Retrieve login hash and salt from local storage, if it exists
  * @returns object containing login hash and salt if it exists, null otherwise
  */
@@ -88,6 +76,7 @@ export async function getLoginAsync(): Promise<LoginInfo | null> {
         return null;
     }
 }
+
 
 /**
  * Save a timestamp to Secure Store before which the app will not be accessible.
@@ -125,7 +114,45 @@ export async function getAccessTimeAsync(): Promise<Date> {
     }
 }
 
-// Functions to interact with external file storage
+
+/**
+ * Save the settings passed in to Secure Store. Rejects promise if there is
+ * an issue savings
+ * @param settings object with theme and unlockedTime fields
+ */
+export async function saveSettingsAsync(settings: Settings): Promise<void> {
+    try {
+        await SecureStore.setItemAsync('settings', JSON.stringify(settings));
+    } catch (error) {
+        console.error('An error occured in saveSettingsAsync:', error);
+        throw error;
+    }
+}
+
+/**
+ * Get settings from Secure Store on device. If no settings are found,
+ * the default settings are saved and returned.
+ * @returns Promise resolving to settings
+ */
+export async function getSettingsAsync(): Promise<Settings> {
+    try {
+        const data = await SecureStore.getItemAsync('settings');
+        if (data === null || !isSettings(JSON.parse(data))) {
+            // No settings saved or invalid: save default settings
+            SecureStore.setItemAsync('settings', JSON.stringify(defaultSettings));
+            return defaultSettings;
+        }
+
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('An error occured in getSettingsAsync:', error);
+        throw error;
+    }
+}
+
+// -------------------------------------------------------- //
+//        File Service functions (external storage)
+// -------------------------------------------------------- //
 
 /**
  * Saves and encrypts given note to given filename in notes

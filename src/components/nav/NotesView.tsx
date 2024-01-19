@@ -3,9 +3,9 @@ import { TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNotesAsync } from "../../util/files";
-import styles from "../../util/styles";
-import Note, { blankNote } from "../../util/note";
+import { getNotesAsync } from "../../util/services/files";
+import styles from "../../util/services/styles";
+import Note, { blankNote } from "../../util/types/note";
 import showErrorDialog from "../../util/error";
 
 import { Params } from "../screens/Unlocked";

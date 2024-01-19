@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-import { LoginInfo, getAccessTimeAsync, setAccessTimeAsync } from "../../util/files";
-import { calculateExpiryTime } from "../../util/datetime";
+import { LoginInfo, getAccessTimeAsync, setAccessTimeAsync } from "../../util/services/files";
+import { calculateExpiryTime } from "../../util/services/datetime";
 import showErrorDialog from "../../util/error";
 
 import CreatePin from './CreatePin';

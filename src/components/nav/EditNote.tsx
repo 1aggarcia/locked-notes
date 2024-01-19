@@ -3,10 +3,10 @@ import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
-import { saveNoteAsync } from "../../util/files";
+import { saveNoteAsync } from "../../util/services/files";
 import { Params } from "../screens/Unlocked";
 
-import styles, { colorMap } from "../../util/styles";
+import styles, { colorMap } from "../../util/services/styles";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
