@@ -15,7 +15,7 @@ import {
 } from './encryption';
 
 import Note, { isNote } from '../types/note';
-import Settings, { defaultSettings, isSettings } from '../types/settings';
+import Settings, { defaultSettings, isValidSettings } from '../types/settings';
 
 export type LoginInfo = {
     hash: string,
@@ -137,13 +137,14 @@ export async function saveSettingsAsync(settings: Settings): Promise<void> {
 export async function getSettingsAsync(): Promise<Settings> {
     try {
         const data = await SecureStore.getItemAsync('settings');
-        if (data === null || !isSettings(JSON.parse(data))) {
+
+        if (data !== null && isValidSettings(JSON.parse(data))) {
+            return JSON.parse(data);
+        } else {
             // No settings saved or invalid: save default settings
             SecureStore.setItemAsync('settings', JSON.stringify(defaultSettings));
             return defaultSettings;
         }
-
-        return JSON.parse(data);
     } catch (error) {
         console.error('An error occured in getSettingsAsync:', error);
         throw error;

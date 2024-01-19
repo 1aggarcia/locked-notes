@@ -1,7 +1,7 @@
 import { Pressable, TouchableOpacity, View, Alert } from "react-native";
 
 import showErrorDialog from "../../util/error";
-import styles from "../../util/services/styles";
+import { getStyles } from "../../util/services/styles";
 import Note from "../../util/types/note";
 import { formatDate } from "../../util/services/datetime";
 
@@ -22,6 +22,7 @@ export default function NoteOptions(props: NoteOptionProps) {
     const dateCreatedString = formatDate(props.note.dateCreated);
     const dateModifiedString = formatDate(props.note.dateModified);
 
+    const styles = getStyles();
     const deleteButton = {
         text: 'Delete',
         onPress: () => {

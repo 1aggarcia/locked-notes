@@ -9,7 +9,7 @@ type Settings = {
 export default Settings;
 
 export const defaultSettings: Settings = {
-    theme: 'lightMode',
+    theme: 'Light Mode',
     unlockedTime: 599
 }
 
@@ -18,7 +18,7 @@ export const defaultSettings: Settings = {
  * @param obj object to check
  * @returns true iff obj contains all the properties of a Settings object
  */
-export function isSettings(obj: object): boolean {
+export function isValidSettings(obj: object): boolean {
     return (
         typeof obj === 'object' &&
         'theme' in obj && typeof obj.theme === 'string' &&

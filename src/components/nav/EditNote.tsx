@@ -6,7 +6,7 @@ import showErrorDialog from "../../util/error";
 import { saveNoteAsync } from "../../util/services/files";
 import { Params } from "../screens/Unlocked";
 
-import styles, { colorMap } from "../../util/services/styles";
+import { getStyles, getColorTheme } from "../../util/services/styles";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
@@ -14,6 +14,7 @@ const maxBodyLength = 16384;  // 2^14
 
 export default function EditNote({ route, navigation }: NativeStackScreenProps<Params, 'EditNote'>) {
     const props = route.params;
+    const styles = getStyles();
 
     const [title, setTitle] = useState(props.note.title);
     const [body, setBody] = useState(props.note.body);
@@ -66,7 +67,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
     }
 
     return (
-        <View style={styles.app}>
+        <View style={getStyles().app}>
             <ScrollView style={styles.editNote}>
                 <TextInput 
                     style={styles.noteTitle}
@@ -74,7 +75,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
                     maxLength={maxTitleLength}
                     onChangeText={saveTitle}
                     placeholder='Title'
-                    placeholderTextColor={colorMap.placeholder}
+                    placeholderTextColor={getColorTheme().placeholder}
                     multiline
                 />
                 <TextInput 
@@ -83,7 +84,7 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
                     maxLength={maxBodyLength}
                     onChangeText={saveBody}
                     placeholder='Write something here...'
-                    placeholderTextColor={colorMap.placeholder}
+                    placeholderTextColor={getColorTheme().placeholder}
                     multiline
                 />
             </ScrollView>
