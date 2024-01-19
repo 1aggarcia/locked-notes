@@ -2,9 +2,11 @@
 
 This is a simple notes app offering encrypted protection of notes via numerical PIN, designed for iOS and Android.
 
-Upon first usage after installation, the user is propmted to set a 6 digit PIN required for entry into the app. At the moment PIN resetting is not avaliable but is under development. One the PIN is set, the app will unlock for 5 minutes before automatically locking again. At the top of the screen, the user may manually lock the app at any time with the "Lock" button.
+By default the app is unlockable for 10 minutes at a time, during which the user can create, edit, and delete notes. All files are encrypted on the disk, and all changes are automatically saved.
 
-In the unlocked state, a list of all notes is shown. Tapping a note opens the edit view for that note, long pressing the note shows details about its file. All files are encrypted in external storage. In the edit view for any note, all changes are automatically saved.
+## Demo APK
+
+If you want to demo the app without downloading any source code, there is a relatively recent APK avaliable [on the expo website](https://expo.dev/accounts/1aggarcia/projects/locked-notes/builds/eba85f52-45a0-45eb-a732-980a434aadc0) which you can install on an Android device. If you don't trust me, you could download it on an emulator or build the app yourself with the instructions below.
 
 ## Source Code
 
@@ -12,31 +14,32 @@ This app is built in TypeScript using the React Native framework and the Expo pl
 
 ### Software Setup
 
-The following software tools are required to build and run the app:
-- Git (confirm installation with `git -v`)
-- Node.js (confirm installation with `node -v`)
-- Expo Go app installed on test device
-
+Required tools:
+- [Node.js](https://nodejs.org/en) - run `node -v` in the terminal to confirm installation.
+- [Expo Go](https://expo.dev/client) for iOS and Android - install this on the device you want to test the app on.
 
 ### Build and Run
 
 After setting up the required tools, follow the following steps to build and run the app
 
-1. Clone source code
+1. Clone source code and navigate to `src` folder in the terminal
     ```
     git clone https://github.com/1aggarcia/locked-notes.git
     ```
+    ```
+    cd src
+    ```
 
-2. Navigate to `src` folder in the terminal 
-
-3. Install dependencies in the `src` folder
+2. Install dependencies in the `src` folder
     ```
     npm install
     ```
 
-4. Start the development server
+3. Start the development server
     ```
     npx expo start
     ```
+    This will produce a QR code in the terminal window
 
-5. Scan the QR code produced in the terminal with the Expo Go app for Android, or the Camera app for iOS.
+4. Scan the QR code on your test device, through the Camera app on iOS or the Expo Go app on Android.
+    - Make sure both the development server and test device are running on the same WiFi network, and that the computer running the development server is configured to use a public network so that it can be discovered by the phone. The trick I like to use is to use my phone's hotspot and connect my laptop to that hotspot.
