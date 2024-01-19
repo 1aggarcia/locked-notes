@@ -21,13 +21,15 @@ export function registerPinAsEncryptionKey(pin: string) {
 /**
  * Encrypts data with AES using registered key.
  * Key must be registered using `registerEncryptionKey()` before use
- * @param data text data to encrypt
+ * @param data text data to encrypt. Must not be empty.
  * @throws Error if encryption key has not been registered
  * @returns encrypted data as text
  */
 export function encryptData(data: string): string {
     if (encryptionKey === undefined)
-        throw Error('Encryption key has not been registered');
+        throw ReferenceError('Encryption key has not been registered');
+    if (data.length === 0)
+        throw RangeError('Attempted to encrypt an empty string');
 
     return CryptoJS.AES.encrypt(data, encryptionKey).toString();
 }
@@ -36,15 +38,26 @@ export function encryptData(data: string): string {
  * Decrypts ciphertext with AES using registered key.
  * Key must be registered using `registerEncryptionKey()` before use
  * @param ciphertext encrypted data as text
- * @throws Error if encryption key has not been registered
- * @returns original text data, if the correct key was registered
+ * @throws Error if encryption key has not been registered.
+ * @returns The decrypted data, if the correct key was registered.
+ *      Otherwise, null
  */
-export function decryptData(ciphertext: string): string {
+export function decryptData(ciphertext: string): string | null {
     if (encryptionKey === undefined)
-        throw Error('Encryption key has not been registered');
+        throw ReferenceError('Encryption key has not been registered');
 
     const bytes = CryptoJS.AES.decrypt(ciphertext, encryptionKey);
-    return bytes.toString(CryptoJS.enc.Utf8);
+    if (bytes.sigBytes < 0) {
+        console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
+        return null;
+    }
+
+    try {
+        return bytes.toString(CryptoJS.enc.Utf8);
+    } catch {
+        console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
+        return null;
+    }
 }
 
 /**

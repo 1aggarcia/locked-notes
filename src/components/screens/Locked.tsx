@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/encryption";
-import { LoginInfo } from "../../util/files";
+import { LoginInfo, testSafAsync } from "../../util/files";
 import styles from "../../util/styles";
 
 import AppText from "../common/AppText";
@@ -50,4 +50,14 @@ export default function Locked(props: LockedProps) {
             <PinPad onComplete={confirmPin}/>
         </View>
     )
+}
+
+/** Dummy button for testing new file service functions */
+function TestActionDontUse() {
+    return <TouchableOpacity 
+        onPress={testSafAsync}
+        style={{backgroundColor: 'lime', padding: 15}}
+    >
+        <AppText style={{textAlign: 'center'}}>Do something dangerous to my phone</AppText>
+    </TouchableOpacity>
 }

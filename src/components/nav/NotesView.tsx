@@ -24,13 +24,6 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
         note: Note
     }>();
 
-    // Load notes from external storage to app state
-    function refreshList() {
-        getNotesAsync()
-            .then(setNoteMap)
-            .catch(showErrorDialog);
-    }
-
     function openNote(filename: string, note: Note) {
         const noteProps = { filename: filename, note: note };
         navigation.navigate('EditNote', noteProps);
@@ -46,11 +39,15 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
         refreshList();
     }
 
+    // Load notes from external storage to app state
+    function refreshList() {
+        getNotesAsync()
+            .then(setNoteMap)
+            .catch(showErrorDialog);
+    }
+
     // Refresh the list only when this screen is focused (prevents inf loop)
-    useFocusEffect(useCallback(() => {
-        console.log('refreshing...');
-        refreshList();
-    }, []))
+    useFocusEffect(useCallback(refreshList, []));
 
     if (noteMap === undefined)
         return <Loading message='Fetching notes...'/>;

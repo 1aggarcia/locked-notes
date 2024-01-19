@@ -163,14 +163,16 @@ export async function saveNoteAsync(filename: string, note: Note) {
 export async function getNoteAsync(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
-        const rawFile = await FileSystem.readAsStringAsync(fileUri)
-        const decrypted = JSON.parse(decryptData(rawFile));
-
-        if (isNote(decrypted)) {
-            return decrypted;
-        } else {
+        const decryptedFile = decryptData(await FileSystem.readAsStringAsync(fileUri));
+        if (decryptedFile === null)
+            // Decryption failed
             return null;
-        }
+
+        const note = JSON.parse(decryptedFile);
+        if (!isNote(note))
+            return null;
+
+        return note;
     } catch (error) {
         console.error("An error occured in getNoteAsync:", error);
         return null;
@@ -188,7 +190,7 @@ export async function getNotesAsync(): Promise<Map<string, Note>> {
 
         for (const filename of filenames) {
             const note = await getNoteAsync(filename);
-            if (note)
+            if (note !== null)
                 result.set(filename, note);
         }
         return result;
@@ -211,4 +213,42 @@ export async function deleteNoteAsync(filename: string) {
         console.error("An error occured in deleteNoteAsync:", error);
         throw error;
     }
+}
+
+/** 
+ * For testing purposes ONLY
+ * Not reccomended to use on real device, overwrites every function in directory selected
+ */
+export async function testSafAsync() {
+    try {
+        // Get folder
+        const permissions = await FileSystem
+            .StorageAccessFramework
+            .requestDirectoryPermissionsAsync()
+
+        // Verify permissions
+        if (!permissions.granted) {
+            alert('Access Denied');
+            return;
+        }
+
+        // Enumerate files
+        const names = await FileSystem
+            .StorageAccessFramework
+            .readDirectoryAsync(permissions.directoryUri);
+        for (const fileUri of names) {
+            // Write to file
+            await FileSystem.StorageAccessFramework.writeAsStringAsync(
+                fileUri, '-',
+            )
+            console.log(`File overwritted ${fileUri}?`);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    // // Create new file
+    // fileUri = await FileSystem
+    //     .StorageAccessFramework
+    //     .createFileAsync(uri, 'titulo.txt', 'text/plain');
 }
