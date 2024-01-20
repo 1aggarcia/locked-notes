@@ -1,11 +1,21 @@
 import { StyleSheet } from "react-native";
 import { lightModeColors, darkModeColors, ColorTheme } from "../../assets/colors";
+import { getSettingsAsync } from "./files";
 
-// Default value: may be changed once settings load
+// Default value; may be changed once settings load.
 let useDarkMode = false;
 
-// Default value is light mode: will be regenerated once settings load
+// Default styles generated in light mode,
+// will be regenerated once settings load.
 let styles = generateStyles(lightModeColors);
+
+// Load app settings, then overwrite the default values
+getSettingsAsync()
+    .then(settings => {
+        useDarkMode = settings.useDarkMode;
+        styles = generateStyles(getColorTheme())
+    })
+    .catch(error => { throw error });
 
 export const isDarkMode = () => useDarkMode;
 
@@ -14,6 +24,9 @@ export const getStyles = () => styles;
 
 /** Return the color theme saved in the styles service */
 export const getColorTheme = () => useDarkMode? darkModeColors : lightModeColors;
+
+
+// DEFINE ALL STYLES IN THE FUNCTION BELOW
 
 /** Generate the stylesheet with the given color theme */
 function generateStyles(colorTheme: ColorTheme) {
