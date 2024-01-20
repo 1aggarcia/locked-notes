@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, View, Switch } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 

@@ -6,7 +6,6 @@ let useDarkMode = false;
 
 // Default value is light mode: will be regenerated once settings load
 let styles = generateStyles(lightModeColors);
-export default styles;
 
 export const isDarkMode = () => useDarkMode;
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import styles from "../../util/services/styles";
+import { getStyles } from "../../util/services/styles";
 import { LoginInfo, savePinAsync } from "../../util/services/files";
 import showErrorDialog from "../../util/error";
 
@@ -14,6 +14,8 @@ interface CreatePinProps {
 }
 
 export default function CreatePin(props: CreatePinProps) {
+    const styles = getStyles();
+
     const [pin, setPin] = useState('');
     const [error, setError] = useState(false);
 

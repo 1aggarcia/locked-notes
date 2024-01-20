@@ -4,7 +4,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getNotesAsync } from "../../util/services/files";
-import styles from "../../util/services/styles";
+import { getStyles } from "../../util/services/styles";
 import Note, { blankNote } from "../../util/types/note";
 import showErrorDialog from "../../util/error";
 
@@ -15,6 +15,8 @@ import NoteOptions from "../common/NoteOptions";
 import { NoteList } from "../common/NoteList";
 
 export default function NotesView({ navigation }: NativeStackScreenProps<Params>) {
+    const styles = getStyles();
+
     // map of notes where key=filename, value=note
     const [noteMap, setNoteMap] = useState<Map<string, Note>>();
 

@@ -1,6 +1,6 @@
 import { View, ActivityIndicator } from "react-native";
 
-import styles from "../../util/services/styles";
+import { getStyles } from "../../util/services/styles";
 import AppText from "../common/AppText";
 
 interface LoadingProps {
@@ -9,6 +9,8 @@ interface LoadingProps {
 }
 
 export default function Loading(props: LoadingProps) {
+    const styles = getStyles();
+
     return (
         <View style={[styles.app, styles.centered]}>
             <AppText style={styles.header}>Loading</AppText>
