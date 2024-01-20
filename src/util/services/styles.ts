@@ -98,8 +98,8 @@ function generateStyles(colorTheme: ColorTheme) {
         },
         pinButton: {
             margin: 5,
-            width: 80,
-            height: 80,
+            width: 90,
+            height: 70,
             borderRadius: 50,
             borderColor: colorTheme.strongBorder,
             borderWidth: 2,
@@ -109,13 +109,14 @@ function generateStyles(colorTheme: ColorTheme) {
         },
         pinBackspace: {
             margin: 5,
-            width: 80,
-            height: 80,
+            width: 90,
+            height: 70,
             alignItems: 'center',
             justifyContent: 'center',
         },
         pinDots: {
             display: 'flex',
+            alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
         },
@@ -129,10 +130,13 @@ function generateStyles(colorTheme: ColorTheme) {
         pinDotFull: {
             backgroundColor: colorTheme.strongBorder
         },
+        pinPad: {
+            justifyContent: 'flex-end',
+        },
         keypad: {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            margin: 20
+            paddingVertical: 20,
         },
         backspace: {
             alignSelf: 'flex-end',
@@ -176,11 +180,8 @@ function generateStyles(colorTheme: ColorTheme) {
             fontWeight: 'bold'
         },
         noteListEmpty: {
-            flex: 1,
-            textAlign: 'center',
-            padding: 10,
             color: colorTheme.placeholder,
-            fontSize: 20,
+            fontSize: 25,
             fontWeight: 'bold',
         }
     })

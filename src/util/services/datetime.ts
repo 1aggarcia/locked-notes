@@ -44,3 +44,15 @@ export function formatTime(seconds: number): string {
         return `${minutes}:${leftOver}`
     }
 }
+
+/**
+ * Determine the number of seconds until the diven date
+ * @param timestamp date and time to calculate the difference for
+ * @returns number of seconds until given timestamp, or 0 if date is in the past.
+ */
+export function secondsUntil(timestamp: Date): number {
+    const msPerSec = 1000;
+    const difference = Math.floor((timestamp.getTime() - Date.now()) / msPerSec);
+
+    return (difference > 0)? difference : 0
+}

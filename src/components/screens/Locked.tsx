@@ -43,12 +43,14 @@ export default function Locked(props: LockedProps) {
 
     return (
         <View style={[styles.app, styles.pinContainer]}>
-            {error &&
-                <AppText style={{color: 'red', textAlign: 'center'}}>
-                    Incorrect PIN entered. {`${maxAttempts - attempts}`} attempts remaining.
-                </AppText>
-            }
-            <AppText style={styles.header}>Enter PIN to unlock</AppText>
+            <View style={[styles.centered, {flex: 1}]}>
+                <AppText style={styles.header}>Enter PIN to unlock</AppText>
+                {error &&
+                    <AppText style={{color: 'red', textAlign: 'center'}}>
+                        Incorrect PIN entered. {`${maxAttempts - attempts}`} attempts remaining.
+                    </AppText>
+                }
+            </View>
             <PinPad onComplete={confirmPin}/>
         </View>
     )

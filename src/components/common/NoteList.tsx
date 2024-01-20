@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import Note from "../../util/types/note";
 import { getStyles } from "../../util/services/styles";
@@ -32,9 +32,11 @@ export function NoteList(props: NoteListProps) {
     }
 
     if (result.length === 0)
-        return <AppText style={getStyles().noteListEmpty}>
-            No Notes Yet
-        </AppText>
+        return <View style={[getStyles().centered, {flex: 1}]}>
+            <AppText style={getStyles().noteListEmpty}>
+                No Notes Yet
+            </AppText>
+        </View>
 
     // Sort by date modified
     result.sort((a, b) => b.props.note.dateModified - a.props.note.dateModified)

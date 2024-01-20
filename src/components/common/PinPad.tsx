@@ -49,31 +49,33 @@ export default function PinPad(props: PinPadProps) {
         setPin(newPin);
     }
 
-    return (<>
-        <PinVisualizer
-            max={maxPinLength}
-            currentLength={pin.length}
-        />
-        <View style={styles.keypad}>
-            <View>
-                <PinButton digit={1} onPress={updatePin}/>
-                <PinButton digit={4} onPress={updatePin}/>
-                <PinButton digit={7} onPress={updatePin}/>
-            </View>
-            <View>
-                <PinButton digit={2} onPress={updatePin}/>
-                <PinButton digit={5} onPress={updatePin}/>
-                <PinButton digit={8} onPress={updatePin}/>
-                <PinButton digit={0} onPress={updatePin}/>
-            </View>
-            <View>
-                <PinButton digit={3} onPress={updatePin}/>
-                <PinButton digit={6} onPress={updatePin}/>
-                <PinButton digit={9} onPress={updatePin}/>
-                <PinBackspace onPress={backspace} />
+    return (
+        <View style={styles.pinPad}>
+            <PinVisualizer
+                max={maxPinLength}
+                currentLength={pin.length}
+            />
+            <View style={styles.keypad}>
+                <View>
+                    <PinButton digit={1} onPress={updatePin}/>
+                    <PinButton digit={4} onPress={updatePin}/>
+                    <PinButton digit={7} onPress={updatePin}/>
+                </View>
+                <View>
+                    <PinButton digit={2} onPress={updatePin}/>
+                    <PinButton digit={5} onPress={updatePin}/>
+                    <PinButton digit={8} onPress={updatePin}/>
+                    <PinButton digit={0} onPress={updatePin}/>
+                </View>
+                <View>
+                    <PinButton digit={3} onPress={updatePin}/>
+                    <PinButton digit={6} onPress={updatePin}/>
+                    <PinButton digit={9} onPress={updatePin}/>
+                    <PinBackspace onPress={backspace} />
+                </View>
             </View>
         </View>
-    </>)
+    )
 }
 
 // One-time-use small component for the backspace button, so we define it here
@@ -88,7 +90,7 @@ function PinBackspace(props: PinBackspaceProps) {
             style={getStyles().pinBackspace}
             onPress={props.onPress}
         >
-            <AppText style={{fontSize: 50}}>{'<'}</AppText>
+            <AppText style={{fontSize: 35}}>{'<'}</AppText>
         </TouchableOpacity>
     )
 }

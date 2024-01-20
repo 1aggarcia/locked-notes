@@ -44,12 +44,14 @@ export default function CreatePin(props: CreatePinProps) {
         // Pin has not been set
         return (
             <View style={[styles.app, styles.pinContainer]}>
-                {error &&
-                    <AppText style={{color: 'red', textAlign: 'center'}}>
-                        The PINs entered did not match. Please try again
-                    </AppText>
-                }
-                <AppText style={styles.header}>Create a New PIN</AppText>
+                <View style={[styles.centered, {flex: 1}]}>
+                    <AppText style={styles.header}>Create a New PIN</AppText>
+                    {error &&
+                        <AppText style={{color: 'red', textAlign: 'center'}}>
+                            The PINs entered did not match. Please try again
+                        </AppText>
+                    }
+                </View>
                 <PinPad onComplete={setPin} />
             </View>
         )
@@ -57,7 +59,9 @@ export default function CreatePin(props: CreatePinProps) {
         // Pin has been set: need to confirm it
         return (
             <View style={[styles.app, styles.pinContainer]}>
-                <AppText style={styles.header}>Confirm PIN</AppText>
+                <View style={[styles.centered, {flex: 1}]}>
+                    <AppText style={styles.header}>Confirm PIN</AppText>
+                </View>
                 <PinPad onComplete={confirmPin} />
             </View>
         )

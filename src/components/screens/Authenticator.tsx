@@ -15,10 +15,10 @@ import Loading from "./Loading";
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
 // Maximum number of seconds for which the app may be unlocked
-const maxSeconds = 599;
+const maxSeconds = 600;
 
 // Number of seconds to deny access for
-const denyAccessSeconds = 299;
+const denyAccessSeconds = 300;
 
 interface AuthenticatorProps {
     // We allow an undefined login to signal that

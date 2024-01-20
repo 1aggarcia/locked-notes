@@ -10,7 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/types/note";
 import { isDarkMode } from "../../util/services/styles";
-import { formatTime } from "../../util/services/datetime";
+import { formatTime, secondsUntil } from "../../util/services/datetime";
 
 import NotesView from "../nav/NotesView";
 import EditNote from "../nav/EditNote";
@@ -47,18 +47,23 @@ export default function Unlocked(props: UnlockedProps) {
         title: `Unlocked Time: ${formatTime(timeLeft)}`
     }
 
-    // Countdown until expireTime goes into the past
+    /** Refresh the clock, lock the app if it is past the expiryTime */
+    function decrementTime() {
+        if (Date.now() < props.expiryTime.getTime()) {
+            setTimeLeft(secondsUntil(props.expiryTime) + 1);
+        } else {
+            props.lock()
+        }
+    }
+
+    // Count down until expireTime goes into the past
     useEffect(() => {
-        setTimeout(() => {
-            if (Date.now() < props.expiryTime.getTime()) {
-                // still time left, just keep counting
-                setTimeLeft(secondsUntil(props.expiryTime) + 1);
-            } else {
-                // time is up
-                props.lock()
-            }
-        }, 1000)
-    }, [timeLeft]);
+        const interval = setInterval(decrementTime, 1000);
+
+        // Stop the counter when this component is unmounted
+        // React handles the rest automatically
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <NavigationContainer theme={isDarkMode()? DarkTheme : DefaultTheme}>
@@ -70,16 +75,4 @@ export default function Unlocked(props: UnlockedProps) {
             </Stack.Navigator>
         </NavigationContainer>
     )
-}
-
-/**
- * Determine the number of seconds until the diven date
- * @param timestamp date and time to calculate the difference for
- * @returns number of seconds until given timestamp, or 0 if date is in the past.
- */
-function secondsUntil(timestamp: Date): number {
-    const msPerSec = 1000;
-    const difference = Math.floor((timestamp.getTime() - Date.now()) / msPerSec);
-
-    return (difference > 0)? difference : 0
 }
