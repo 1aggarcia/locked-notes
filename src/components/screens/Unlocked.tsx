@@ -61,7 +61,7 @@ export default function Unlocked(props: UnlockedProps) {
     }, [timeLeft]);
 
     return (
-        <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
+        <NavigationContainer theme={isDarkMode()? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions}>
                 <Stack.Screen name={'NotesView'} component={NotesView} />
                 <Stack.Screen name={'EditNote'} component={EditNote} />

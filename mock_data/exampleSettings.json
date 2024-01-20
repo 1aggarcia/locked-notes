@@ -1,5 +1,4 @@
 {
-    "theme": "dark",
-    "maxUnlockedTime": 300,
-    "notesDir": "content://com.android.externalstorage.documents/tree/primary%3ADocuments%2F"
+    "useDarkMode": true,
+    "maxUnlockedTime": 299
 }

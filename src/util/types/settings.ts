@@ -1,7 +1,6 @@
 /** Object representation of app settings, saved as JSON to the disk */
 type Settings = {
-    /** Name of the color theme to use */
-    theme: string;
+    useDarkMode: boolean;
 
     /** Number of seconds the app will be open when unlocked */
     unlockedTime: number;
@@ -9,7 +8,7 @@ type Settings = {
 export default Settings;
 
 export const defaultSettings: Settings = {
-    theme: 'Light Mode',
+    useDarkMode: false,
     unlockedTime: 599
 }
 
@@ -21,7 +20,7 @@ export const defaultSettings: Settings = {
 export function isValidSettings(obj: object): boolean {
     return (
         typeof obj === 'object' &&
-        'theme' in obj && typeof obj.theme === 'string' &&
+        'useDarkMode' in obj && typeof obj.useDarkMode === 'boolean' &&
         'unlockedTime' in obj && typeof obj.unlockedTime === 'number'
     )
 }

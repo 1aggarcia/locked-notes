@@ -1,17 +1,29 @@
-import { Button, View } from "react-native";
+import { useState, useEffect } from 'react';
+import { Button, View, Switch } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import AppText from "../common/AppText";
-import { setColorTheme, getStyles } from "../../util/services/styles";
+import { getStyles } from "../../util/services/styles";
 import { Params } from "../screens/Unlocked";
+import { getSettingsAsync, saveSettingsAsync } from '../../util/services/files';
 
 export default function Settings({ navigation }: NativeStackScreenProps<Params>) {
+    const [darkMode, setDarkMode] = useState(false);
+
+    async function saveSettings() {
+        const settings = await getSettingsAsync();
+
+        settings.useDarkMode = darkMode;
+        await saveSettingsAsync(settings);
+        console.log('settings saved:', settings);
+    }
+
     return (
         <View style={[getStyles().app, getStyles().centered]}>
             <AppText style={{fontSize: 25}}>Settings</AppText>
-            <Button title='Set theme to Random Colors' onPress={() => setColorTheme('Random Colors')} />
-            <Button title='Set theme to Dark Mode' onPress={() => setColorTheme('Dark Mode')} />
+            <Switch onValueChange={setDarkMode} value={darkMode} />
             <Button title='Go to ResetPin' onPress={() => navigation.navigate('ResetPin')}/>
+            <Button title='Save' onPress={saveSettings} />
         </View>
     )
 }
