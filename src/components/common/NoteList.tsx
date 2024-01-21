@@ -1,7 +1,7 @@
 import { ScrollView, View } from "react-native";
 
 import Note from "../../util/types/note";
-import { getStyles } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 
 import AppText from "./AppText";
 import NotePreview from "./NotePreview";
@@ -32,8 +32,8 @@ export function NoteList(props: NoteListProps) {
     }
 
     if (result.length === 0)
-        return <View style={[getStyles().centered, {flex: 1}]}>
-            <AppText style={getStyles().noteListEmpty}>
+        return <View style={[Styles.get().centered, {flex: 1}]}>
+            <AppText style={Styles.get().noteListEmpty}>
                 No Notes Yet
             </AppText>
         </View>

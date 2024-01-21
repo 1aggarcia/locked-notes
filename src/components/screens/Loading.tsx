@@ -1,6 +1,6 @@
 import { View, ActivityIndicator } from "react-native";
 
-import { getStyles } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 import AppText from "../common/AppText";
 
 interface LoadingProps {
@@ -9,7 +9,7 @@ interface LoadingProps {
 }
 
 export default function Loading(props: LoadingProps) {
-    const styles = getStyles();
+    const styles = Styles.get();
 
     return (
         <View style={[styles.app, styles.centered]}>

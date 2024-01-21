@@ -3,7 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
 import { LoginInfo, getLoginAsync, getSettingsAsync } from './util/services/files';
-import { isDarkMode } from './util/services/styles';
+import Styles from './util/services/styles';
 import showErrorDialog from './util/error';
 
 import Authenticator from './components/screens/Authenticator';
@@ -13,28 +13,35 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [login, setLogin] = useState<LoginInfo>();
   
-  function handleGetLogin(login: LoginInfo | null) {
-    if (login)
-      setLogin(login);
+  async function loadSettingsAsync() {
+    try {
+      const settings = await getSettingsAsync();
+      const savedLogin = await getLoginAsync();
 
-    setLoaded(true);
+      Styles.setDarkMode(settings.useDarkMode);
+      if (savedLogin !== null)
+        setLogin(savedLogin);
+
+      setLoaded(true);
+    } catch (error) {
+      showErrorDialog(error);
+    }
   }
-  
-  // Load login and settings from device secure store on app start
+
   useEffect(() => {
-    getLoginAsync()
-      .then(handleGetLogin)
-      .catch(showErrorDialog);
+    loadSettingsAsync();
   }, [])
 
   return (
     <SafeAreaProvider>
-      {loaded?
+      {loaded? <>
         <Authenticator login={login} />
+        <StatusBar style={Styles.isDarkMode()? 'light' : 'dark'}/>
+        </>
         :
-        <Loading message='Fetching login info...' />
+        <Loading message='Fetching app settings...' />
       }
-      <StatusBar style={isDarkMode()? 'light' : 'dark'}/>
+
     </SafeAreaProvider>
   )
 }

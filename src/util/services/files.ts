@@ -6,13 +6,7 @@
 import * as SecureStore from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 
-import { 
-    decryptData,
-    encryptData,
-    generateSalt,
-    saltAndSha256,
-    registerPinAsEncryptionKey,
-} from './encryption';
+import Encryption, { generateSalt, saltAndSha256 } from './encryption';
 
 import Note, { isNote } from '../types/note';
 import Settings, { defaultSettings, isValidSettings } from '../types/settings';
@@ -45,7 +39,7 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
-    registerPinAsEncryptionKey(pin);
+    Encryption.registerPinAsKey(pin);
 
     try {
         await SecureStore.setItemAsync('loginHash', loginHash);
@@ -176,7 +170,7 @@ export async function saveNoteAsync(filename: string, note: Note) {
     }
     try {
         const fileUri = notesDir + filename
-        await FileSystem.writeAsStringAsync(fileUri, encryptData(text));
+        await FileSystem.writeAsStringAsync(fileUri, Encryption.encrypt(text));
     } catch (error) {
         console.error("An error occured in saveNoteAsync:", error);
         throw error;
@@ -191,7 +185,7 @@ export async function saveNoteAsync(filename: string, note: Note) {
 export async function getNoteAsync(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
-        const decryptedFile = decryptData(await FileSystem.readAsStringAsync(fileUri));
+        const decryptedFile = Encryption.decrypt(await FileSystem.readAsStringAsync(fileUri));
         if (decryptedFile === null)
             // Decryption failed
             return null;

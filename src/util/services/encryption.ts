@@ -1,67 +1,68 @@
-/** 
- * Hash login PINs, encrypt and decrypt .ejn files.
- * Intended for use primarily with `file-service.ts`
- */
-
 import { Hasher, sha256 } from 'js-sha256';
 import CryptoJS from 'react-native-crypto-js';
 
-// starts as undefined, app must handle finding the PIN from local storage
-// or creating a new pin to register a key
-let encryptionKey: string;
+// Export a singleton module to encapsulate global encryptionKey var
+const Encryption = (() => {
+    // App must handle key registration
+    let encryptionKey: string;
 
-/**
- * Hash and register pin to use as an encryption key
- * @param pin to hash and register
- */
-export function registerPinAsEncryptionKey(pin: string) {
-    encryptionKey = sha256Hash1000(pin);
-}
+    return {
+        /**
+         * Hash and register pin to use as an encryption key
+         * @param pin to hash and register
+         */
+        registerPinAsKey: (pin: string): void => {
+            encryptionKey = sha256Hash1000(pin);
+        },
 
-/**
- * Encrypts data with AES using registered key.
- * Key must be registered using `registerEncryptionKey()` before use
- * @param data text data to encrypt. Must not be empty.
- * @throws Error if encryption key has not been registered
- * @returns encrypted data as text
- */
-export function encryptData(data: string): string {
-    if (encryptionKey === undefined)
-        throw ReferenceError('Encryption key has not been registered');
-    if (data.length === 0)
-        throw RangeError('Attempted to encrypt an empty string');
+        /**
+         * Encrypts data with AES using registered key.
+         * Key must be registered using `registerEncryptionKey()` before use
+         * @param data text data to encrypt. Must not be empty.
+         * @throws Error if encryption key has not been registered
+         * @returns encrypted data as text
+         */
+        encrypt: (data: string): string => {
+            if (encryptionKey === undefined)
+                throw ReferenceError('Encryption key has not been registered');
+            if (data.length === 0)
+                throw RangeError('Attempted to encrypt an empty string');
 
-    return CryptoJS.AES.encrypt(data, encryptionKey).toString();
-}
+            return CryptoJS.AES.encrypt(data, encryptionKey).toString();
+        },
 
-/**
- * Decrypts ciphertext with AES using registered key.
- * Key must be registered using `registerEncryptionKey()` before use
- * @param ciphertext encrypted data as text
- * @throws Error if encryption key has not been registered.
- * @returns The decrypted data, if the correct key was registered.
- *      Otherwise, null
- */
-export function decryptData(ciphertext: string): string | null {
-    if (encryptionKey === undefined)
-        throw ReferenceError('Encryption key has not been registered');
+        /**
+         * Decrypts ciphertext with AES using registered key.
+         * Key must be registered using `registerEncryptionKey()` before use
+         * @param ciphertext encrypted data as text
+         * @throws Error if encryption key has not been registered.
+         * @returns The decrypted data, if the correct key was registered.
+         *        Otherwise, null
+         */
+        decrypt: (ciphertext: string): string | null => {
+            if (encryptionKey === undefined)
+                throw ReferenceError('Encryption key has not been registered');
 
-    const bytes = CryptoJS.AES.decrypt(ciphertext, encryptionKey);
-    if (bytes.sigBytes < 0) {
-        console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
-        return null;
+            const bytes = CryptoJS.AES.decrypt(ciphertext, encryptionKey);
+            if (bytes.sigBytes < 0) {
+                console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
+                return null;
+            }
+
+            try {
+                return bytes.toString(CryptoJS.enc.Utf8);
+            } catch {
+                console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
+                return null;
+            }
+        }
     }
+})();
 
-    try {
-        return bytes.toString(CryptoJS.enc.Utf8);
-    } catch {
-        console.warn('Ciphertext could not be decrypted. Was the wrong key registered?');
-        return null;
-    }
-}
+export default Encryption;
 
 /**
- * Salt and has text using SHA-256
+ * Salt and hash text using SHA-256
  * @param data text and salt to hash
  * @returns hashed text in hexadecimal
  */

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
-import { getStyles } from '../../util/services/styles';
+import Styles from '../../util/services/styles';
 
 import PinButton from './PinButton';
 import PinVisualizer from './PinVisualizer';
@@ -15,7 +15,7 @@ export interface PinPadProps {
 }
 
 export default function PinPad(props: PinPadProps) {
-    const styles = getStyles();
+    const styles = Styles.get();
     const [pin, setPin] = useState('');
 
     /**
@@ -87,7 +87,7 @@ interface PinBackspaceProps {
 function PinBackspace(props: PinBackspaceProps) {
     return (
         <TouchableOpacity
-            style={getStyles().pinBackspace}
+            style={Styles.get().pinBackspace}
             onPress={props.onPress}
         >
             <AppText style={{fontSize: 35}}>{'<'}</AppText>

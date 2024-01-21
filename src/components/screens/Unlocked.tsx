@@ -9,7 +9,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Note from "../../util/types/note";
-import { isDarkMode } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
 
 import NotesView from "../nav/NotesView";
@@ -66,7 +66,7 @@ export default function Unlocked(props: UnlockedProps) {
     }, []);
 
     return (
-        <NavigationContainer theme={isDarkMode()? DarkTheme : DefaultTheme}>
+        <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions}>
                 <Stack.Screen name={'NotesView'} component={NotesView} />
                 <Stack.Screen name={'EditNote'} component={EditNote} />

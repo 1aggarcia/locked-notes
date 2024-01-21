@@ -1,5 +1,5 @@
 import { View } from "react-native"
-import { getStyles } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 
 export interface PinVisualizerProps {
     /** maximun length of PIN */
@@ -15,7 +15,7 @@ export default function PinVisualizer(props: PinVisualizerProps) {
         throw RangeError('props.max < props.currentLength');
 
     const dots: JSX.Element[] = []
-    const styles = getStyles();
+    const styles = Styles.get();
 
     // Generate array of JSX dots based on props
     for (let i = 0; i < props.max; i++) {

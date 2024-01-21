@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { getSettingsAsync, saveSettingsAsync } from '../../util/services/files';
 import showErrorDialog from '../../util/error';
-import { getStyles } from "../../util/services/styles";
+import Styles from '../../util/services/styles';
 import SettingsType from '../../util/types/settings';
 
 import AppText from "../common/AppText";
@@ -14,6 +14,8 @@ import Loading from '../screens/Loading';
 export default function Settings({ navigation }: NativeStackScreenProps<Params>) {
     const [wasChanged, setWasChanged] = useState(false);
     const [settings, setSettings] = useState<SettingsType>();
+
+    const styles = Styles.get();
 
     function saveSettings() {
         if (wasChanged === false || settings === undefined)
@@ -46,7 +48,7 @@ export default function Settings({ navigation }: NativeStackScreenProps<Params>)
         return <Loading message='Loading settings...' />
 
     return (
-        <View style={[getStyles().app, getStyles().centered]}>
+        <View style={[styles.app, styles.centered]}>
             <AppText style={{fontSize: 25}}>Settings</AppText>
             <Switch onValueChange={setDarkMode} value={settings.useDarkMode} />
             <Button title='Go to ResetPin' onPress={() => navigation.navigate('ResetPin')}/>

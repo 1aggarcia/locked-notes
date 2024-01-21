@@ -1,10 +1,12 @@
 import { View } from "react-native";
 import AppText from "../common/AppText";
-import { getStyles } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 
 export default function ResetPin() {
+    const styles = Styles.get();
+
     return (
-        <View style={[getStyles().app, getStyles().centered]}>
+        <View style={[styles.app, styles.centered]}>
             <AppText style={{fontSize: 25}}>ResetPin</AppText>
         </View>
     )

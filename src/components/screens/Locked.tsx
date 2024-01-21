@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
-import { registerPinAsEncryptionKey, saltAndSha256 } from "../../util/services/encryption";
+import Encryption, { saltAndSha256 } from "../../util/services/encryption";
 import { LoginInfo, testSafAsync } from "../../util/services/files";
-import { getStyles } from "../../util/services/styles";
+import Styles from "../../util/services/styles";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";
@@ -23,13 +23,13 @@ export default function Locked(props: LockedProps) {
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);
 
-    const styles = getStyles();
+    const styles = Styles.get();
 
     function confirmPin(pin: string) {
         const hashedPin = saltAndSha256({ text: pin, salt: props.login.salt})
         if (hashedPin === props.login.hash) {
             // Correct login info, set encryption key and unlock
-            registerPinAsEncryptionKey(pin);
+            Encryption.registerPinAsKey(pin);
             props.unlock()
         } else {
             setError(true);
