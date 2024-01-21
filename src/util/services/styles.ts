@@ -3,15 +3,11 @@ import { lightModeColors, darkModeColors, ColorTheme } from "../../assets/colors
 
 // Export a singleton module to encapsulate global style vars
 const Styles = (() => {
-    // Default value
+    // Default values
     let useDarkMode = false;
-
-    // Default styles generated in light mode,
-    // will be regenerated once settings load.
     let stylesheet = generateStyles(false);
 
     return {
-        /** Get the app stylesheet */
         get: () => stylesheet,
 
         getColorTheme: () => useDarkMode? darkModeColors : lightModeColors,

@@ -3,7 +3,6 @@ import CryptoJS from 'react-native-crypto-js';
 
 // Export a singleton module to encapsulate global encryptionKey var
 const Encryption = (() => {
-    // App must handle key registration
     let encryptionKey: string;
 
     return {
@@ -60,6 +59,9 @@ const Encryption = (() => {
 })();
 
 export default Encryption;
+
+
+// Additional stateless functions
 
 /**
  * Salt and hash text using SHA-256

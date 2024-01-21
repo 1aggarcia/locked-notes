@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import { LoginInfo, getAccessTimeAsync, setAccessTimeAsync } from "../../util/services/files";
+import { LoginInfo, getAccessTimeAsync, getSettingsAsync, setAccessTimeAsync } from "../../util/services/files";
 import { calculateExpiryTime } from "../../util/services/datetime";
 import showErrorDialog from "../../util/error";
 
@@ -15,7 +15,7 @@ import Loading from "./Loading";
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
 // Maximum number of seconds for which the app may be unlocked
-const maxSeconds = 600;
+const defaultUnlockedTime = 600;
 
 // Number of seconds to deny access for
 const denyAccessSeconds = 300;
@@ -29,6 +29,7 @@ interface AuthenticatorProps {
 export default function Authenticator(props: AuthenticatorProps) {
     const [mode, setMode] = useState<Mode>('Loading');
     const [login, setLogin] = useState(props.login);
+    const [unlockedTime, setUnlockedTime] = useState(defaultUnlockedTime);
 
     function updateLogin(newLogin: LoginInfo) {
         setLogin(newLogin);
@@ -55,10 +56,21 @@ export default function Authenticator(props: AuthenticatorProps) {
 
     // Deny access to the app if the current time is before
     // the access time
+    async function loadDeps() {
+        try {
+            const settings = await getSettingsAsync();
+            const accessTime = await getAccessTimeAsync();
+
+            setUnlockedTime(settings.unlockedTime);
+            console.log('new unlocked time:', settings.unlockedTime);
+            verifyAccess(accessTime);
+        } catch (error) {
+            showErrorDialog(error);
+        }
+    }
+
     useEffect(() => {
-        getAccessTimeAsync()
-            .then(verifyAccess)
-            .catch(showErrorDialog);
+        loadDeps();
     }, [])
 
     if (login === undefined)
@@ -72,7 +84,7 @@ export default function Authenticator(props: AuthenticatorProps) {
         case 'Unlocked':
             return <Unlocked 
                 lock={() => setMode('Locked')}
-                expiryTime={calculateExpiryTime(maxSeconds)}
+                expiryTime={calculateExpiryTime(unlockedTime)}
             />;
         case 'Locked':
             return <Locked 

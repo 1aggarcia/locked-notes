@@ -50,7 +50,7 @@ export default function Unlocked(props: UnlockedProps) {
     /** Refresh the clock, lock the app if it is past the expiryTime */
     function decrementTime() {
         if (Date.now() < props.expiryTime.getTime()) {
-            setTimeLeft(secondsUntil(props.expiryTime) + 1);
+            setTimeLeft(secondsUntil(props.expiryTime));
         } else {
             props.lock()
         }
