@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import Styles from "../../util/services/styles";
-import { LoginInfo, savePinAsync } from "../../util/services/files";
+import { LoginInfo, savePinAsync } from "../../util/services/securestore";
 import showErrorDialog from "../../util/error";
 
 import AppText from "../common/AppText";

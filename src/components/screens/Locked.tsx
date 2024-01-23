@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 
 import Encryption, { saltAndSha256 } from "../../util/services/encryption";
-import { LoginInfo } from "../../util/services/files";
+import { LoginInfo } from "../../util/services/securestore";
 import Styles from "../../util/services/styles";
-import showErrorDialog from "../../util/error";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";

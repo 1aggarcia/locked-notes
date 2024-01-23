@@ -67,7 +67,7 @@ export default function Unlocked(props: UnlockedProps) {
 
     return (
         <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
-            <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Navigator screenOptions={screenOptions} initialRouteName='NotesView'>
                 <Stack.Screen name={'NotesView'} component={NotesView} />
                 <Stack.Screen name={'EditNote'} component={EditNote} />
                 <Stack.Screen name={'Settings'} component={Settings} />

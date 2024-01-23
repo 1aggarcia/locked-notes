@@ -4,13 +4,13 @@ import showErrorDialog from "../../util/error";
 import Styles from "../../util/services/styles";
 import Note from "../../util/types/note";
 import { formatDate } from "../../util/services/datetime";
-
-import AppText from "./AppText";
 import { 
     deleteNoteAsync,
-    exportTextFileAsync,
     getRawNoteAsync
-} from "../../util/services/files";
+} from "../../util/services/notefiles";
+import { exportTextFileAsync } from "../../util/services/androidstorage";
+
+import AppText from "./AppText";
 
 interface NoteOptionProps {
     /** The note we will show the options for */
@@ -38,21 +38,25 @@ export default function NoteOptions(props: NoteOptionProps) {
 
     // Handle retreiving note and prompting user to export it
     async function exportNote() {
-        const rawFile = await getRawNoteAsync(props.filename);
-        if (rawFile === null) {
-            showErrorDialog(`Error reading file ${props.filename}`);
-            return;
-        }
+        try {
+            const rawFile = await getRawNoteAsync(props.filename);
+            if (rawFile === null) {
+                showErrorDialog(`Error reading file ${props.filename}`);
+                return;
+            }
 
-        if (await exportTextFileAsync(props.filename, rawFile) === false) {
-            Alert.alert(
-                'Operation Cancelled',
-                'Access to file storage was denied.'
-            );
-        } else {
-            Alert.alert('Success!', `${props.filename} successfully exported.`);
+            if (await exportTextFileAsync(props.filename, rawFile) === false) {
+                Alert.alert(
+                    'Operation Cancelled',
+                    'Access to file storage was denied.'
+                );
+            } else {
+                Alert.alert('Success!', `${props.filename} successfully exported.`);
+            }
+            props.close();
+        } catch (error) {
+            showErrorDialog(error);
         }
-        props.close();
 
     }
 

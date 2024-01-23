@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, View, Switch, TextInput } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { getSettingsAsync, saveSettingsAsync } from '../../util/services/files';
+import { getSettingsAsync, saveSettingsAsync } from '../../util/services/securestore';
 import showErrorDialog from '../../util/error';
 import Styles from '../../util/services/styles';
 import SettingsType from '../../util/types/settings';

@@ -3,7 +3,7 @@ import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
-import { saveNoteAsync } from "../../util/services/files";
+import { saveNoteAsync } from "../../util/services/notefiles";
 import { Params } from "../screens/Unlocked";
 
 import Styles from "../../util/services/styles";

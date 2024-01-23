@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 
-import { LoginInfo, getAccessTimeAsync, getSettingsAsync, setAccessTimeAsync } from "../../util/services/files";
+import {
+    LoginInfo,
+    getAccessTimeAsync,
+    getSettingsAsync,
+    setAccessTimeAsync
+} from "../../util/services/securestore";
 import { calculateExpiryTime } from "../../util/services/datetime";
 import showErrorDialog from "../../util/error";
 
