@@ -2,8 +2,9 @@ import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import Encryption, { saltAndSha256 } from "../../util/services/encryption";
-import { LoginInfo, testSafAsync } from "../../util/services/files";
+import { LoginInfo } from "../../util/services/files";
 import Styles from "../../util/services/styles";
+import showErrorDialog from "../../util/error";
 
 import AppText from "../common/AppText";
 import PinPad from "../common/PinPad";
@@ -56,12 +57,28 @@ export default function Locked(props: LockedProps) {
     )
 }
 
-/** Dummy button for testing new file service functions */
-function TestActionDontUse() {
-    return <TouchableOpacity 
-        onPress={testSafAsync}
-        style={{backgroundColor: 'lime', padding: 15}}
-    >
-        <AppText style={{textAlign: 'center'}}>Do something dangerous to my phone</AppText>
-    </TouchableOpacity>
-}
+/** Dummy button for testing new services */
+// function TestActionDontUse() {
+//     return <TouchableOpacity 
+//         onPress={() => {
+//             async function test() {
+//                 try {
+//                     const filename = 'note_1705653496165.ejn';
+//                     const rawFile = await getFileFromNotesDirAsync(filename);
+//                     if (rawFile === null)
+//                         throw ReferenceError("Error reading file");
+
+//                     await exportTextFileAsync(filename, rawFile);
+
+//                     alert("File export complete.")
+//                 } catch (error) {
+//                     showErrorDialog(error);
+//                 }
+//             }
+//             test();
+//         }}
+//         style={{backgroundColor: 'lime', padding: 15}}
+//     >
+//         <AppText style={{textAlign: 'center'}}>Do something dangerous to my phone</AppText>
+//     </TouchableOpacity>
+// }

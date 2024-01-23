@@ -62,7 +62,6 @@ export default function Authenticator(props: AuthenticatorProps) {
             const accessTime = await getAccessTimeAsync();
 
             setUnlockedTime(settings.unlockedTime);
-            console.log('new unlocked time:', settings.unlockedTime);
             verifyAccess(accessTime);
         } catch (error) {
             showErrorDialog(error);

@@ -178,14 +178,31 @@ export async function saveNoteAsync(filename: string, note: Note) {
 }
 
 /**
+ * Retreives the file with the given filename from the notes directory,
+ * if it exists
+ * @param filename name of the file
+ * @returns file contents if there is a corresponding file, null otherwise
+ */
+export async function getRawNoteAsync(filename: string): Promise<string | null> {
+    try {
+        return await FileSystem.readAsStringAsync(notesDir + filename);
+    } catch (error) {
+        console.error("An error occured in getEncryptedNoteAsync:", error);
+        return null;
+    }
+}
+
+/**
  * Retreives the note with the given filename, if it exists.
- * @param fileName name of the note file with extension
- * @returns note as an object if there is a correspondind file, null otherwise
+ * @param filename name of the note file with extension
+ * @returns note as an object if there is a corresponding file, null otherwise
  */
 export async function getNoteAsync(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
-        const decryptedFile = Encryption.decrypt(await FileSystem.readAsStringAsync(fileUri));
+        const decryptedFile = Encryption.decrypt(
+            await FileSystem.readAsStringAsync(fileUri)
+        );
         if (decryptedFile === null)
             // Decryption failed
             return null;
@@ -237,40 +254,39 @@ export async function deleteNoteAsync(filename: string) {
     }
 }
 
-/** 
- * For testing purposes ONLY
- * Not reccomended to use on real device, overwrites every function in directory selected
+/**
+ * Request folder permissions from user, write given file as text
+ * to the location user picks
+ * 
+ * @param filename name of file to save
+ * @param content contents of file in text
+ * @returns boolean Promise resolving to true if the file was sucessfully
+ *  written, false if the user denies access. Promise rejects if an error
+ *  occurs in the file system.
  */
-export async function testSafAsync() {
+export async function exportTextFileAsync(filename: string, content: string) {
     try {
-        // Get folder
         const permissions = await FileSystem
             .StorageAccessFramework
-            .requestDirectoryPermissionsAsync()
+            .requestDirectoryPermissionsAsync();
 
-        // Verify permissions
         if (!permissions.granted) {
             alert('Access Denied');
-            return;
+            return false;
         }
-
-        // Enumerate files
-        const names = await FileSystem
+        // Create new file at the directory user selected
+        const dir = permissions.directoryUri;
+        const fileUri = await FileSystem
             .StorageAccessFramework
-            .readDirectoryAsync(permissions.directoryUri);
-        for (const fileUri of names) {
-            // Write to file
-            await FileSystem.StorageAccessFramework.writeAsStringAsync(
-                fileUri, '-',
-            )
-            console.log(`File overwritted ${fileUri}?`);
-        }
-    } catch (error) {
-        console.log(error);
-    }
+            .createFileAsync(dir, filename, 'text');
 
-    // // Create new file
-    // fileUri = await FileSystem
-    //     .StorageAccessFramework
-    //     .createFileAsync(uri, 'titulo.txt', 'text/plain');
+        await FileSystem.StorageAccessFramework.writeAsStringAsync(
+            fileUri, content,
+        );
+
+        return true;
+    } catch (error) {
+        console.error("An error occured in exportTextFileAsync:", error);
+        throw error;
+    }
 }

@@ -166,16 +166,20 @@ function generateStyles(useDarkMode: boolean) {
             bottom: 0,
             right: 0,
             left: 0,
+            padding: 20
         },
-        deleteButton: {
-            borderColor: 'red',
+        noteOptionsButton: {
+            borderColor: colorTheme.strongBorder,
             borderWidth: 1,
             borderRadius: 10,
             margin: 5,
             paddingVertical: 5,
             paddingHorizontal: 20,
-            color: 'red',
             fontWeight: 'bold'
+        },
+        noteDeleteButton: {
+            borderColor: 'red',
+            color: 'red'
         },
         noteListEmpty: {
             color: colorTheme.placeholder,

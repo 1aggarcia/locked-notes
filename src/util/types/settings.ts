@@ -9,7 +9,7 @@ export default Settings;
 
 export const defaultSettings: Settings = {
     useDarkMode: false,
-    unlockedTime: 599
+    unlockedTime: 600
 }
 
 /**
