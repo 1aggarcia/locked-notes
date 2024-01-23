@@ -3,68 +3,86 @@ import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
-import { saveNoteAsync } from "../../util/services/notefiles";
-import { Params } from "../screens/Unlocked";
-
+import { getNoteAsync, saveNoteAsync } from "../../util/services/notefiles";
+import Note from "../../util/types/note";
 import Styles from "../../util/services/styles";
+
+import { Params } from "../screens/Unlocked";
+import Loading from "../screens/Loading";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
 const maxBodyLength = 16384;  // 2^14
 
-export default function EditNote({ route, navigation }: NativeStackScreenProps<Params, 'EditNote'>) {
-    const props = route.params;
+export default function EditNote(
+    { route, navigation }: NativeStackScreenProps<Params, 'EditNote'>
+) {
+    const [loaded, setLoaded] = useState(false);
+
+    // Default values of blank note, in the event that a new note is being created
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    const [dateCreated, setDateCreated] = useState(Date.now());
+
+    const filename = route.params.filename;
     const styles = Styles.get();
 
-    const [title, setTitle] = useState(props.note.title);
-    const [body, setBody] = useState(props.note.body);
-    const [dateModified, setDateModified] = useState(props.note.dateModified);
-
+    // Retreive note from storage
     useEffect(() => {
-        navigation.addListener('beforeRemove', (e) => {
-            if (title.length > 0) {
-                return;
-            }
-            // e.preventDefault();
-            // alert('No creás notas blancas');
-        })
-    }, [navigation, title])
+        getNoteAsync(filename)
+            .then(handleGetNote)
+            .catch(handleGetNoteError);
+    }, []);
+
+    function handleGetNote(note: Note | null) {
+        if (note !== null) {
+            setTitle(note.title);
+            setBody(note.body);
+            setDateCreated(note.dateCreated);
+        }
+        // If no note was found, the default values already
+        // in state work perfectly to make a new one
+        setLoaded(true);
+    }
+
+    // Promise reject uses 'any' type
+    function handleGetNoteError(reason: any) {
+        showErrorDialog(reason);
+        navigation.goBack();
+    }
 
     function saveTitle(newTitle: string) {
-        // If title is too long, don't save it
         if (newTitle.length > maxTitleLength)
             return;
 
         setTitle(newTitle);
-        setDateModified(Date.now());
+
         // Save note to external storage
-        saveNoteAsync(
-            props.filename, {
-                title: newTitle,
-                body: body,
-                dateCreated: props.note.dateCreated,
-                dateModified: Date.now(),
-            }
-        ).catch(showErrorDialog);
+        saveNoteAsync(filename, {
+            title: newTitle,
+            body: body,
+            dateModified: Date.now(),
+            dateCreated: dateCreated,
+        }).catch(showErrorDialog);
     }
 
     function saveBody(newBody: string) {
-        // If body is too long, don't save it
         if (newBody.length > maxBodyLength)
             return;
 
-        setBody(newBody)
-        setDateModified(Date.now());
+        setBody(newBody);
+
         // Save note to external storage
-        saveNoteAsync(
-            props.filename, {
-                title: title,
-                body: newBody,
-                dateCreated: props.note.dateCreated,
-                dateModified: Date.now(),
-            }
-        ).catch(showErrorDialog);
+        saveNoteAsync(filename, {
+            title: title,
+            body: newBody,
+            dateModified: Date.now(),
+            dateCreated: dateCreated,
+        }).catch(showErrorDialog);
     }
+
+    if (!loaded)
+        return <Loading message="Fetching note contents..." />
 
     return (
         <View style={styles.app}>
@@ -91,3 +109,14 @@ export default function EditNote({ route, navigation }: NativeStackScreenProps<P
         </View>
     )
 }
+
+// Check for blank note before closing
+// useEffect(() => {
+    //     navigation.addListener('beforeRemove', (e) => {
+    //         if (title.length > 0) {
+    //             return;
+    //         }
+    //         // e.preventDefault();
+    //         // alert('No creás notas blancas');
+    //     })
+    // }, [navigation, title])

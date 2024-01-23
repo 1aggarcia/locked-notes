@@ -1,35 +1,33 @@
 import { TouchableOpacity } from "react-native";
 
-import Note from "../../util/types/note";
+import Note, { NoteMetadata } from "../../util/types/note";
 import { formatDate } from "../../util/services/datetime";
 import Styles from "../../util/services/styles";
 import AppText from "./AppText";
 
 interface NotePreviewProps {
-    filename: string
-    note: Note
+    metadata: NoteMetadata
 
     /** Open the edit view for the given note */
-    openNote: (filename: string, note: Note) => void
+    openNote: (filename: string) => void
 
     /** Open the properties view for the given note */
-    setNoteOptions: (data: {filename: string, note: Note}) => void;
+    setNoteOptions: (metadata: NoteMetadata) => void;
 }
 
 export default function NotePreview(props: NotePreviewProps) {
     const styles = Styles.get();
-    const dateModifiedString = formatDate(props.note.dateModified);
-    const noteOptions = {filename: props.filename, note: props.note};
+    const dateModifiedString = formatDate(props.metadata.dateModified);
 
     return (
         <TouchableOpacity
             style={styles.notePreview} 
-            onPress={() => props.openNote(props.filename, props.note)}
-            onLongPress={() => props.setNoteOptions(noteOptions)}
+            onPress={() => props.openNote(props.metadata.filename)}
+            onLongPress={() => props.setNoteOptions(props.metadata)}
             activeOpacity={0.7}
         >   
             <AppText style={styles.notePreviewHeader}>
-                {props.note.title}
+                {props.metadata.title}
             </AppText>
             <AppText style={styles.placeholder}>
                 Modified: {dateModifiedString}

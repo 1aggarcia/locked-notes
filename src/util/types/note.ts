@@ -11,18 +11,14 @@ type Note = {
     dateCreated: number,
     dateModified: number
 }
+export default Note;
 
-/**
- * Create and return a new blank note
- * @returns note with no title, no body, and dateCreated/dateModified set to current time
- */
-export function blankNote(): Note {
-    return {
-        title: '',
-        body: '',
-        dateCreated: Date.now(),
-        dateModified: Date.now()
-    }
+/** Lighter description of note to easily store in a list */
+export type NoteMetadata = {
+    filename: string,
+    title: string,
+    dateCreated: number,
+    dateModified: number
 }
 
 /**
@@ -39,5 +35,3 @@ export function isNote(obj: object): boolean {
         'dateModified' in obj && typeof obj.dateModified === 'number'
     )
 }
-
-export default Note

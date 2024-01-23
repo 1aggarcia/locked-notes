@@ -3,7 +3,7 @@
 import * as FileSystem from 'expo-file-system';
 
 import Encryption from './encryption';
-import Note, { isNote } from '../types/note';
+import Note, { NoteMetadata, isNote } from '../types/note';
 
 export type LoginInfo = {
     hash: string,
@@ -77,30 +77,36 @@ export async function getNoteAsync(filename: string): Promise<Note | null> {
 
         return note;
     } catch (error) {
-        console.error("An error occured in getNoteAsync:", error);
         return null;
     }
 }
 
 /**
- * Retrieves map of all notes in external storage with key=filename, value=note
- * @returns map of notes currently in external storage
+ * Retrieves list of all notes in external storage
+ * @returns map of notes currently in the notes directory
  */
-export async function getNotesAsync(): Promise<Map<string, Note>> {
-    const result = new Map<string, Note>();
+export async function getNoteListAsync(): Promise<NoteMetadata[]> {
+    const result: NoteMetadata[] = [];
     try {
         const filenames = await FileSystem.readDirectoryAsync(notesDir);
 
         for (const filename of filenames) {
             const note = await getNoteAsync(filename);
-            if (note !== null)
-                result.set(filename, note);
+            if (note !== null) {
+                // Add metadata to list
+                result.push({
+                    filename: filename,
+                    title: note.title,
+                    dateCreated: note.dateCreated,
+                    dateModified: note.dateModified
+                });
+            }
         }
-        return result;
-    } catch {
+    } catch (error) {
         // Directory not found or empty
-        return result
+        console.warn(error);
     }
+    return result;
 }
 
 /**

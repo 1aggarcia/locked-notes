@@ -1,36 +1,31 @@
 import { Pressable, TouchableOpacity, View, Alert } from "react-native";
 
 import showErrorDialog from "../../util/error";
+import { NoteMetadata } from "../../util/types/note";
+
 import Styles from "../../util/services/styles";
-import Note from "../../util/types/note";
 import { formatDate } from "../../util/services/datetime";
-import { 
-    deleteNoteAsync,
-    getRawNoteAsync
-} from "../../util/services/notefiles";
+import { deleteNoteAsync, getRawNoteAsync } from "../../util/services/notefiles";
 import { exportTextFileAsync } from "../../util/services/androidstorage";
 
 import AppText from "./AppText";
 
 interface NoteOptionProps {
-    /** The note we will show the options for */
-    note: Note;
-
-    filename: string;
+    metadata: NoteMetadata;
 
     /** Close the popup menu, go back to the NoteList screen */
     close: () => void;
 }
 
 export default function NoteOptions(props: NoteOptionProps) {
-    const dateCreatedString = formatDate(props.note.dateCreated);
-    const dateModifiedString = formatDate(props.note.dateModified);
+    const dateCreatedString = formatDate(props.metadata.dateCreated);
+    const dateModifiedString = formatDate(props.metadata.dateModified);
 
     const styles = Styles.get();
     const deleteButton = {
         text: 'Delete',
         onPress: () => {
-            deleteNoteAsync(props.filename)
+            deleteNoteAsync(props.metadata.filename)
                 .then(handleDelete)
                 .catch(handleDeleteError);
         }
@@ -39,19 +34,19 @@ export default function NoteOptions(props: NoteOptionProps) {
     // Handle retreiving note and prompting user to export it
     async function exportNote() {
         try {
-            const rawFile = await getRawNoteAsync(props.filename);
+            const rawFile = await getRawNoteAsync(props.metadata.filename);
             if (rawFile === null) {
-                showErrorDialog(`Error reading file ${props.filename}`);
+                showErrorDialog(`Error reading file ${props.metadata.filename}`);
                 return;
             }
 
-            if (await exportTextFileAsync(props.filename, rawFile) === false) {
+            if (await exportTextFileAsync(props.metadata.filename, rawFile) === false) {
                 Alert.alert(
                     'Operation Cancelled',
                     'Access to file storage was denied.'
                 );
             } else {
-                Alert.alert('Success!', `${props.filename} successfully exported.`);
+                Alert.alert('Success!', `${props.metadata.filename} successfully exported.`);
             }
             props.close();
         } catch (error) {
@@ -63,7 +58,7 @@ export default function NoteOptions(props: NoteOptionProps) {
     function confirmDelete() {
         Alert.alert(
             'Really delete this note?',
-            `Note "${props.note.title}" will be deleted forever.`,
+            `Note "${props.metadata.title}" will be deleted forever.`,
             [{text: 'Cancel'}, deleteButton]
         )
     }
@@ -86,10 +81,10 @@ export default function NoteOptions(props: NoteOptionProps) {
                     Note Properties
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Filename: {props.filename}
+                    Filename: {props.metadata.filename}
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Title: "{props.note.title}"
+                    Title: "{props.metadata.title}"
                 </AppText>
                 <AppText style={{padding: 5}}>
                     Created: {dateCreatedString}

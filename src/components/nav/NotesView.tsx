@@ -3,9 +3,9 @@ import { TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNotesAsync } from "../../util/services/notefiles";
+import { getNoteListAsync } from "../../util/services/notefiles";
 import Styles from "../../util/services/styles";
-import Note, { blankNote } from "../../util/types/note";
+import { NoteMetadata } from "../../util/types/note";
 import showErrorDialog from "../../util/error";
 
 import { Params } from "../screens/Unlocked";
@@ -15,25 +15,21 @@ import NoteOptions from "../common/NoteOptions";
 import { NoteList } from "../common/NoteList";
 
 export default function NotesView({ navigation }: NativeStackScreenProps<Params>) {
+    // note for which the properties menu is shown. Undefined means no menu shown
+    const [noteOptions, setNoteOptions] = useState<NoteMetadata>();
+    const [noteList, setNoteList] = useState<NoteMetadata[]>();
     const styles = Styles.get();
 
-    // map of notes where key=filename, value=note
-    const [noteMap, setNoteMap] = useState<Map<string, Note>>();
+    // Refresh the list only when this screen is focused (prevents inf loop)
+    useFocusEffect(useCallback(refreshList, []));
 
-    // note for which the properties menu is shown. Undefined means no menu shown
-    const [noteOptions, setNoteOptions] = useState<{
-        filename: string,
-        note: Note
-    }>();
-
-    function openNote(filename: string, note: Note) {
-        const noteProps = { filename: filename, note: note };
-        navigation.navigate('EditNote', noteProps);
+    function openNote(filename: string) {
+        navigation.navigate('EditNote', { filename: filename });
     }
 
     function createNote() {
         const filename = `note_${Date.now()}.ejn`;
-        openNote(filename, blankNote());
+        openNote(filename);
     }
 
     function clearOptions() {
@@ -43,21 +39,18 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
 
     // Load notes from external storage to app state
     function refreshList() {
-        getNotesAsync()
-            .then(setNoteMap)
+        getNoteListAsync()
+            .then(setNoteList)
             .catch(showErrorDialog);
     }
 
-    // Refresh the list only when this screen is focused (prevents inf loop)
-    useFocusEffect(useCallback(refreshList, []));
-
-    if (noteMap === undefined)
+    if (noteList === undefined)
         return <Loading message='Fetching notes...'/>;
 
     return (
         <View style={styles.app}>
             <NoteList
-                noteMap={noteMap}
+                noteList={noteList}
                 openNote={openNote}
                 setNoteOptions={setNoteOptions}
             />
@@ -68,11 +61,7 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
                 <AppText style={styles.createButtonText}>+</AppText>
             </TouchableOpacity>
             {noteOptions &&
-                <NoteOptions
-                    note={noteOptions.note}
-                    filename={noteOptions.filename}
-                    close={clearOptions}
-                />
+                <NoteOptions metadata={noteOptions} close={clearOptions}/>
             }
         </View>
     );

@@ -8,7 +8,6 @@ import { TouchableOpacity } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Note from "../../util/types/note";
 import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
 
@@ -20,7 +19,7 @@ import AppText from "../common/AppText";
 
 export type Params = {
     NotesView: undefined;
-    EditNote: { filename: string, note: Note };
+    EditNote: { filename: string };
     Settings: undefined;
     ResetPin: undefined;
 };
