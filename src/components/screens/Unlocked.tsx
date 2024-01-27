@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, AppState } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -37,6 +37,23 @@ export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
 
+    // Count down until expireTime goes into the past
+    useEffect(() => {
+        const interval = setInterval(decrementTime, 1000);
+
+        // Stop the counter when this component is unmounted
+        // React handles the rest automatically
+        return () => clearInterval(interval);
+    }, []);
+
+    // Lock the app whenever it goes out of focus
+    useEffect(() => {
+        AppState.addEventListener("change", status => {
+            if (status !== "active")
+                props.lock();
+        })
+    }, [])
+
     const screenOptions = {
         headerRight: () => (
             <TouchableOpacity onPress={props.lock}>
@@ -54,15 +71,6 @@ export default function Unlocked(props: UnlockedProps) {
             props.lock()
         }
     }
-
-    // Count down until expireTime goes into the past
-    useEffect(() => {
-        const interval = setInterval(decrementTime, 1000);
-
-        // Stop the counter when this component is unmounted
-        // React handles the rest automatically
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
