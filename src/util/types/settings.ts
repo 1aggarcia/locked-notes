@@ -19,8 +19,8 @@ export const defaultSettings: Settings = {
  */
 export function isValidSettings(obj: object): boolean {
     return (
-        typeof obj === 'object' &&
-        'useDarkMode' in obj && typeof obj.useDarkMode === 'boolean' &&
-        'unlockedTime' in obj && typeof obj.unlockedTime === 'number'
+        typeof obj === 'object'
+        && 'useDarkMode' in obj && typeof obj.useDarkMode === 'boolean'
+        && 'unlockedTime' in obj && typeof obj.unlockedTime === 'number'
     )
 }

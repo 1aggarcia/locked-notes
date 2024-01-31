@@ -9,6 +9,7 @@ import Styles from "../../util/services/styles";
 
 import { Params } from "../screens/Unlocked";
 import Loading from "../screens/Loading";
+import AppText from "../common/AppText";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
@@ -106,6 +107,9 @@ export default function EditNote(
                     multiline
                 />
             </ScrollView>
+            <AppText style={styles.charCount}>
+                {body.length} / {maxBodyLength}
+            </AppText>
         </View>
     )
 }

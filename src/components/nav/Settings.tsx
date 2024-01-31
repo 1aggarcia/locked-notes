@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Button, View, Switch, TextInput } from "react-native";
+import {
+    Button,
+    View,
+    Switch,
+    TextInput,
+    TouchableOpacity
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { getSettingsAsync, saveSettingsAsync } from '../../util/services/securestore';
@@ -74,24 +80,56 @@ export default function Settings({ navigation }: NativeStackScreenProps<Params>)
     if (settings === undefined)
         return <Loading message='Loading settings...' />
 
+    // This is way too big, break it up
     return (
-        <View style={[styles.app, styles.centered]}>
-            <AppText style={{fontSize: 25}}>Settings</AppText>
-            <AppText>App must be restarted to use new settings</AppText>
-            <AppText>Use dark mode:</AppText>
-            <Switch onValueChange={setDarkMode} value={settings.useDarkMode} />
-            <AppText>Unlocked Time (seconds):</AppText>
-            <TextInput 
-                keyboardType='number-pad'
-                placeholderTextColor={Styles.getColorTheme().placeholder}
-                onChangeText={setUnlockedTime}
-                value={settings.unlockedTime.toString()}
-            />
-            <Button title='Go to ResetPin' onPress={() => navigation.navigate('ResetPin')}/>
+        <View style={[styles.app]}>
+            <AppText style={styles.settingsHeader}>Settings</AppText>
+            <View style={styles.settingsRow}>
+                <AppText style={styles.settingsText}>Use dark mode:</AppText>
+                <Switch 
+                    onValueChange={setDarkMode}
+                    value={settings.useDarkMode}
+                />
+            </View>
+            <View style={styles.settingsRow}>
+                <AppText style={styles.settingsText}>
+                    Unlocked Time (seconds):
+                </AppText>
+                <TextInput 
+                    keyboardType='number-pad'
+                    style={styles.settingsTextInput}
+                    placeholderTextColor={Styles.getColorTheme().placeholder}
+                    onChangeText={setUnlockedTime}
+                    value={settings.unlockedTime.toString()}
+                />
+            </View>
+            <View style={styles.settingsRow}>
+                <AppText style={styles.settingsText}>PIN</AppText>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('ResetPin')}
+                    style={styles.settingsButton}
+                >
+                    <AppText style={styles.settingsButtonText}>
+                        Reset
+                    </AppText>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.settingsRow}>
+                <TouchableOpacity
+                    style={styles.settingsButton}
+                    onPress={saveSettings}
+                    disabled={!wasChanged}
+                >
+                    <AppText style={styles.settingsButtonText}>
+                        Save
+                    </AppText>
+                </TouchableOpacity>
             {wasChanged &&
-                <AppText style={{color: 'red'}}>You have unsaved changes</AppText>
+                <AppText style={{color: 'red', textAlign: 'center'}}>
+                    You have unsaved changes
+                </AppText>
             }
-            <Button title='Save' onPress={saveSettings} disabled={!wasChanged} />
+            </View>
         </View>
     )
 }

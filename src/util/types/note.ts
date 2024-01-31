@@ -28,10 +28,10 @@ export type NoteMetadata = {
  */
 export function isNote(obj: object): boolean {
     return (
-        typeof obj === 'object' &&
-        'title' in obj && typeof obj.title === 'string' &&
-        'body' in obj && typeof obj.body === 'string' &&
-        'dateCreated' in obj && typeof obj.dateCreated === 'number' &&
-        'dateModified' in obj && typeof obj.dateModified === 'number'
+        typeof obj === 'object'
+        && 'title' in obj && typeof obj.title === 'string'
+        && 'body' in obj && typeof obj.body === 'string'
+        && 'dateCreated' in obj && typeof obj.dateCreated === 'number'
+        && 'dateModified' in obj && typeof obj.dateModified === 'number'
     )
 }

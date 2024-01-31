@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { lightModeColors, darkModeColors, ColorTheme } from "../../assets/colors";
+import { lightModeColors, darkModeColors } from "../../assets/colors";
 
 // Export a singleton module to encapsulate global style vars
 const Styles = (() => {
@@ -185,6 +185,49 @@ function generateStyles(useDarkMode: boolean) {
             color: colorTheme.placeholder,
             fontSize: 25,
             fontWeight: 'bold',
-        }
+        },
+        charCount: {
+            backgroundColor: colorTheme.fg,
+            color: colorTheme.placeholder,
+            fontSize: 13,
+            bottom: 0,
+            paddingHorizontal: 7,
+            paddingBottom: 2,
+            textAlign: 'right'
+        },
+        settingsHeader: {
+            fontSize: 25,
+            padding: 15,
+            textAlign: 'center'
+        },
+        settingsRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderTopColor: colorTheme.weakBorder,
+            borderTopWidth: 1,
+            backgroundColor: colorTheme.fg
+        },
+        settingsText: {
+            paddingVertical: 5,
+            fontSize: 17,
+        },
+        settingsButton: {
+            backgroundColor: colorTheme.buttonBg,
+            justifyContent: 'center',
+            paddingVertical: 10,
+            paddingHorizontal: 14,
+            borderRadius: 5,
+        },
+        settingsButtonText: {
+            color: colorTheme.fg,
+            fontSize: 17,
+        },
+        settingsTextInput: {
+            color: colorTheme.text,
+            fontSize: 17,
+            paddingHorizontal: 15
+        },
     })
 )};
