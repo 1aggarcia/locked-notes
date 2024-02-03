@@ -1,4 +1,4 @@
-import { Pressable, View, Alert } from "react-native";
+import { Pressable, Alert } from "react-native";
 
 import showErrorDialog from "../../util/error";
 import { NoteMetadata } from "../../util/types/note";
@@ -32,6 +32,25 @@ export default function NoteOptions(props: NoteOptionProps) {
         }
     }
 
+    function handleDelete() {
+        props.close();
+        Alert.alert('Success!', 'Note has been deleted.')
+    }
+
+    // the promise reject gives us "any" type for `reason` so we are forced to use it here
+    function handleDeleteError(reason: any) {
+        props.close();
+        showErrorDialog(reason);
+    }
+
+    function confirmDelete() {
+        Alert.alert(
+            'Really delete this note?',
+            `Note "${props.metadata.title}" will be deleted forever.`,
+            [{text: 'Cancel'}, deleteButton]
+        )
+    }
+
     // Handle retreiving note and prompting user to export it
     async function exportNote() {
         try {
@@ -56,29 +75,15 @@ export default function NoteOptions(props: NoteOptionProps) {
 
     }
 
-    function confirmDelete() {
-        Alert.alert(
-            'Really delete this note?',
-            `Note "${props.metadata.title}" will be deleted forever.`,
-            [{text: 'Cancel'}, deleteButton]
-        )
-    }
-
-    function handleDelete() {
-        props.close();
-        Alert.alert('Success!', 'Note has been deleted.')
-    }
-
-    // the promise reject gives us "any" type for `reason` so we are forced to use it here
-    function handleDeleteError(reason: any) {
-        props.close();
-        showErrorDialog(reason);
-    }
-
     return (
-        <Pressable onPress={props.close} style={[styles.noteOptionsBg, styles.centered]}>
-            <View style={[styles.noteOptions, styles.centered]}>
-                <AppText style={{fontSize: 18, padding: 5, fontWeight: 'bold'}}>
+        <Pressable
+            onPress={props.close}
+            style={[styles.noteOptionsBg, styles.centered]}
+        >
+            <Pressable style={[styles.noteOptions, styles.centered]}>
+                <AppText
+                    style={{fontSize: 18, padding: 5, fontWeight: 'bold'}}
+                >
                     Note Properties
                 </AppText>
                 <AppText style={{padding: 5}}>
@@ -99,7 +104,7 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppButton color="red" onPress={confirmDelete}>
                     Delete Note
                 </AppButton>
-            </View>
+            </Pressable>
         </Pressable>
     )
 }
