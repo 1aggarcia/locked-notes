@@ -51,12 +51,12 @@ export default function Authenticator(props: AuthenticatorProps) {
     }
     
     /** Deny or allow user access based on the given timestamp */
-    function verifyAccess(timestamp: Date) {
-        console.log('Access Time Saved:', timestamp)
-        if (Date.now() < timestamp.getTime())
+    function verifyAccess(timestamp: Date) {``
+        if (Date.now() < timestamp.getTime()) {
             setMode('Denied');
-        else
+        } else {
             setMode('Locked');
+        }
     }
 
     // Deny access to the app if the current time is before

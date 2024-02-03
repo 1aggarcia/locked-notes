@@ -21,9 +21,9 @@ export async function exportTextFileAsync(filename: string, content: string) {
     try {
         const permissions = await SAF.requestDirectoryPermissionsAsync();
 
-        if (!permissions.granted)
+        if (!permissions.granted) {
             return false;
-
+        }
         // Create new file at the directory user selected
         const dir = permissions.directoryUri;
         const fileUri = await SAF.createFileAsync(dir, filename, 'text');

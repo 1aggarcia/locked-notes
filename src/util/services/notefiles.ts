@@ -51,7 +51,7 @@ export async function getRawNoteAsync(filename: string): Promise<string | null> 
     try {
         return await FileSystem.readAsStringAsync(notesDir + filename);
     } catch (error) {
-        console.error("An error occured in getEncryptedNoteAsync:", error);
+        console.warn("An error occured in getRawNoteAsync:", error);
         return null;
     }
 }
@@ -77,6 +77,7 @@ export async function getNoteAsync(filename: string): Promise<Note | null> {
 
         return note;
     } catch (error) {
+        console.warn("An error occured in getNoteAsync:", error);
         return null;
     }
 }

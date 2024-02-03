@@ -2,6 +2,10 @@
  * Manage data stored in the device's secure store.
  * Used to store and retreive app data such as settings and login info.
  * Not used to store user data like notes.
+ * 
+ * In general, getters should not throw errors, they should catch any errors
+ * and return defualt values instead.
+ * Setters do throw errors if a value can't be saved.
  */
 
 import * as SecureStore from 'expo-secure-store';
@@ -25,9 +29,9 @@ const saltLength = 64;
  *      or if string is too long (cap: 2^16 chars)
  */
 export async function savePinAsync(pin: string): Promise<LoginInfo> {
-    if (pin.length > maxStringLength)
+    if (pin.length > maxStringLength) {
         throw new RangeError(`pin is too long: ${pin}`);
-
+    }
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
@@ -53,12 +57,12 @@ export async function getLoginAsync(): Promise<LoginInfo | null> {
         const loginHash = await SecureStore.getItemAsync('loginHash');
         const loginSalt = await SecureStore.getItemAsync('loginSalt');
 
-        if (loginHash === null || loginSalt === null)
+        if (loginHash === null || loginSalt === null) {
             return null;
-
+        }
         return { hash: loginHash, salt: loginSalt };
     } catch (error) {
-        console.error("An error occured in getLoginAsync:", error);
+        console.log("getLoginAsync caught an error:", error);
         return null;
     }
 }
@@ -75,7 +79,6 @@ export async function setAccessTimeAsync(timestamp: Date): Promise<void> {
         // The timestamp is stored as a plain number to
         // make decoding easier and more reliable
         const timestamp_ms: number = timestamp.getTime();
-
         await SecureStore.setItemAsync('accessTime', timestamp_ms.toString());
     } catch (error) {
         console.error("An error occured in setAccessTimeAsync:", error);
@@ -95,7 +98,7 @@ export async function getAccessTimeAsync(): Promise<Date> {
         const timestamp_ms = Number(await SecureStore.getItemAsync('accessTime'));
         return new Date(timestamp_ms);
     } catch (error) {
-        console.error("An error occured in getAccessTimeAsync:", error);
+        console.log("getAccessTimeAsync caught an error:", error);
         return new Date(0);
     }
 }
@@ -124,15 +127,15 @@ export async function getSettingsAsync(): Promise<Settings> {
     try {
         const data = await SecureStore.getItemAsync('settings');
 
-        if (data !== null && isValidSettings(JSON.parse(data))) {
-            return JSON.parse(data);
-        } else {
-            // No settings saved or invalid: save default settings
-            SecureStore.setItemAsync('settings', JSON.stringify(defaultSettings));
-            return defaultSettings;
+        if (data === null || !isValidSettings(JSON.parse(data))) {
+            throw ReferenceError("Could not retreive data entry");
         }
+        return JSON.parse(data);
     } catch (error) {
-        console.error('An error occured in getSettingsAsync:', error);
-        throw error;
+        console.log('getSettingsAsync caught an error:', error);
+
+        // Save the default settings, overwrite any fautly or non-existent data
+        SecureStore.setItemAsync('settings', JSON.stringify(defaultSettings));
+        return defaultSettings;
     }
 }
