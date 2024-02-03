@@ -142,11 +142,6 @@ function generateStyles(useDarkMode: boolean) {
             borderColor: colorTheme.strongBorder,
             borderWidth: 1
         },
-        button: {
-            padding: 10,
-            borderColor: colorTheme.buttonBg,
-            borderWidth: 1
-        },
         editNote: {
             flex: 1,
             backgroundColor: colorTheme.fg,
@@ -168,18 +163,15 @@ function generateStyles(useDarkMode: boolean) {
             left: 0,
             padding: 20
         },
-        noteOptionsButton: {
+        button: {
             borderColor: colorTheme.strongBorder,
+            color: colorTheme.text,
             borderWidth: 1,
             borderRadius: 10,
             margin: 5,
             paddingVertical: 5,
             paddingHorizontal: 20,
             fontWeight: 'bold'
-        },
-        noteDeleteButton: {
-            borderColor: 'red',
-            color: 'red'
         },
         noteListEmpty: {
             color: colorTheme.placeholder,

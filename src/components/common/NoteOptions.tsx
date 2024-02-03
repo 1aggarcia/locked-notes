@@ -1,4 +1,4 @@
-import { Pressable, TouchableOpacity, View, Alert } from "react-native";
+import { Pressable, View, Alert } from "react-native";
 
 import showErrorDialog from "../../util/error";
 import { NoteMetadata } from "../../util/types/note";
@@ -9,6 +9,7 @@ import { deleteNoteAsync, getRawNoteAsync } from "../../util/services/notefiles"
 import { exportTextFileAsync } from "../../util/services/androidstorage";
 
 import AppText from "./AppText";
+import AppButton from "./AppButton";
 
 interface NoteOptionProps {
     metadata: NoteMetadata;
@@ -92,17 +93,12 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppText style={{padding: 5}}>
                     Last Modified: {dateModifiedString}
                 </AppText>
-
-                <TouchableOpacity onPress={exportNote}>
-                    <AppText style={styles.noteOptionsButton}>
-                        Export Encrypted File
-                    </AppText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={confirmDelete}>
-                    <AppText style={[styles.noteOptionsButton, styles.noteDeleteButton]}>
-                        Delete Note
-                    </AppText>
-                </TouchableOpacity>
+                <AppButton onPress={exportNote}>
+                    Export Encrypted File
+                </AppButton>
+                <AppButton color="red" onPress={confirmDelete}>
+                    Delete Note
+                </AppButton>
             </View>
         </Pressable>
     )

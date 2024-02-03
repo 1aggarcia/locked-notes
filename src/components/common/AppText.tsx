@@ -9,6 +9,7 @@ export interface AppTextProps {
     style?: StyleProp<TextStyle>;
 }
 
+/** Text component with standardized styling accross the app */
 export default function AppText(props: PropsWithChildren<AppTextProps>) {
     return (
         <Text style={[Styles.get().appText, props.style]}>

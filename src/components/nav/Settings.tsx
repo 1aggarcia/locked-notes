@@ -16,6 +16,7 @@ import SettingsType from '../../util/types/settings';
 import AppText from "../common/AppText";
 import { Params } from "../screens/Unlocked";
 import Loading from '../screens/Loading';
+import AppButton from '../common/AppButton';
 
 const minUnlockedTime = 60;
 const maxUnlockedTime = 3600;
@@ -105,25 +106,19 @@ export default function Settings({ navigation }: NativeStackScreenProps<Params>)
             </View>
             <View style={styles.settingsRow}>
                 <AppText style={styles.settingsText}>PIN</AppText>
-                <TouchableOpacity
+                <AppButton
                     onPress={() => navigation.navigate('ResetPin')}
-                    style={styles.settingsButton}
                 >
-                    <AppText style={styles.settingsButtonText}>
-                        Reset
-                    </AppText>
-                </TouchableOpacity>
+                    Reset
+                </AppButton>
             </View>
             <View style={styles.settingsRow}>
-                <TouchableOpacity
-                    style={styles.settingsButton}
-                    onPress={saveSettings}
+                <AppButton
                     disabled={!wasChanged}
+                    onPress={saveSettings}
                 >
-                    <AppText style={styles.settingsButtonText}>
-                        Save
-                    </AppText>
-                </TouchableOpacity>
+                    Save
+                </AppButton>
             {wasChanged &&
                 <AppText style={{color: 'red', textAlign: 'center'}}>
                     You have unsaved changes

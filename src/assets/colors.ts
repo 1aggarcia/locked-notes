@@ -7,6 +7,7 @@ export type ColorTheme = {
     placeholder: string,
     text: string,
     buttonBg: string,
+    buttonDisabled: string,
 }
 
 export const lightModeColors: ColorTheme = {
@@ -17,6 +18,7 @@ export const lightModeColors: ColorTheme = {
     placeholder: '#bbbbbb',
     text: '#000000',
     buttonBg: '#61009e',
+    buttonDisabled: '#bbbbbb'
 }
 
 export const darkModeColors: ColorTheme = {
@@ -27,4 +29,5 @@ export const darkModeColors: ColorTheme = {
     placeholder: '#777777',
     text: '#ffffff',
     buttonBg: '#dda6ff',
+    buttonDisabled: '#777777'
 }
