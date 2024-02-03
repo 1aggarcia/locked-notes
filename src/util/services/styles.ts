@@ -161,7 +161,7 @@ function generateStyles(useDarkMode: boolean) {
             bottom: 0,
             right: 0,
             left: 0,
-            padding: 20
+            padding: 40
         },
         button: {
             borderColor: colorTheme.strongBorder,
@@ -192,6 +192,10 @@ function generateStyles(useDarkMode: boolean) {
             padding: 15,
             textAlign: 'center'
         },
+        settingsRowContainer: {
+            flex: 1,
+            backgroundColor: colorTheme.fg,
+        },
         settingsRow: {
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -199,25 +203,16 @@ function generateStyles(useDarkMode: boolean) {
             paddingVertical: 10,
             borderTopColor: colorTheme.weakBorder,
             borderTopWidth: 1,
-            backgroundColor: colorTheme.fg
         },
         settingsText: {
             paddingVertical: 5,
             fontSize: 17,
         },
-        settingsButton: {
-            backgroundColor: colorTheme.buttonBg,
-            justifyContent: 'center',
-            paddingVertical: 10,
-            paddingHorizontal: 14,
-            borderRadius: 5,
-        },
-        settingsButtonText: {
-            color: colorTheme.fg,
-            fontSize: 17,
-        },
         settingsTextInput: {
+            backgroundColor: colorTheme.bg,
             color: colorTheme.text,
+            borderColor: colorTheme.weakBorder,
+            borderWidth: 1,
             fontSize: 17,
             paddingHorizontal: 15
         },

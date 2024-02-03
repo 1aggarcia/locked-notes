@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { TouchableOpacity, AppState } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -45,14 +45,6 @@ export default function Unlocked(props: UnlockedProps) {
         // React handles the rest automatically
         return () => clearInterval(interval);
     }, []);
-
-    // Lock the app whenever it goes out of focus
-    useEffect(() => {
-        AppState.addEventListener("change", status => {
-            if (status !== "active")
-                props.lock();
-        })
-    }, [])
 
     const screenOptions = {
         headerRight: () => (
