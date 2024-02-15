@@ -35,6 +35,7 @@ export async function saveNoteAsync(filename: string, note: Note) {
     try {
         const fileUri = notesDir + filename
         await FileSystem.writeAsStringAsync(fileUri, Encryption.encrypt(text));
+        console.debug(`File ${filename} saved`);
     } catch (error) {
         console.error("An error occured in saveNoteAsync:", error);
         throw error;
@@ -77,7 +78,7 @@ export async function getNoteAsync(filename: string): Promise<Note | null> {
 
         return note;
     } catch (error) {
-        console.warn("An error occured in getNoteAsync:", error);
+        console.log("getNoteAsync caught an error:", error);
         return null;
     }
 }

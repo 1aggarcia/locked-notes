@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, TextInput, View, Alert } from "react-native";
+import { ScrollView, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
@@ -53,8 +53,7 @@ export default function EditNote(
     }
 
     function saveTitle(newTitle: string) {
-        if (newTitle.length > maxTitleLength)
-            return;
+        if (newTitle.length > maxTitleLength) return;
 
         setTitle(newTitle);
 
@@ -68,8 +67,7 @@ export default function EditNote(
     }
 
     function saveBody(newBody: string) {
-        if (newBody.length > maxBodyLength)
-            return;
+        if (newBody.length > maxBodyLength) return;
 
         setBody(newBody);
 
@@ -82,8 +80,9 @@ export default function EditNote(
         }).catch(showErrorDialog);
     }
 
-    if (!loaded)
+    if (!loaded) {
         return <Loading message="Fetching note contents..." />
+    }
 
     return (
         <View style={styles.app}>

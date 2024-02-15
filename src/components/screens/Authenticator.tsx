@@ -61,7 +61,7 @@ export default function Authenticator(props: AuthenticatorProps) {
 
     // Deny access to the app if the current time is before
     // the access time
-    async function loadDeps() {
+    async function loadDependencies() {
         try {
             const settings = await getSettingsAsync();
             const accessTime = await getAccessTimeAsync();
@@ -74,7 +74,7 @@ export default function Authenticator(props: AuthenticatorProps) {
     }
 
     useEffect(() => {
-        loadDeps();
+        loadDependencies();
     }, [])
 
     if (login === undefined)
