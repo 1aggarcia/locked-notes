@@ -52,7 +52,7 @@ export default function Unlocked(props: UnlockedProps) {
                 <AppText>Lock</AppText>
             </TouchableOpacity>
         ),
-        title: `Unlocked Time: ${formatTime(timeLeft)}`
+        title: `Unlocked Time: ${formatTime(timeLeft)}`,
     }
 
     /** Refresh the clock, lock the app if it is past the expiryTime */

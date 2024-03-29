@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { lightModeColors, darkModeColors } from "../../assets/colors";
+import { colorNameToTheme } from "../../assets/colors";
 import { ThemeName } from "../types/settings";
 
 // Export a singleton module to encapsulate global style vars
@@ -11,7 +11,7 @@ const Styles = (() => {
     return {
         get: () => stylesheet,
 
-        getColorTheme: () => colorTheme === 'dark' ? darkModeColors : lightModeColors,
+        getColorTheme: () => colorNameToTheme(colorTheme),
 
         isDarkMode: () => {
             return (colorTheme === 'dark' || colorTheme === 'lowContrastDark' );
@@ -25,17 +25,6 @@ const Styles = (() => {
 })()
 
 export default Styles;
-
-function colorNameToTheme(name: ThemeName) {
-    switch (name) {
-        case 'dark':
-            return darkModeColors;
-        case 'light':
-            return lightModeColors;
-        default:
-            throw new ReferenceError("Non existent theme");
-    }
-}
 
 /** Generate the stylesheet with the given color theme */
 function generateStyles(theme: ThemeName) {
