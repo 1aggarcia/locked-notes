@@ -1,3 +1,5 @@
+import { ThemeName } from "../util/types/settings"
+
 /** All fields should be hex color codes */
 export type ColorTheme = {
     bg: string,

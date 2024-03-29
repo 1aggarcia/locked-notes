@@ -8,7 +8,7 @@ import {
 } from '../../util/services/securestore';
 import showErrorDialog from '../../util/error';
 import Styles from '../../util/services/styles';
-import SettingsType from '../../util/types/settings';
+import SettingsType, { ThemeName } from '../../util/types/settings';
 
 import AppText from "../common/AppText";
 import Loading from '../screens/Loading';
@@ -22,7 +22,6 @@ export default function Settings(
     { navigation }: NativeStackScreenProps<Params>)
 {
     const styles = Styles.get();
-
     const [wasChanged, setWasChanged] = useState(false);
     const [settings, setSettings] = useState<SettingsType>();
 
@@ -33,14 +32,15 @@ export default function Settings(
             .catch(showErrorDialog)
     }, [])
 
-    function setDarkMode(value: boolean) {
+    function setColorTheme(theme: ThemeName) {
         if (settings === undefined) return;
 
         setWasChanged(true);
         setSettings({
             ...settings,
-            useDarkMode: value
+            colorTheme: theme
         });
+        Styles.setColorTheme(theme);
     }
 
     function setUnlockedTime(value: string) {
@@ -84,7 +84,7 @@ export default function Settings(
 
             <View style={styles.settingsRowContainer}>
                 <DarkModeRow
-                    useDarkMode={settings.useDarkMode} setDarkMode={setDarkMode}/>
+                    colorTheme={settings.colorTheme} setColorTheme={setColorTheme}/>
 
                 <UnlockedTimeRow
                     setUnlockedTime={setUnlockedTime}
@@ -104,19 +104,23 @@ export default function Settings(
 // Definitions for sub-components
 
 interface DarkModeRowProps {
-    useDarkMode: boolean,
-    setDarkMode: (value: boolean) => void
+    colorTheme: ThemeName,
+    setColorTheme: (theme: ThemeName) => void
 }
 
 function DarkModeRow(props: DarkModeRowProps) {
     const styles = Styles.get();
 
+    function toggleDarkMode(value: boolean) {
+        props.setColorTheme(value ? 'dark' : 'light');
+    }
+
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>Use dark mode:</AppText>
             <Switch 
-                onValueChange={props.setDarkMode}
-                value={props.useDarkMode} />
+                onValueChange={toggleDarkMode}
+                value={props.colorTheme === 'dark'} />
         </View>
     )
 }
