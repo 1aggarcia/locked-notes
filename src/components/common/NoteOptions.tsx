@@ -37,8 +37,7 @@ export default function NoteOptions(props: NoteOptionProps) {
         Alert.alert('Success!', 'Note has been deleted.')
     }
 
-    // the promise reject gives us "any" type for `reason` so we are forced to use it here
-    function handleDeleteError(reason: any) {
+    function handleDeleteError(reason: unknown) {
         props.close();
         showErrorDialog(reason);
     }

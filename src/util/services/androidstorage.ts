@@ -3,9 +3,7 @@
  * Storage Access Framework. (iOS solution needs to be found)
  */
 
-import { StorageAccessFramework } from 'expo-file-system';
-
-const SAF = StorageAccessFramework;
+import { StorageAccessFramework as SAF } from 'expo-file-system';
 
 /**
  * Request folder permissions from user, write given file as text

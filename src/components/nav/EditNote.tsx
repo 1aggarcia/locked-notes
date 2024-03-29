@@ -46,8 +46,7 @@ export default function EditNote(
         setLoaded(true);
     }
 
-    // Promise reject uses 'any' type
-    function handleGetNoteError(reason: any) {
+    function handleGetNoteError(reason: unknown) {
         showErrorDialog(reason);
         navigation.goBack();
     }

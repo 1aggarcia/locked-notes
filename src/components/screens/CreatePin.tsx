@@ -30,8 +30,7 @@ export default function CreatePin(props: CreatePinProps) {
         }
     }
 
-    // the promise reject gives us "any" type for `reason` so we are forced to use it here
-    function handleSaveError(reason: any) {
+    function handleSaveError(reason: unknown) {
         console.error(reason);
         showErrorDialog(reason);
         setPin('');
