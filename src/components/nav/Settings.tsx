@@ -8,7 +8,7 @@ import {
 } from '../../util/services/securestore';
 import showErrorDialog from '../../util/error';
 import Styles from '../../util/services/styles';
-import SettingsType, { ThemeName } from '../../util/types/settings';
+import SettingsType from '../../util/types/settings';
 
 import AppText from "../common/AppText";
 import Loading from '../screens/Loading';
@@ -32,15 +32,15 @@ export default function Settings(
             .catch(showErrorDialog)
     }, [])
 
-    function setColorTheme(theme: ThemeName) {
+    function setDarkMode(value: boolean) {
         if (settings === undefined) return;
 
         setWasChanged(true);
         setSettings({
             ...settings,
-            colorTheme: theme
+            darkMode: value
         });
-        Styles.setColorTheme(theme);
+        Styles.setDarkMode(value);
     }
 
     function setUnlockedTime(value: string) {
@@ -84,7 +84,7 @@ export default function Settings(
 
             <View style={styles.settingsRowContainer}>
                 <DarkModeRow
-                    colorTheme={settings.colorTheme} setColorTheme={setColorTheme}/>
+                    darkMode={settings.darkMode} setDarkMode={setDarkMode}/>
 
                 <UnlockedTimeRow
                     setUnlockedTime={setUnlockedTime}
@@ -104,15 +104,15 @@ export default function Settings(
 // Definitions for sub-components
 
 interface DarkModeRowProps {
-    colorTheme: ThemeName,
-    setColorTheme: (theme: ThemeName) => void
+    darkMode: boolean,
+    setDarkMode: (value: boolean) => void
 }
 
 function DarkModeRow(props: DarkModeRowProps) {
     const styles = Styles.get();
 
     function toggleDarkMode(value: boolean) {
-        props.setColorTheme(value ? 'dark' : 'light');
+        props.setDarkMode(value);
     }
 
     return (
@@ -120,7 +120,7 @@ function DarkModeRow(props: DarkModeRowProps) {
             <AppText style={styles.settingsText}>Use dark mode:</AppText>
             <Switch 
                 onValueChange={toggleDarkMode}
-                value={props.colorTheme === 'dark'} />
+                value={props.darkMode} />
         </View>
     )
 }

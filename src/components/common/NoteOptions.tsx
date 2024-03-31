@@ -27,7 +27,7 @@ export default function NoteOptions(props: NoteOptionProps) {
         text: 'Delete',
         onPress: () => {
             deleteNoteAsync(props.metadata.filename)
-                .then(handleDelete)
+                .then(props.close)
                 .catch(handleDeleteError);
         }
     }

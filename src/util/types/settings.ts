@@ -1,9 +1,7 @@
-export type ThemeName = 'dark' | 'light' | 'lowContrastDark' | 'lowContrastLight'
-
 /** Object representation of app settings, saved as JSON to the disk */
 type Settings = {
-    /** String representation of the color theme */
-    colorTheme: ThemeName,
+    darkMode: boolean,
+    lowContrast: boolean,
 
     /** Number of seconds the app will be open when unlocked */
     unlockedTime: number;
@@ -11,7 +9,8 @@ type Settings = {
 export default Settings;
 
 export const defaultSettings: Settings = {
-    colorTheme: 'light',
+    darkMode: false,
+    lowContrast: false,
     unlockedTime: 600
 }
 
@@ -20,20 +19,11 @@ export const defaultSettings: Settings = {
  * @param obj object to check
  * @returns true iff obj contains all the properties of a Settings object
  */
-export function isValidSettings(obj: object): boolean {
+export function isValidSettings(obj: object): obj is Settings {
     return (
         typeof obj === 'object'
-        && 'colorTheme' in obj && typeof obj.colorTheme === 'string'
-        && isThemeName(obj.colorTheme)
+        && 'darkMode' in obj && typeof obj.darkMode === 'boolean'
+        && 'lowContrast' in obj && typeof obj.darkMode === 'boolean'
         && 'unlockedTime' in obj && typeof obj.unlockedTime === 'number'
     )
-}
-
-function isThemeName(value: string): value is ThemeName {
-    return (
-        value === 'dark'
-        || value === 'light'
-        || value === 'lowContrastDark'
-        || value === 'lowContrastLight'
-    );
 }

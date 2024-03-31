@@ -1,20 +1,3 @@
-import { ThemeName } from "../util/types/settings"
-
-export function colorNameToTheme(name: ThemeName) {
-    switch (name) {
-        case 'dark':
-            return darkColors;
-        case 'light':
-            return lowContrastLight;
-        case 'lowContrastLight':
-            return lowContrastLight;
-        case 'lowContrastDark':
-            return lowContrastDark;
-        default:
-            throw new ReferenceError("Invalid theme");
-    }
-}
-
 /** All fields should be hex color codes */
 export type ColorTheme = {
     bg: string,
@@ -25,9 +8,9 @@ export type ColorTheme = {
     text: string,
     buttonBg: string,
     buttonDisabled: string,
-}
+};
 
-const lightColors: ColorTheme = {
+export const lightColors: ColorTheme = {
     bg: '#eeeeee',
     fg: '#ffffff',
     strongBorder: '#000000',
@@ -36,9 +19,9 @@ const lightColors: ColorTheme = {
     text: '#000000',
     buttonBg: '#61009e',
     buttonDisabled: '#bbbbbb'
-}
+};
 
-const darkColors: ColorTheme = {
+export const darkColors: ColorTheme = {
     bg: '#121212',
     fg: '#000000',
     strongBorder: '#ffffff',
@@ -47,9 +30,9 @@ const darkColors: ColorTheme = {
     text: '#ffffff',
     buttonBg: '#dda6ff',
     buttonDisabled: '#777777'
-}
+};
 
-const lowContrastLight: ColorTheme = {
+export const lowContrastLight: ColorTheme = {
     bg: '#eeeeee',
     fg: '#efefef',
     strongBorder: '#cccccc',
@@ -58,9 +41,9 @@ const lowContrastLight: ColorTheme = {
     text: '#cccccc',
     buttonBg: '#d6afed',
     buttonDisabled: '#bbbbbb'
-}
+};
 
-const lowContrastDark: ColorTheme = {
+export const lowContrastDark: ColorTheme = {
     bg: '#121212',
     fg: '#000000',
     strongBorder: '#444444',
@@ -69,4 +52,4 @@ const lowContrastDark: ColorTheme = {
     text: '#444444',
     buttonBg: '#3e224f',
     buttonDisabled: '#323232'
-}
+};

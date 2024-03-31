@@ -1,25 +1,24 @@
 import { StyleSheet } from "react-native";
-import { colorNameToTheme } from "../../assets/colors";
-import { ThemeName } from "../types/settings";
+import { lightColors, darkColors  } from "../../assets/colors"
 
 // Export a singleton module to encapsulate global style vars
 const Styles = (() => {
     // Default values
-    let colorTheme: ThemeName = 'light';
-    let stylesheet = generateStyles(colorTheme);
+    let darkMode = false;
+    let stylesheet = generateStyles(darkMode);
 
     return {
         get: () => stylesheet,
 
-        getColorTheme: () => colorNameToTheme(colorTheme),
+        getColorTheme: () => darkMode ? darkColors : lightColors,
 
         isDarkMode: () => {
-            return (colorTheme === 'dark' || colorTheme === 'lowContrastDark' );
+            return darkMode;
         },
 
-        setColorTheme: (theme: ThemeName) => {
-            colorTheme = theme;
-            stylesheet = generateStyles(theme);
+        setDarkMode: (value: boolean) => {
+            darkMode = value;
+            stylesheet = generateStyles(value);
         },
     }
 })()
@@ -27,8 +26,8 @@ const Styles = (() => {
 export default Styles;
 
 /** Generate the stylesheet with the given color theme */
-function generateStyles(theme: ThemeName) {
-    const colorTheme = colorNameToTheme(theme);
+function generateStyles(darkMode: boolean) {
+    const colorTheme = darkMode ? darkColors : lightColors;
 
     return (StyleSheet.create({
         app: {
