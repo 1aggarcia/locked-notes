@@ -1,33 +1,46 @@
 import { StyleSheet } from "react-native";
-import { lightColors, darkColors  } from "../../assets/colors"
+import {
+    lightColors,
+    darkColors,
+    lowContrastLight,
+    lowContrastDark,
+    ColorTheme
+} from "../../assets/colors"
 
 // Export a singleton module to encapsulate global style vars
 const Styles = (() => {
     // Default values
     let darkMode = false;
-    let stylesheet = generateStyles(darkMode);
+    let lowContrast = false;
+    let stylesheet = generateStyles(darkColors);
 
     return {
         get: () => stylesheet,
 
-        getColorTheme: () => darkMode ? darkColors : lightColors,
+        getColorTheme: () => getColorTheme(darkMode, lowContrast),
 
-        isDarkMode: () => {
-            return darkMode;
-        },
+        isDarkMode: () => darkMode,
 
-        setDarkMode: (value: boolean) => {
-            darkMode = value;
-            stylesheet = generateStyles(value);
+        setColorTheme: (darkModeVal: boolean, lowContrastVal: boolean) => {
+            darkMode = darkModeVal;
+            lowContrast = lowContrastVal;
+            stylesheet = generateStyles(getColorTheme(darkMode, lowContrast));
         },
     }
 })()
-
 export default Styles;
 
+function getColorTheme(darkMode: boolean, lowContrast: boolean) {
+    if (lowContrast) {
+        return darkMode ? lowContrastDark : lowContrastLight;
+    } else {
+        return darkMode ? darkColors : lightColors;
+    }
+}
+
 /** Generate the stylesheet with the given color theme */
-function generateStyles(darkMode: boolean) {
-    const colorTheme = darkMode ? darkColors : lightColors;
+function generateStyles(colorTheme: ColorTheme) {
+    //const colorTheme = darkMode ? darkColors : lightColors;
 
     return (StyleSheet.create({
         app: {

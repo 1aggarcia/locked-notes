@@ -130,7 +130,6 @@ export async function getSettingsAsync(): Promise<Settings> {
         if (data === null || !isValidSettings(JSON.parse(data))) {
             throw ReferenceError("Could not retreive data entry");
         }
-        console.log(JSON.parse(data));
         return JSON.parse(data);
     } catch (error) {
         console.log('getSettingsAsync caught an error:', error);

@@ -32,15 +32,16 @@ export default function Settings(
             .catch(showErrorDialog)
     }, [])
 
-    function setDarkMode(value: boolean) {
+    function setColorTheme(darkMode: boolean, lowContrast: boolean) {
         if (settings === undefined) return;
 
         setWasChanged(true);
         setSettings({
             ...settings,
-            darkMode: value
+            darkMode: darkMode,
+            lowContrast: lowContrast,
         });
-        Styles.setDarkMode(value);
+        Styles.setColorTheme(darkMode, lowContrast);
     }
 
     function setUnlockedTime(value: string) {
@@ -84,7 +85,9 @@ export default function Settings(
 
             <View style={styles.settingsRowContainer}>
                 <DarkModeRow
-                    darkMode={settings.darkMode} setDarkMode={setDarkMode}/>
+                    darkMode={settings.darkMode}
+                    lowContrast={settings.lowContrast}
+                    setColorTheme={setColorTheme}/>
 
                 <UnlockedTimeRow
                     setUnlockedTime={setUnlockedTime}
@@ -105,24 +108,35 @@ export default function Settings(
 
 interface DarkModeRowProps {
     darkMode: boolean,
-    setDarkMode: (value: boolean) => void
+    lowContrast: boolean,
+    setColorTheme: (darkMode: boolean, lowContrast: boolean) => void
 }
 
 function DarkModeRow(props: DarkModeRowProps) {
     const styles = Styles.get();
 
     function toggleDarkMode(value: boolean) {
-        props.setDarkMode(value);
+        props.setColorTheme(value, props.lowContrast);
     }
 
-    return (
+    function toggleLowContrast(value: boolean) {
+        props.setColorTheme(props.darkMode, value);
+    }
+
+    return (<>
         <View style={styles.settingsRow}>
-            <AppText style={styles.settingsText}>Use dark mode:</AppText>
+            <AppText style={styles.settingsText}>Dark Mode:</AppText>
             <Switch 
                 onValueChange={toggleDarkMode}
                 value={props.darkMode} />
         </View>
-    )
+        <View style={styles.settingsRow}>
+            <AppText style={styles.settingsText}>Low Contrast:</AppText>
+            <Switch 
+                onValueChange={toggleLowContrast}
+                value={props.lowContrast} />
+        </View>
+    </>)
 }
 
 
@@ -160,7 +174,7 @@ function ResetPinRow(props: ResetPinRowProps) {
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>PIN</AppText>
-            <AppButton onPress={props.navigateAway}>
+            <AppButton disabled={true} onPress={props.navigateAway}>
                 Reset
             </AppButton>
         </View>

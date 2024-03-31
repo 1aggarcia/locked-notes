@@ -18,7 +18,7 @@ export default function App() {
       const settings = await getSettingsAsync();
       const savedLogin = await getLoginAsync();
 
-      Styles.setDarkMode(settings.darkMode);
+      Styles.setColorTheme(settings.darkMode, settings.lowContrast);
       if (savedLogin !== null)
         setLogin(savedLogin);
 
