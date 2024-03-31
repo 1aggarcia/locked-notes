@@ -3,13 +3,13 @@ import { ScrollView, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
-import { getNoteAsync, saveNoteAsync } from "../../util/services/notefiles";
+import { getNoteAsync, saveNoteAsync } from "../../util/storage/notefiles";
 import Note from "../../util/types/note";
 import Styles from "../../util/services/styles";
 
 import { Params } from "../screens/Unlocked";
 import Loading from "../screens/Loading";
-import AppText from "../common/AppText";
+import AppText from "../shared/AppText";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7

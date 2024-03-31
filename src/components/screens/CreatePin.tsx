@@ -2,11 +2,11 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import Styles from "../../util/services/styles";
-import { LoginInfo, savePinAsync } from "../../util/services/securestore";
+import { LoginInfo, savePinAsync } from "../../util/storage/securestore";
 import showErrorDialog from "../../util/error";
 
-import AppText from "../common/AppText";
-import PinPad from "../common/PinPad";
+import AppText from "../shared/AppText";
+import PinPad from "../shared/PinPad";
 
 interface CreatePinProps {
     /** Set the app's login state & unlock the app */

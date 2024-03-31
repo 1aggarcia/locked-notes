@@ -3,16 +3,16 @@ import { TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getNoteListAsync } from "../../util/services/notefiles";
+import { getNoteListAsync } from "../../util/storage/notefiles";
 import Styles from "../../util/services/styles";
 import { NoteMetadata } from "../../util/types/note";
 import showErrorDialog from "../../util/error";
 
 import { Params } from "../screens/Unlocked";
 import Loading from "../screens/Loading";
-import AppText from "../common/AppText";
-import NoteOptions from "../common/NoteOptions";
-import { NoteList } from "../common/NoteList";
+import AppText from "../shared/AppText";
+import NoteOptions from "../shared/NoteOptions";
+import { NoteList } from "../shared/NoteList";
 
 export default function NotesView({ navigation }: NativeStackScreenProps<Params>) {
     // note for which the properties menu is shown. Undefined means no menu shown

@@ -2,7 +2,7 @@
 
 import * as FileSystem from 'expo-file-system';
 
-import Encryption from './encryption';
+import Encryption from '../services/encryption';
 import Note, { NoteMetadata, isNote } from '../types/note';
 
 export type LoginInfo = {

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import Encryption, { saltAndSha256 } from "../../util/services/encryption";
-import { LoginInfo } from "../../util/services/securestore";
+import { LoginInfo } from "../../util/storage/securestore";
 import Styles from "../../util/services/styles";
 
-import AppText from "../common/AppText";
-import PinPad from "../common/PinPad";
+import AppText from "../shared/AppText";
+import PinPad from "../shared/PinPad";
 
 interface LockedProps {
     unlock: () => void;

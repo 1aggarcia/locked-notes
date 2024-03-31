@@ -1,7 +1,7 @@
 import { View } from "react-native";
 
 import Styles from "../../util/services/styles";
-import AppText from "../common/AppText";
+import AppText from "../shared/AppText";
 
 export default function Denied() {
     const styles = Styles.get();

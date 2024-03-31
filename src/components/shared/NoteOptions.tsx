@@ -5,8 +5,8 @@ import { NoteMetadata } from "../../util/types/note";
 
 import Styles from "../../util/services/styles";
 import { formatDate } from "../../util/services/datetime";
-import { deleteNoteAsync, getRawNoteAsync } from "../../util/services/notefiles";
-import { exportTextFileAsync } from "../../util/services/androidstorage";
+import { deleteNoteAsync, getRawNoteAsync } from "../../util/storage/notefiles";
+import { exportTextFileAsync } from "../../util/storage/android";
 
 import AppText from "./AppText";
 import AppButton from "./AppButton";

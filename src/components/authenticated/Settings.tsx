@@ -5,14 +5,14 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { 
     getSettingsAsync,
     saveSettingsAsync 
-} from '../../util/services/securestore';
+} from '../../util/storage/securestore';
 import showErrorDialog from '../../util/error';
 import Styles from '../../util/services/styles';
 import SettingsType from '../../util/types/settings';
 
-import AppText from "../common/AppText";
+import AppText from "../shared/AppText";
 import Loading from '../screens/Loading';
-import AppButton from '../common/AppButton';
+import AppButton from '../shared/AppButton';
 import { Params } from "../screens/Unlocked";
 
 const minUnlockedTime = 60;

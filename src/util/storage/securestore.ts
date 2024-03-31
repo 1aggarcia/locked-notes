@@ -10,7 +10,7 @@
 
 import * as SecureStore from 'expo-secure-store';
 
-import Encryption, { generateSalt, saltAndSha256 } from './encryption';
+import Encryption, { generateSalt, saltAndSha256 } from '../services/encryption';
 import Settings, { defaultSettings, isValidSettings } from '../types/settings';
 
 export type LoginInfo = {

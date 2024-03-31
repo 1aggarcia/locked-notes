@@ -1,7 +1,7 @@
 import { View, ActivityIndicator } from "react-native";
 
 import Styles from "../../util/services/styles";
-import AppText from "../common/AppText";
+import AppText from "../shared/AppText";
 
 interface LoadingProps {
     /** Give the user some helpful information about what is loading */

@@ -11,11 +11,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
 
-import NotesView from "../nav/NotesView";
-import EditNote from "../nav/EditNote";
-import Settings from "../nav/Settings";
-import ResetPin from "../nav/ResetPin";
-import AppText from "../common/AppText";
+import NotesView from "../authenticated/NotesView";
+import EditNote from "../authenticated/EditNote";
+import Settings from "../authenticated/Settings";
+import ResetPin from "../authenticated/ResetPin";
+import AppText from "../shared/AppText";
 
 export type Params = {
     NotesView: undefined;

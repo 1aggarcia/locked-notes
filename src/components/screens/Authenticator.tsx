@@ -7,7 +7,7 @@ import {
     getAccessTimeAsync,
     getSettingsAsync,
     setAccessTimeAsync
-} from "../../util/services/securestore";
+} from "../../util/storage/securestore";
 import { calculateExpiryTime } from "../../util/services/datetime";
 import showErrorDialog from "../../util/error";
 
