@@ -6,6 +6,7 @@ export type ColorTheme = {
     weakBorder: string,
     placeholder: string,
     text: string,
+    error: string,
     buttonBg: string,
     buttonDisabled: string,
 };
@@ -17,6 +18,7 @@ export const lightColors: ColorTheme = {
     weakBorder: '#cccccc',
     placeholder: '#bbbbbb',
     text: '#000000',
+    error: 'red',
     buttonBg: '#61009e',
     buttonDisabled: '#bbbbbb'
 };
@@ -28,6 +30,7 @@ export const darkColors: ColorTheme = {
     weakBorder: '#444444',
     placeholder: '#777777',
     text: '#ffffff',
+    error: 'red',
     buttonBg: '#dda6ff',
     buttonDisabled: '#777777'
 };
@@ -39,7 +42,8 @@ export const lowContrastLight: ColorTheme = {
     weakBorder: '#dddddd',
     placeholder: '#bbbbbb',
     text: '#cccccc',
-    buttonBg: '#d6afed',
+    error: '#ff8a8a',
+    buttonBg: '#e6cbf7',
     buttonDisabled: '#bbbbbb'
 };
 
@@ -50,6 +54,7 @@ export const lowContrastDark: ColorTheme = {
     weakBorder: '#333333',
     placeholder: '#323232',
     text: '#444444',
-    buttonBg: '#3e224f',
+    error: '#940000',
+    buttonBg: '#463552',
     buttonDisabled: '#323232'
 };

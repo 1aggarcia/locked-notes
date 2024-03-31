@@ -189,6 +189,7 @@ interface SaveRowProps {
 
 function SaveRow(props: SaveRowProps) {
     const styles = Styles.get();
+    const errorColor = Styles.getColorTheme().error;
 
     return (
         <View style={styles.settingsRow}>
@@ -197,7 +198,7 @@ function SaveRow(props: SaveRowProps) {
             >Save</AppButton>
 
         {props.wasChanged &&
-            <AppText style={{color: 'red', textAlignVertical: 'center'}}>
+            <AppText style={{color: errorColor, textAlignVertical: 'center'}}>
                 You have unsaved changes
             </AppText>
         }

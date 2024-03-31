@@ -47,11 +47,12 @@ export default function Unlocked(props: UnlockedProps) {
     }, []);
 
     const screenOptions = {
-        headerRight: () => (
+        headerBackTitle: "Back",
+        headerRight: () => (<>
             <TouchableOpacity onPress={props.lock}>
                 <AppText>Lock</AppText>
             </TouchableOpacity>
-        ),
+        </>),
         title: `Unlocked Time: ${formatTime(timeLeft)}`,
     }
 
