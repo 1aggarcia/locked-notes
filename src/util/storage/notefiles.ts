@@ -22,7 +22,6 @@ const notesDir = FileSystem.documentDirectory + 'notes/';
  * @param note note to save to file
  */
 export async function saveNoteAsync(filename: string, note: Note) {
-    throw new Error("jajajaja");
     if (note.title.length > maxStringLength || note.body.length > maxStringLength)
         throw new RangeError(`note is too long: ${note}`);
 
