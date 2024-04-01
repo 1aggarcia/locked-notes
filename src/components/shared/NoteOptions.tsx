@@ -23,7 +23,6 @@ export default function NoteOptions(props: NoteOptionProps) {
     const dateModifiedString = formatDate(props.metadata.dateModified);
 
     const styles = Styles.get();
-    const errorColor = Styles.getColorTheme().error;
 
     const deleteButton = {
         text: 'Delete',
@@ -97,7 +96,7 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppButton onPress={exportNote}>
                     Export Encrypted File
                 </AppButton>
-                <AppButton color={errorColor} onPress={confirmDelete}>
+                <AppButton color='red' onPress={confirmDelete}>
                     Delete Note
                 </AppButton>
             </Pressable>

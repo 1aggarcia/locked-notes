@@ -25,21 +25,47 @@ export default function EditNote(
     const [body, setBody] = useState('');
     const [dateCreated, setDateCreated] = useState(Date.now());
 
+    // The most recent values saved to the disk
+    const [savedTitle, setSavedTitle] = useState('');
+    const [savedBody, setSavedBody] = useState('');
+
     const filename = route.params.filename;
     const styles = Styles.get();
 
-    // Retreive note from storage
+    // Fetch the note from storage
     useEffect(() => {
         getNoteAsync(filename)
             .then(handleGetNote)
             .catch(handleGetNoteError);
     }, []);
 
+    // Wait one second after the user finishes typing to save
+    useEffect(() => {
+        if (!loaded) return;
+
+        const timeout = setTimeout(checkForUpdates, 1000);
+
+        // Reset the timeout whenever the note changes
+        return () => clearTimeout(timeout);
+    },
+    [title, body]);
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            checkForUpdates();
+            navigation.dispatch(e.data.action);
+        })
+    }, [navigation])
+
     function handleGetNote(note: Note | null) {
         if (note !== null) {
             setTitle(note.title);
             setBody(note.body);
             setDateCreated(note.dateCreated);
+
+            setSavedTitle(note.title);
+            setSavedBody(note.body);
         }
         // If no note was found, the default values already
         // in state work perfectly to make a new one
@@ -51,32 +77,27 @@ export default function EditNote(
         navigation.goBack();
     }
 
-    function saveTitle(newTitle: string) {
-        if (newTitle.length > maxTitleLength) return;
-
-        setTitle(newTitle);
-
-        // Save note to external storage
+    /**
+     * Checks for any new changes in the note.
+     * Saves the note if there are changes.
+     */
+    function checkForUpdates() {
+        // TODO: make async
+        if (savedTitle === title && savedBody === body) {
+            // no new changes
+            return;
+        }
         saveNoteAsync(filename, {
-            title: newTitle,
+            title: title,
             body: body,
             dateModified: Date.now(),
             dateCreated: dateCreated,
-        }).catch(showErrorDialog);
-    }
-
-    function saveBody(newBody: string) {
-        if (newBody.length > maxBodyLength) return;
-
-        setBody(newBody);
-
-        // Save note to external storage
-        saveNoteAsync(filename, {
-            title: title,
-            body: newBody,
-            dateModified: Date.now(),
-            dateCreated: dateCreated,
-        }).catch(showErrorDialog);
+        })
+        .then(() => {
+            setSavedTitle(title);
+            setSavedBody(body);
+        })
+        .catch(showErrorDialog);
     }
 
     if (!loaded) {
@@ -90,7 +111,7 @@ export default function EditNote(
                     style={styles.noteTitle}
                     value={title}
                     maxLength={maxTitleLength}
-                    onChangeText={saveTitle}
+                    onChangeText={setTitle}
                     placeholder='Title'
                     placeholderTextColor={Styles.getColorTheme().placeholder}
                     multiline
@@ -99,7 +120,7 @@ export default function EditNote(
                     style={styles.noteBody}
                     value={body}
                     maxLength={maxBodyLength}
-                    onChangeText={saveBody}
+                    onChangeText={setBody}
                     placeholder='Write something here...'
                     placeholderTextColor={Styles.getColorTheme().placeholder}
                     multiline

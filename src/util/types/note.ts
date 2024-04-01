@@ -26,7 +26,7 @@ export type NoteMetadata = {
  * @param obj object to check
  * @returns true iff obj contains all the properties of a note
  */
-export function isNote(obj: object): boolean {
+export function isNote(obj: object): obj is Note {
     return (
         typeof obj === 'object'
         && 'title' in obj && typeof obj.title === 'string'
