@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, TextInput, View } from "react-native";
+import { ScrollView, TextInput, View, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import showErrorDialog from "../../util/error";
@@ -39,24 +39,24 @@ export default function EditNote(
             .catch(handleGetNoteError);
     }, []);
 
-    // Wait one second after the user finishes typing to save
     useEffect(() => {
-        if (!loaded) return;
-
-        const timeout = setTimeout(checkForUpdates, 1000);
-
-        // Reset the timeout whenever the note changes
-        return () => clearTimeout(timeout);
-    },
-    [title, body]);
+        checkForUpdates();
+    }, [title, body]);
 
     useEffect(() => {
-        navigation.addListener('beforeRemove', (e) => {
+        const removeListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
-            checkForUpdates();
-            navigation.dispatch(e.data.action);
-        })
-    }, [navigation])
+
+            if (title.length === 0) {
+                Alert.alert("Save Error", "Title cannot be blank");
+                return;
+            }
+
+            checkForUpdates()
+                .then(() => navigation.dispatch(e.data.action))
+        });
+        return removeListener;
+    }, [navigation, title])
 
     function handleGetNote(note: Note | null) {
         if (note !== null) {
@@ -81,23 +81,29 @@ export default function EditNote(
      * Checks for any new changes in the note.
      * Saves the note if there are changes.
      */
-    function checkForUpdates() {
+    async function checkForUpdates() {
+        if (!loaded) return;
+
         // TODO: make async
         if (savedTitle === title && savedBody === body) {
             // no new changes
             return;
         }
-        saveNoteAsync(filename, {
+
+        const newNote = {
             title: title,
             body: body,
             dateModified: Date.now(),
             dateCreated: dateCreated,
-        })
-        .then(() => {
+        };
+
+        try {
+            await saveNoteAsync(filename, newNote);
             setSavedTitle(title);
             setSavedBody(body);
-        })
-        .catch(showErrorDialog);
+        } catch (err) {
+            showErrorDialog(err);
+        }
     }
 
     if (!loaded) {
