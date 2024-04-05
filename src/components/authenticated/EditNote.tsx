@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { ScrollView, TextInput, View, Alert } from "react-native";
+import { ScrollView, TextInput, View, Alert, AlertButton } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { UNSTABLE_usePreventRemove } from "@react-navigation/native";
 
 import showErrorDialog from "../../util/error";
 import { getNoteAsync, saveNoteAsync } from "../../util/storage/notefiles";
@@ -39,25 +40,27 @@ export default function EditNote(
             .catch(handleGetNoteError);
     }, []);
 
-    useEffect(() => {
-        checkForUpdates();
-    }, [title, body]);
+    useEffect(() => { checkForUpdates() }, [title, body]);
 
-    useEffect(() => {
-        // Does not work on iOS
-        const removeListener = navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
+    // Save note before leaving the screen
+    // Only current iOS solution, stable version should come with React Navigation 7
+    UNSTABLE_usePreventRemove(title.length === 0, ({ data }) => {
+        const cancelBtn: AlertButton = { text: "Back", style: "cancel" };
+        const continueBtn: AlertButton = {
+            text: "Continue",
+            style: "destructive",
+            onPress: () => checkForUpdates().then(
+                () => navigation.dispatch(data.action)
+            )
+        };
 
-            if (title.length === 0) {
-                Alert.alert("Save Error", "Title cannot be left blank");
-                return;
-            }
-
-            checkForUpdates()
-                .then(() => navigation.dispatch(e.data.action))
-        });
-        return removeListener;
-    }, [navigation, title])
+        Alert.alert(
+            "Warning",
+            "This note has no title. It will be saved without a title"
+            + " if you continue.",
+            [cancelBtn, continueBtn]
+        );
+    });
 
     function handleGetNote(note: Note | null) {
         if (note !== null) {
@@ -85,7 +88,6 @@ export default function EditNote(
     async function checkForUpdates() {
         if (!loaded) return;
 
-        // TODO: make async
         if (savedTitle === title && savedBody === body) {
             // no new changes
             return;
@@ -139,14 +141,3 @@ export default function EditNote(
         </View>
     )
 }
-
-// Check for blank note before closing
-// useEffect(() => {
-    //     navigation.addListener('beforeRemove', (e) => {
-    //         if (title.length > 0) {
-    //             return;
-    //         }
-    //         // e.preventDefault();
-    //         // alert('No creás notas blancas');
-    //     })
-    // }, [navigation, title])

@@ -1,11 +1,14 @@
-import { Pressable, Alert } from "react-native";
+import { Pressable, Alert, AlertButton, Platform } from "react-native";
 
 import showErrorDialog from "../../util/error";
 import { NoteMetadata } from "../../util/types/note";
 
 import Styles from "../../util/services/styles";
 import { formatDate } from "../../util/services/datetime";
-import { deleteNoteAsync, getRawNoteAsync } from "../../util/storage/notefiles";
+import {
+    deleteNoteAsync,
+    getRawNoteAsync
+} from "../../util/storage/notefiles";
 import { exportTextFileAsync } from "../../util/storage/android";
 
 import AppText from "./AppText";
@@ -24,25 +27,27 @@ export default function NoteOptions(props: NoteOptionProps) {
 
     const styles = Styles.get();
 
-    const deleteButton = {
-        text: 'Delete',
-        onPress: () => {
-            deleteNoteAsync(props.metadata.filename)
-                .then(props.close)
-                .catch(handleDeleteError);
-        }
-    }
-
     function handleDeleteError(reason: unknown) {
         props.close();
         showErrorDialog(reason);
     }
 
     function confirmDelete() {
+        const cancelButton: AlertButton = {text: 'Cancel', style: 'cancel'};
+        const deleteButton: AlertButton = {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => {
+                deleteNoteAsync(props.metadata.filename)
+                    .then(props.close)
+                    .catch(handleDeleteError);
+            }
+        };
+
         Alert.alert(
             'Really delete this note?',
             `Note "${props.metadata.title}" will be deleted forever.`,
-            [{text: 'Cancel'}, deleteButton]
+            [cancelButton, deleteButton]
         )
     }
 
@@ -93,7 +98,8 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppText style={{padding: 5}}>
                     Last Modified: {dateModifiedString}
                 </AppText>
-                <AppButton onPress={exportNote}>
+                {/* User exports are currently only supported by android */}
+                <AppButton onPress={exportNote} disabled={Platform.OS !== "android"}>
                     Export Encrypted File
                 </AppButton>
                 <AppButton color='red' onPress={confirmDelete}>

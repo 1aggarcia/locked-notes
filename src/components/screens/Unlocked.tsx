@@ -69,7 +69,11 @@ export default function Unlocked(props: UnlockedProps) {
         <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions} initialRouteName='NotesView'>
                 <Stack.Screen name={'NotesView'} component={NotesView} />
-                <Stack.Screen name={'EditNote'} component={EditNote} />
+                <Stack.Screen
+                    name={'EditNote'}
+                    component={EditNote}
+                    options={{ headerBackButtonMenuEnabled: false }}
+                />
                 <Stack.Screen name={'Settings'} component={Settings} />
                 <Stack.Screen name={'ResetPin'} component={ResetPin} />
             </Stack.Navigator>

@@ -3,6 +3,7 @@
  * Storage Access Framework. (iOS solution needs to be found)
  */
 
+import { Platform } from 'react-native';
 import { StorageAccessFramework as SAF } from 'expo-file-system';
 
 /**
@@ -16,6 +17,10 @@ import { StorageAccessFramework as SAF } from 'expo-file-system';
  *  occurs in the file system.
  */
 export async function exportTextFileAsync(filename: string, content: string) {
+    if (Platform.OS !== 'android') {
+        throw new Error("exportTextFileAsync is only supported by Android");
+    }
+
     try {
         const permissions = await SAF.requestDirectoryPermissionsAsync();
 
