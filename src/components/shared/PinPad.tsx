@@ -10,8 +10,8 @@ import AppText from './AppText';
 const maxPinLength = 6;
 
 export interface PinPadProps {
-    /** External accion to execute once the full pin has been entered */
-    onComplete: (pin: string) => void;
+    /** External action to execute once the full pin has been entered */
+    onComplete: (pin: string) => unknown;
 }
 
 export default function PinPad(props: PinPadProps) {
@@ -33,7 +33,7 @@ export default function PinPad(props: PinPadProps) {
         const newPin = pin + digit;
         setPin(newPin);
 
-        // Send pin back if max length
+        // Send pin back if it's reached max length
         if (newPin.length === maxPinLength) {
             setPin('');
             props.onComplete(newPin);

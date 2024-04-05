@@ -110,8 +110,9 @@ function generateStyles(colorTheme: ColorTheme) {
         },
         pinButton: {
             margin: 5,
-            width: 90,
-            height: 70,
+            marginHorizontal: 10,
+            width: 80,
+            height: 80,
             borderRadius: 50,
             borderColor: colorTheme.strongBorder,
             borderWidth: 2,
@@ -121,8 +122,8 @@ function generateStyles(colorTheme: ColorTheme) {
         },
         pinBackspace: {
             margin: 5,
-            width: 90,
-            height: 70,
+            width: 80,
+            height: 80,
             alignItems: 'center',
             justifyContent: 'center',
         },
@@ -147,7 +148,7 @@ function generateStyles(colorTheme: ColorTheme) {
         },
         keypad: {
             flexDirection: 'row',
-            justifyContent: 'space-evenly',
+            justifyContent: 'center',
             paddingVertical: 20,
         },
         backspace: {
