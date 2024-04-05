@@ -30,7 +30,7 @@ export default function App() {
 
   useEffect(() => {
     loadSettingsAsync();
-  }, [])
+  }, []);
 
   return (
     <SafeAreaProvider>

@@ -44,11 +44,12 @@ export default function EditNote(
     }, [title, body]);
 
     useEffect(() => {
+        // Does not work on iOS
         const removeListener = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
 
             if (title.length === 0) {
-                Alert.alert("Save Error", "Title cannot be blank");
+                Alert.alert("Save Error", "Title cannot be left blank");
                 return;
             }
 

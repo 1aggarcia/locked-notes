@@ -22,20 +22,25 @@ export default function Settings(
     { navigation }: NativeStackScreenProps<Params>)
 {
     const styles = Styles.get();
-    const [wasChanged, setWasChanged] = useState(false);
     const [settings, setSettings] = useState<SettingsType>();
+    const [savedSettings, setSavedSetings] = useState<SettingsType>();
+
+    // Extremely lazy object equality check: not recommended
+    const hasChanged = JSON.stringify(settings) !== JSON.stringify(savedSettings);
 
     // Load settings from disk
     useEffect(() => {
         getSettingsAsync()
-            .then(setSettings)
+            .then(settings => {
+                setSettings(settings);
+                setSavedSetings(settings);
+            })
             .catch(showErrorDialog)
     }, [])
 
     function setColorTheme(darkMode: boolean, lowContrast: boolean) {
         if (settings === undefined) return;
 
-        setWasChanged(true);
         setSettings({
             ...settings,
             darkMode: darkMode,
@@ -50,7 +55,6 @@ export default function Settings(
         // Filter out non-numeric characters
         const digits = Number(value.replace(/[^0-9]/g, ''))
 
-        setWasChanged(true);
         setSettings({
             ...settings,
             unlockedTime: digits
@@ -58,7 +62,7 @@ export default function Settings(
     }
 
     function saveSettings() {
-        if (wasChanged === false || settings === undefined) return;
+        if (hasChanged === false || settings === undefined) return;
 
         if (settings.unlockedTime < minUnlockedTime) {
             alert(`Unlocked time must be at least ${minUnlockedTime} seconds`);
@@ -69,7 +73,7 @@ export default function Settings(
             return;
         }
         saveSettingsAsync(settings)
-            .then(() => setWasChanged(false))
+            .then(() => setSavedSetings(settings))
             .catch(showErrorDialog);
     }
 
@@ -96,7 +100,7 @@ export default function Settings(
                 <ResetPinRow
                     navigateAway={() => navigation.navigate('ResetPin')}/>
 
-                <SaveRow wasChanged={wasChanged} saveSettings={saveSettings} />
+                <SaveRow wasChanged={hasChanged} saveSettings={saveSettings} />
                 <BottomRow />
             </View>
         </View>
