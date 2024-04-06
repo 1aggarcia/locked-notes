@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import Encryption, { saltAndSha256 } from "../../util/services/encryption";
+import appEncryptor, { saltAndSha256 } from "../../util/services/encryption";
 import { LoginInfo } from "../../util/storage/securestore";
 import Styles from "../../util/services/styles";
 
@@ -29,7 +29,7 @@ export default function Locked(props: LockedProps) {
         const hashedPin = saltAndSha256({ text: pin, salt: props.login.salt})
         if (hashedPin === props.login.hash) {
             // Correct login info, set encryption key and unlock
-            Encryption.registerPinAsKey(pin);
+            appEncryptor.registerPinAsKey(pin);
             props.unlock()
         } else {
             setError(true);

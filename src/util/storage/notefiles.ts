@@ -2,7 +2,7 @@
 
 import * as FileSystem from 'expo-file-system';
 
-import Encryption from '../services/encryption';
+import appEncryptor from '../services/encryption';
 import Note, { NoteMetadata, isNote } from '../types/note';
 
 export type LoginInfo = {
@@ -34,7 +34,7 @@ export async function saveNoteAsync(filename: string, note: Note) {
     }
     try {
         const fileUri = notesDir + filename
-        await FileSystem.writeAsStringAsync(fileUri, Encryption.encrypt(text));
+        await FileSystem.writeAsStringAsync(fileUri, appEncryptor.encrypt(text));
         console.debug(`File ${filename} saved`);
     } catch (error) {
         console.error("An error occured in saveNoteAsync:", error);
@@ -65,7 +65,7 @@ export async function getRawNoteAsync(filename: string): Promise<string | null> 
 export async function getNoteAsync(filename: string): Promise<Note | null> {
     const fileUri = notesDir + filename;
     try {
-        const decryptedFile = Encryption.decrypt(
+        const decryptedFile = appEncryptor.decrypt(
             await FileSystem.readAsStringAsync(fileUri)
         );
         if (decryptedFile === null)

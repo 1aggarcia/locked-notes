@@ -10,7 +10,7 @@
 
 import * as SecureStore from 'expo-secure-store';
 
-import Encryption, { generateSalt, saltAndSha256 } from '../services/encryption';
+import appEncryptor, { generateSalt, saltAndSha256 } from '../services/encryption';
 import Settings, { defaultSettings, isValidSettings } from '../types/settings';
 
 export type LoginInfo = {
@@ -35,7 +35,7 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
-    Encryption.registerPinAsKey(pin);
+    appEncryptor.registerPinAsKey(pin);
 
     try {
         await SecureStore.setItemAsync('loginHash', loginHash);
@@ -95,8 +95,8 @@ export async function setAccessTimeAsync(timestamp: Date): Promise<void> {
  */
 export async function getAccessTimeAsync(): Promise<Date> {
     try {
-        const timestamp_ms = Number(await SecureStore.getItemAsync('accessTime'));
-        return new Date(timestamp_ms);
+        const timestampMs = Number(await SecureStore.getItemAsync('accessTime'));
+        return new Date(timestampMs);
     } catch (error) {
         console.log("getAccessTimeAsync caught an error:", error);
         return new Date(0);
