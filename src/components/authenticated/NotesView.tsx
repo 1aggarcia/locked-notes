@@ -54,9 +54,6 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
                 openNote={openNote}
                 setNoteOptions={setNoteOptions}
             />
-            <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <AppText style={{textAlign: 'center'}}>Settings</AppText>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.createButton} onPress={createNote}>
                 <AppText style={styles.createButtonText}>+</AppText>
             </TouchableOpacity>

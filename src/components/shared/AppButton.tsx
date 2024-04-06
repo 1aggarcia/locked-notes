@@ -17,14 +17,14 @@ interface AppButtonProps {
 export default function AppButton(props: PropsWithChildren<AppButtonProps>) {
     const colorTheme = Styles.getColorTheme();
 
-    // Make a copy of the button styles since they might be modified
+    // Make a copy of the button styles to personalize
     const buttonStyle = {...Styles.get().button}
 
     if (props.disabled) {
         // Always override colors to disabled if the button is disabled
         buttonStyle.borderColor = colorTheme.buttonDisabled;
         buttonStyle.color = colorTheme.buttonDisabled;
-    } else if (props.color != undefined) {
+    } else if (props.color !== undefined) {
         // Override color values if color was passed in
         buttonStyle.borderColor = props.color;
         buttonStyle.color = props.color;

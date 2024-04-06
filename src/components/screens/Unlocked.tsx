@@ -4,9 +4,8 @@
  */
 
 import { useState, useEffect } from "react";
-import { TouchableOpacity } from "react-native";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
@@ -15,7 +14,7 @@ import NotesView from "../authenticated/NotesView";
 import EditNote from "../authenticated/EditNote";
 import Settings from "../authenticated/Settings";
 import ResetPin from "../authenticated/ResetPin";
-import AppText from "../shared/AppText";
+import AppButton from "../shared/AppButton";
 
 export type Params = {
     NotesView: undefined;
@@ -48,13 +47,19 @@ export default function Unlocked(props: UnlockedProps) {
 
     const screenOptions = {
         headerBackTitle: "Back",
-        headerRight: () => (<>
-            <TouchableOpacity onPress={props.lock}>
-                <AppText>Lock</AppText>
-            </TouchableOpacity>
-        </>),
-        title: `Unlocked Time: ${formatTime(timeLeft)}`,
+        headerRight: () => <AppButton onPress={props.lock}>Lock</AppButton>,
+        title: `Unlocked: ${formatTime(timeLeft)}`,
     }
+
+    // Prop 'navigation' is provided by the Stack Navigator
+    const notesViewOptions = ({ navigation }: NativeStackScreenProps<Params>) => ({
+        headerRight: () => (<>
+            <AppButton onPress={() => navigation.navigate('Settings')}>
+                Settings
+            </AppButton>
+            <AppButton onPress={props.lock}>Lock</AppButton>
+        </>),
+    });
 
     /** Refresh the clock, lock the app if it is past the expiryTime */
     function decrementTime() {
@@ -68,12 +73,12 @@ export default function Unlocked(props: UnlockedProps) {
     return (
         <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions} initialRouteName='NotesView'>
-                <Stack.Screen name={'NotesView'} component={NotesView} />
-                <Stack.Screen
-                    name={'EditNote'}
-                    component={EditNote}
-                    options={{ headerBackButtonMenuEnabled: false }}
-                />
+                <Stack.Screen name={'NotesView'} component={NotesView}
+                    options={notesViewOptions} />
+
+                <Stack.Screen name={'EditNote'} component={EditNote}
+                    options={{ headerBackButtonMenuEnabled: false }} />
+
                 <Stack.Screen name={'Settings'} component={Settings} />
                 <Stack.Screen name={'ResetPin'} component={ResetPin} />
             </Stack.Navigator>
