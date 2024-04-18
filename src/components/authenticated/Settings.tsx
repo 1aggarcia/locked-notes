@@ -19,13 +19,14 @@ const minUnlockedTime = 60;
 const maxUnlockedTime = 3600;
 
 export default function Settings(
-    { navigation }: NativeStackScreenProps<Params>)
+    { route, navigation }: NativeStackScreenProps<Params, 'Settings'>)
 {
     const styles = Styles.get();
     const [settings, setSettings] = useState<SettingsType>();
     const [savedSettings, setSavedSetings] = useState<SettingsType>();
 
-    // Extremely lazy object equality check: not recommended
+    // Extremely lazy object equality check
+    // TODO: perform equality check properly
     const hasChanged = JSON.stringify(settings) !== JSON.stringify(savedSettings);
 
     // Load settings from disk
@@ -98,7 +99,7 @@ export default function Settings(
                     unlockedTime={settings.unlockedTime} />
 
                 <ResetPinRow
-                    navigateAway={() => navigation.navigate('ResetPin')}/>
+                    navigateAway={() => navigation.navigate('ResetPin', route.params)} />
 
                 <SaveRow wasChanged={hasChanged} saveSettings={saveSettings} />
                 <BottomRow />
@@ -178,7 +179,7 @@ function ResetPinRow(props: ResetPinRowProps) {
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>PIN</AppText>
-            <AppButton disabled={true} onPress={props.navigateAway}>
+            <AppButton onPress={props.navigateAway}>
                 Reset
             </AppButton>
         </View>

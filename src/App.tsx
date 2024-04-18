@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { LoginInfo, getLoginAsync, getSettingsAsync } from './util/storage/securestore';
+import {
+  LoginInfo,
+  getLoginAsync,
+  getSettingsAsync
+} from './util/storage/securestore';
 import Styles from './util/services/styles';
 import showErrorDialog from './util/error';
 

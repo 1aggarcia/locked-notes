@@ -9,6 +9,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navig
 
 import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
+import { LoginInfo } from "../../util/storage/securestore";
 
 import NotesView from "../authenticated/NotesView";
 import EditNote from "../authenticated/EditNote";
@@ -19,22 +20,32 @@ import AppButton from "../shared/AppButton";
 export type Params = {
     NotesView: undefined;
     EditNote: { filename: string };
-    Settings: undefined;
-    ResetPin: undefined;
+    Settings: { login: LoginInfo, setLogin: (login: LoginInfo) => unknown };
+    ResetPin: { login: LoginInfo, setLogin: (login: LoginInfo) => unknown  };
 };
 
 const Stack = createNativeStackNavigator<Params>();
 
 interface UnlockedProps {
-    lock: () => void;
-
     /** Timestamp when the app should expire and lock itself */
     expiryTime: Date;
+
+    login: LoginInfo;
+    setLogin: (login: LoginInfo) => unknown;
+    lock: () => unknown;
+
+    
 }
 
 export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
+    const colors = Styles.getColorTheme();
+
+    const loginHook = {
+        login: props.login,
+        setLogin: props.setLogin
+    }
 
     // Count down until expireTime goes into the past
     useEffect(() => {
@@ -49,12 +60,14 @@ export default function Unlocked(props: UnlockedProps) {
         headerBackTitle: "Back",
         headerRight: () => <AppButton onPress={props.lock}>Lock</AppButton>,
         title: `Unlocked: ${formatTime(timeLeft)}`,
+        headerStyle: { backgroundColor: colors.fg },
+        headerTitleStyle: { color: colors.text }
     }
 
     // Prop 'navigation' is provided by the Stack Navigator
     const notesViewOptions = ({ navigation }: NativeStackScreenProps<Params>) => ({
         headerRight: () => (<>
-            <AppButton onPress={() => navigation.navigate('Settings')}>
+            <AppButton onPress={() => navigation.navigate('Settings', loginHook)}>
                 Settings
             </AppButton>
             <AppButton onPress={props.lock}>Lock</AppButton>

@@ -14,7 +14,6 @@ export class Encryptor {
      * @param pin to hash and register
      */
     registerPinAsKey(pin: string) {
-        console.log("using new class");
         this.key = sha256Hash1000(pin);
     }
 

@@ -73,9 +73,7 @@ export default function Authenticator(props: AuthenticatorProps) {
         }
     }
 
-    useEffect(() => {
-        loadDependencies();
-    }, [])
+    useEffect(() => { loadDependencies() }, []);
 
     if (login === undefined)
         return <CreatePin updateLogin={updateLogin} />;
@@ -86,9 +84,11 @@ export default function Authenticator(props: AuthenticatorProps) {
         case 'Denied':
             return <Denied />;
         case 'Unlocked':
-            return <Unlocked 
-                lock={() => setMode('Locked')}
+            return <Unlocked
                 expiryTime={calculateExpiryTime(unlockedTime)}
+                lock={() => setMode('Locked')}
+                login={login}
+                setLogin={setLogin}
             />;
         case 'Locked':
             return <Locked 

@@ -5,11 +5,6 @@ import * as FileSystem from 'expo-file-system';
 import appEncryptor from '../services/encryption';
 import Note, { NoteMetadata, isNote } from '../types/note';
 
-export type LoginInfo = {
-    hash: string,
-    salt: string,
-}
-
 const maxStringLength = 1 << 16; // 2^16
 const notesDir = FileSystem.documentDirectory + 'notes/';
 
@@ -125,3 +120,53 @@ export async function deleteNoteAsync(filename: string) {
         throw error;
     }
 }
+
+// // TODO: Finish
+// /**
+//  * Reencrypt every note saved using a new pin
+//  */
+// async function reencryptNotesAsync(newPin: string) {
+//     const okToDelete: string[] = [];
+//     const newEncryptor = new Encryptor();
+
+//     newEncryptor.registerPinAsKey(newPin);
+
+//     try {
+//         const filenames = await FileSystem.readDirectoryAsync(notesDir);
+
+//         // Step 1: Create new files encrypted with new pin
+//         for (const filename of filenames) {
+//             if (await reencryptNote(filename, newEncryptor)) {
+//                 okToDelete.push(filename);
+//             }
+//         }
+
+//         // Step 2: Remove old files after the app encryptor is set
+//         appEncryptor.registerPinAsKey(newPin);
+//         for (const filename of okToDelete) {
+//             await FileSystem.deleteAsync(filename)
+//                 .catch(err => console.error(err));
+//         }
+//     } catch (error) {
+//         // Directory not found or empty
+//         console.warn(error);
+//     }
+// }
+
+// async function reencryptNote(filename: string, encryptor: Encryptor) {
+//     const note = await getNoteAsync(filename);
+//     if (note === null) {
+//         return false;
+//     }
+
+//     const newFilename = `note_${Date.now()}.ejn`;
+//     const reencrypted = encryptor.encrypt(JSON.stringify(note));
+//     try {
+//         await FileSystem.writeAsStringAsync(newFilename, reencrypted);
+//         console.debug(`File ${filename} saved`);
+//         return true;
+//     } catch (error) {
+//         console.error(error);
+//         return false;
+//     }
+// }
