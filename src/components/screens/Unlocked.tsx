@@ -20,32 +20,24 @@ import AppButton from "../shared/AppButton";
 export type Params = {
     NotesView: undefined;
     EditNote: { filename: string };
-    Settings: { login: LoginInfo, setLogin: (login: LoginInfo) => unknown };
-    ResetPin: { login: LoginInfo, setLogin: (login: LoginInfo) => unknown  };
+    Settings: { login: LoginInfo };
+    ResetPin: { login: LoginInfo };
 };
 
 const Stack = createNativeStackNavigator<Params>();
 
 interface UnlockedProps {
-    /** Timestamp when the app should expire and lock itself */
-    expiryTime: Date;
-
     login: LoginInfo;
-    setLogin: (login: LoginInfo) => unknown;
     lock: () => unknown;
 
-    
+    /** Timestamp when the app should expire and lock itself */
+    expiryTime: Date;
 }
 
 export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
     const colors = Styles.getColorTheme();
-
-    const loginHook = {
-        login: props.login,
-        setLogin: props.setLogin
-    }
 
     // Count down until expireTime goes into the past
     useEffect(() => {
@@ -67,7 +59,7 @@ export default function Unlocked(props: UnlockedProps) {
     // Prop 'navigation' is provided by the Stack Navigator
     const notesViewOptions = ({ navigation }: NativeStackScreenProps<Params>) => ({
         headerRight: () => (<>
-            <AppButton onPress={() => navigation.navigate('Settings', loginHook)}>
+            <AppButton onPress={() => navigation.navigate('Settings', { login: props.login })}>
                 Settings
             </AppButton>
             <AppButton onPress={props.lock}>Lock</AppButton>

@@ -88,7 +88,6 @@ export default function Authenticator(props: AuthenticatorProps) {
                 expiryTime={calculateExpiryTime(unlockedTime)}
                 lock={() => setMode('Locked')}
                 login={login}
-                setLogin={setLogin}
             />;
         case 'Locked':
             return <Locked 
