@@ -1,3 +1,4 @@
+import isEqual from 'lodash.isequal';
 import { useState, useEffect } from 'react';
 import { View, Switch, TextInput } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -21,13 +22,11 @@ const maxUnlockedTime = 3600;
 export default function Settings(
     { route, navigation }: NativeStackScreenProps<Params, 'Settings'>)
 {
-    const styles = Styles.get();
     const [settings, setSettings] = useState<SettingsType>();
     const [savedSettings, setSavedSetings] = useState<SettingsType>();
 
-    // Extremely lazy object equality check
-    // TODO: perform equality check properly
-    const hasChanged = JSON.stringify(settings) !== JSON.stringify(savedSettings);
+    const styles = Styles.get();
+    const hasChanged = !isEqual(settings, savedSettings);
 
     // Load settings from disk
     useEffect(() => {
