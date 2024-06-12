@@ -18,7 +18,7 @@ export type LoginInfo = {
     salt: string,
 }
 
-const maxStringLength = 1 << 16; // 2^16
+const maxStringLength = 1 << 16;  // 2^16
 const saltLength = 64;
 
 /**
@@ -102,7 +102,6 @@ export async function getAccessTimeAsync(): Promise<Date> {
         return new Date(0);
     }
 }
-
 
 /**
  * Save the settings passed in to Secure Store. Rejects promise if there is
