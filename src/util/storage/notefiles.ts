@@ -111,35 +111,32 @@ export async function deleteNoteAsync(filename: string) {
  * 2: Delete the original files
  */
 export async function reencryptNotesAsync(newPin: string) {
-    const okToDelete: string[] = [];
+    const filePairs: [string, string][] = [];  // [originalFilename, tempFilename]
     const newEncryptor = new Encryptor();
 
     newEncryptor.registerPinAsKey(newPin);
 
+    let filenames: string[];
     try {
-        const filenames = await FileSystem.readDirectoryAsync(NOTES_DIR);
-        console.log(filenames);
-
-        // Step 1: Create new files encrypted with new pin
-        for (const filename of filenames) {
-            console.log("Attempting recryptioin on " + filename);
-            if (await reencryptNote(filename, newEncryptor)) {
-                okToDelete.push(filename);
-            } else {
-                console.warn(`Failed to reencrypt ${filename}`);
-            }
-        }
-
-        // Step 2: Remove old files after the app encryptor is set
-        appEncryptor.registerPinAsKey(newPin);
-        for (const filename of okToDelete) {
-            await FileSystem.deleteAsync(NOTES_DIR + filename)
-                .catch(err => console.error(err));
-        }
+        filenames = await FileSystem.readDirectoryAsync(NOTES_DIR);
     } catch (error) {
         console.error("An error occured in reencryptNotesAsync:", error);
         throw error;
     }
+
+    // Step 1: Create temp files encrypted with new pin
+    for (const filename of filenames) {
+        try {
+            const swapFilename = await reencryptNote(filename, newEncryptor);
+            filePairs.push([NOTES_DIR + filename, NOTES_DIR + swapFilename]);
+        } catch (error) {
+            console.warn(`Failed to reencrypt ${filename}: ${error}`);
+        }
+    }
+
+    // Step 2: merge temp files to their original location
+    appEncryptor.registerPinAsKey(newPin);
+    await mergeSwapFiles(filePairs);
 }
 
 
@@ -169,23 +166,49 @@ async function saveAndEncryptNote(
 }
 
 /**
- * Attempt to fetch the note with the provided filename, encrypt it
- * with the passed in encryptor, and save it to a new location
+ * Decrypt the note with the path provided using the appEncryptor,
+ * reencrypt it with the provided encryptor, and save it to the path
+ * <filename>.swp
  * @param filename the name of the original note file in the notes directory
  * @param encryptor the desired encryption scheme
- * @returns true if all parts are successful, false otherwise
+ * @returns Promise resolving to the new filename, or rejecting if there
+ *   is an error in retrieval or saving
  */
 async function reencryptNote(filename: string, encryptor: Encryptor) {
     const note = await getNoteAsync(filename);
     if (note === null) {
-        return false;
+        throw new ReferenceError(`Note "${filename}" could not be retrieved`);
     }
 
+    const newName = filename + ".swp";
     try {
-        await saveAndEncryptNote(`note_${Date.now()}.ejn`, note, encryptor);
-        return true;
+        await saveAndEncryptNote(newName, note, encryptor);
     } catch (error) {
         console.error("An error occured in reencryptNote:", error);
-        return false;
+        throw error;
+    }
+    return newName;
+}
+
+/**
+ * Copy the contents of temporary "swap" files to their original location,
+ * then delete the "swap" files
+ * @param filePairs array of tuples [originalFilename, swapFilename]
+ * @returns
+ */
+async function mergeSwapFiles(filePairs: [string, string][]) {
+    for (const [file, swapFile] of filePairs) {
+        console.debug(`Copying ${swapFile} to ${file}...`);
+        try {
+            await FileSystem.copyAsync({
+                from: swapFile,
+                to: file
+            });
+
+            console.debug(`Deleting ${swapFile}...`);
+            await FileSystem.deleteAsync(swapFile);
+        } catch (error) {
+            console.error("An error occured in mergeSwapFiles:", error);
+        }
     }
 }
