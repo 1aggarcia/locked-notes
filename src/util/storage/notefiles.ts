@@ -123,20 +123,24 @@ export async function reencryptNotesAsync(newPin: string) {
         console.error("An error occured in reencryptNotesAsync:", error);
         throw error;
     }
+    console.log(filenames);
 
     // Step 1: Create temp files encrypted with new pin
     for (const filename of filenames) {
         try {
             const swapFilename = await reencryptNote(filename, newEncryptor);
-            filePairs.push([NOTES_DIR + filename, NOTES_DIR + swapFilename]);
+            if (swapFilename !== null) {
+                filePairs.push([NOTES_DIR + filename, NOTES_DIR + swapFilename]);
+            }
         } catch (error) {
-            console.warn(`Failed to reencrypt ${filename}: ${error}`);
+            console.error(`Failed to reencrypt ${filename}: ${error}`);
+            throw error;
         }
     }
 
     // Step 2: merge temp files to their original location
-    appEncryptor.registerPinAsKey(newPin);
     await mergeSwapFiles(filePairs);
+    appEncryptor.registerPinAsKey(newPin);
 }
 
 
@@ -177,7 +181,7 @@ async function saveAndEncryptNote(
 async function reencryptNote(filename: string, encryptor: Encryptor) {
     const note = await getNoteAsync(filename);
     if (note === null) {
-        throw new ReferenceError(`Note "${filename}" could not be retrieved`);
+        return null;
     }
 
     const newName = filename + ".swp";
@@ -191,24 +195,32 @@ async function reencryptNote(filename: string, encryptor: Encryptor) {
 }
 
 /**
- * Copy the contents of temporary "swap" files to their original location,
- * then delete the "swap" files
+ * Merge the contents of temporary "swap" files into the original filename,
+ * remove the "swap" files
  * @param filePairs array of tuples [originalFilename, swapFilename]
- * @returns
  */
 async function mergeSwapFiles(filePairs: [string, string][]) {
     for (const [file, swapFile] of filePairs) {
-        console.debug(`Copying ${swapFile} to ${file}...`);
+        const backupFile = file + ".old";
         try {
-            await FileSystem.copyAsync({
+            console.debug(`Moving ${file.replace(NOTES_DIR, "")} to ${backupFile.replace(NOTES_DIR, "")}...`);
+            await FileSystem.moveAsync({
+                from: file,
+                to: backupFile
+            });
+
+            console.debug(`Moving ${swapFile.replace(NOTES_DIR, "")} to ${file.replace(NOTES_DIR, "")}...`);
+            await FileSystem.moveAsync({
                 from: swapFile,
                 to: file
             });
 
-            console.debug(`Deleting ${swapFile}...`);
-            await FileSystem.deleteAsync(swapFile);
+            console.debug(`Deleting ${backupFile.replace(NOTES_DIR, "")}...`);
+            //throw new Error("Dummy delete error");
+            await FileSystem.deleteAsync(backupFile);
         } catch (error) {
             console.error("An error occured in mergeSwapFiles:", error);
+            throw error;
         }
     }
 }
