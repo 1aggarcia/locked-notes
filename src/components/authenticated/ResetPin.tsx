@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import AppText from "../shared/AppText";
@@ -27,13 +27,18 @@ export default function ResetPin(
 
         if (hashedPin !== login.hash) {
             // wrong PIN
+            Alert.alert("Verification Failed", "Wrong PIN entered");
             navigation.goBack();
             return;
         }
         setAuthenticated(true);
     }
 
-    function reencryptNotes(login: LoginInfo) {
+    /** Update the cached PIN and reencrypt every note on disk */
+    function setAppLogin(login: LoginInfo) {
+        setLogin(login);
+        Alert.alert("Success!", "Your new PIN was saved");
+        navigation.goBack();
         throw new ReferenceError("Unimplemented: reencryptNotes");
     }
 
@@ -47,31 +52,5 @@ export default function ResetPin(
             </View>
         )
     }
-    return <CreatePin updateLogin={reencryptNotes}/>
-    // if (newPin == "") {
-    //     // PIN has not been set
-    //     return (
-    //         <View style={[styles.app, styles.pinContainer]}>
-    //             <View style={[styles.centered, {flex: 1}]}>
-    //                 <AppText style={styles.header}>Create a New PIN</AppText>
-    //                 {errorMsg &&
-    //                     <AppText style={{color: 'red', textAlign: 'center'}}>
-    //                         The PINs entered did not match. Please try again
-    //                     </AppText>
-    //                 }
-    //             </View>
-    //             <PinPad onComplete={setNewPin} />
-    //         </View>
-    //     )
-    // } else {
-    //     // PIN has been set: needs to be confirmed
-    //     return (
-    //         <View style={[styles.app, styles.pinContainer]}>
-    //             <View style={[styles.centered, {flex: 1}]}>
-    //                 <AppText style={styles.header}>Confirm New PIN</AppText>
-    //             </View>
-    //             <PinPad onComplete={confirmNewPin} />
-    //         </View>
-    //     )
-    // }
+    return <CreatePin updateLogin={setAppLogin}/>
 }

@@ -16,8 +16,8 @@ import Loading from '../screens/Loading';
 import AppButton from '../shared/AppButton';
 import { Params } from "../screens/Unlocked";
 
-const minUnlockedTime = 60;
-const maxUnlockedTime = 3600;
+const MIN_UNLOCKED_SECONDS = 60;
+const MAX_UNLOCKED_SECONDS = 3600;
 
 export default function Settings(
     { navigation }: NativeStackScreenProps<Params, 'Settings'>)
@@ -64,12 +64,12 @@ export default function Settings(
     function saveSettings() {
         if (hasChanged === false || settings === undefined) return;
 
-        if (settings.unlockedTime < minUnlockedTime) {
-            alert(`Unlocked time must be at least ${minUnlockedTime} seconds`);
+        if (settings.unlockedTime < MIN_UNLOCKED_SECONDS) {
+            alert(`Unlocked time must be at least ${MIN_UNLOCKED_SECONDS} seconds`);
             return;
         }
-        if (settings.unlockedTime > maxUnlockedTime) {
-            alert(`Unlocked time must be at most ${maxUnlockedTime} seconds`);
+        if (settings.unlockedTime > MAX_UNLOCKED_SECONDS) {
+            alert(`Unlocked time must be at most ${MAX_UNLOCKED_SECONDS} seconds`);
             return;
         }
         saveSettingsAsync(settings)
