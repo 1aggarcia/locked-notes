@@ -20,7 +20,7 @@ const minUnlockedTime = 60;
 const maxUnlockedTime = 3600;
 
 export default function Settings(
-    { route, navigation }: NativeStackScreenProps<Params, 'Settings'>)
+    { navigation }: NativeStackScreenProps<Params, 'Settings'>)
 {
     const [settings, setSettings] = useState<SettingsType>();
     const [savedSettings, setSavedSetings] = useState<SettingsType>();
@@ -98,7 +98,7 @@ export default function Settings(
                     unlockedTime={settings.unlockedTime} />
 
                 <ResetPinRow
-                    navigateAway={() => navigation.navigate('ResetPin', route.params)} />
+                    navigateAway={() => navigation.navigate('ResetPin')} />
 
                 <SaveRow wasChanged={hasChanged} saveSettings={saveSettings} />
                 <BottomRow />

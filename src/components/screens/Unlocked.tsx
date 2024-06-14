@@ -9,7 +9,6 @@ import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navig
 
 import Styles from "../../util/services/styles";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
-import { LoginInfo } from "../../util/storage/securestore";
 
 import NotesView from "../authenticated/NotesView";
 import EditNote from "../authenticated/EditNote";
@@ -20,14 +19,13 @@ import AppButton from "../shared/AppButton";
 export type Params = {
     NotesView: undefined;
     EditNote: { filename: string };
-    Settings: { login: LoginInfo };
-    ResetPin: { login: LoginInfo };
+    Settings: undefined;
+    ResetPin: undefined;
 };
 
 const Stack = createNativeStackNavigator<Params>();
 
 interface UnlockedProps {
-    login: LoginInfo;
     lock: () => unknown;
 
     /** Timestamp when the app should expire and lock itself */
@@ -59,7 +57,7 @@ export default function Unlocked(props: UnlockedProps) {
     // Prop 'navigation' is provided by the Stack Navigator
     const notesViewOptions = ({ navigation }: NativeStackScreenProps<Params>) => ({
         headerRight: () => (<>
-            <AppButton onPress={() => navigation.navigate('Settings', { login: props.login })}>
+            <AppButton onPress={() => navigation.navigate('Settings')}>
                 Settings
             </AppButton>
             <AppButton onPress={props.lock}>Lock</AppButton>

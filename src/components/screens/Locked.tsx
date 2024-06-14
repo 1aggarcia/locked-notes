@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { TextInput, View } from "react-native";
 
 import appEncryptor, { saltAndSha256 } from "../../util/services/encryption";
@@ -7,6 +7,7 @@ import Styles from "../../util/services/styles";
 
 import AppText from "../shared/AppText";
 import PinPad from "../shared/PinPad";
+import { LoginContext } from "../../util/context";
 
 const BACKDOOR_ENABLED = false;
 const MAX_ATTEMPTS = 5;
@@ -16,19 +17,18 @@ interface LockedProps {
 
     /** Lock the app without a way to unlock it */
     denyAccess: () => void;
-
-    login: LoginInfo;
 }
 
 export default function Locked(props: LockedProps) {
+    const [login] = useContext(LoginContext);
+    const styles = Styles.get();  // should probably use context provider too
+
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);
 
-    const styles = Styles.get();
-
     function confirmPin(pin: string) {
-        const hashedPin = saltAndSha256({ text: pin, salt: props.login.salt})
-        if (hashedPin === props.login.hash) {
+        const hashedPin = saltAndSha256({ text: pin, salt: login.salt})
+        if (hashedPin === login.hash) {
             // Correct login info, set encryption key and unlock
             appEncryptor.registerPinAsKey(pin);
             props.unlock()
@@ -46,7 +46,7 @@ export default function Locked(props: LockedProps) {
         <View style={[styles.app, styles.pinContainer]}>
             <View style={[styles.centered, {flex: 1}]}>
                 {BACKDOOR_ENABLED && 
-                    <NotForProdBackdoorAction login={props.login} />
+                    <NotForProdBackdoorAction login={login} />
                 }
                 <AppText style={styles.header}>Enter PIN to unlock</AppText>
                 {error &&

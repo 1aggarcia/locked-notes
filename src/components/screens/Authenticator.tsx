@@ -16,6 +16,7 @@ import Denied from './Denied';
 import Locked from './Locked';
 import Unlocked from './Unlocked';
 import Loading from "./Loading";
+import { LoginContext } from "../../util/context";
 
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
@@ -51,7 +52,7 @@ export default function Authenticator(props: AuthenticatorProps) {
     }
     
     /** Deny or allow user access based on the given timestamp */
-    function verifyAccess(timestamp: Date) {``
+    function verifyAccess(timestamp: Date) {
         if (Date.now() < timestamp.getTime()) {
             setMode('Denied');
         } else {
@@ -84,16 +85,18 @@ export default function Authenticator(props: AuthenticatorProps) {
         case 'Denied':
             return <Denied />;
         case 'Unlocked':
-            return <Unlocked
-                expiryTime={calculateExpiryTime(unlockedTime)}
-                lock={() => setMode('Locked')}
-                login={login}
-            />;
+            return (<LoginContext.Provider value={[login, setLogin]}>
+                <Unlocked
+                    expiryTime={calculateExpiryTime(unlockedTime)}
+                    lock={() => setMode('Locked')}
+                />
+            </LoginContext.Provider>);
         case 'Locked':
-            return <Locked 
-                login={login}
-                unlock={() => setMode('Unlocked')}
-                denyAccess={denyAccess}
-            />;
+            return (<LoginContext.Provider value={[login, setLogin]}>
+                <Locked
+                    unlock={() => setMode('Unlocked')}
+                    denyAccess={denyAccess}
+                />
+            </LoginContext.Provider>);
       }
 }
