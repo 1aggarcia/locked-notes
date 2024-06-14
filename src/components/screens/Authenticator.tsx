@@ -84,6 +84,7 @@ export default function Authenticator(props: AuthenticatorProps) {
             return <Loading message='Verifying access...' />;
         case 'Denied':
             return <Denied />;
+        // TODO: Find a cleaner way to introduce this provider?
         case 'Unlocked':
             return (<LoginContext.Provider value={[login, setLogin]}>
                 <Unlocked

@@ -178,7 +178,7 @@ function ResetPinRow(props: ResetPinRowProps) {
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>PIN</AppText>
-            <AppButton onPress={props.navigateAway}>
+            <AppButton disabled={true} onPress={props.navigateAway}>
                 Reset
             </AppButton>
         </View>
