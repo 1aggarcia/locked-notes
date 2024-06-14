@@ -8,7 +8,7 @@ By default the app is unlockable for 10 minutes at a time, during which the user
 
 ## Demo APK
 
-If you want to demo the app without downloading any source code, there is a relatively recent APK avaliable [on the expo website](https://expo.dev/accounts/1aggarcia/projects/locked-notes/builds/5d99ee2f-b239-4ac8-9039-e7205166805a) (last updated Feb 14) which you can install on an Android device. Now, that link does seem a bit sketch so if you don't trust me, you could download it on an emulator or build the app yourself with the instructions below.
+If you want to demo the app without downloading any source code, there is a relatively recent APK avaliable in the [builds](builds/) folder which you can install on an Android device. Instructions to build the app yourself are down
 
 ## Source Code
 

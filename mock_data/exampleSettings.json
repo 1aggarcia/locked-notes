@@ -1,4 +1,5 @@
 {
-    "useDarkMode": true,
-    "maxUnlockedTime": 300
+    "darkMode": true,
+    "lowContrast": false,
+    "unlockedTime": 300
 }
