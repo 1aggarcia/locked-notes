@@ -10,7 +10,7 @@ import PinPad from "../shared/PinPad";
 
 interface CreatePinProps {
     /** Set the app's login state & unlock the app */
-    updateLogin: (login: LoginInfo) => void
+    updateLogin: (login: LoginInfo, pin: string) => void
 }
 
 export default function CreatePin(props: CreatePinProps) {
@@ -22,7 +22,7 @@ export default function CreatePin(props: CreatePinProps) {
     function confirmPin(newPin: string) {
         if (newPin === pin) {
             savePinAsync(pin)
-                .then(props.updateLogin)
+                .then(login => props.updateLogin(login, pin))
                 .catch(handleSaveError);
         } else {
             setPin('');

@@ -1,6 +1,8 @@
 import { Hasher, sha256 } from 'js-sha256';
 import CryptoJS from 'react-native-crypto-js';
 
+const HEX_CHARS = '0123456789ABCDEF';
+
 /**
  * Object to encrypt and decrypt text data using a secret key never
  * visible to clients. The key is generated from a numerical PIN via
@@ -82,9 +84,8 @@ export function saltAndSha256(data: { text: string, salt: string }): string {
  * @returns random hexadecimal string
  */
 export function generateSalt(length: number): string {
-    const chars = '0123456789ABCDEF'
     let result = '';
-    for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    for (let i = length; i > 0; --i) result += HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
     return result;
 }
 

@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 
 import appEncryptor, { generateSalt, saltAndSha256 } from '../services/encryption';
 import Settings, { defaultSettings, isValidSettings } from '../types/settings';
+import { reencryptNotesAsync } from './notefiles';
 
 export type LoginInfo = {
     hash: string,
@@ -35,7 +36,7 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
     const loginSalt = generateSalt(saltLength);
     const loginHash = saltAndSha256({ text: pin, salt: loginSalt })
 
-    appEncryptor.registerPinAsKey(pin);
+    await reencryptNotesAsync(pin);  // TODO: error handling
 
     try {
         await SecureStore.setItemAsync('loginHash', loginHash);
