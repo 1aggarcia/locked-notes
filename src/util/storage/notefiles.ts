@@ -5,7 +5,7 @@ import * as FileSystem from 'expo-file-system';
 import appEncryptor, { Encryptor } from '../services/encryption';
 import Note, { NoteMetadata, isNote } from '../types/note';
 
-const MAX_STRING_LEN = 1 << 16; // 2^16
+const MAX_STRING_LEN = 1 << 16;  // 2^16
 const NOTES_DIR = FileSystem.documentDirectory + 'notes/';
 
 /**
@@ -17,24 +17,7 @@ const NOTES_DIR = FileSystem.documentDirectory + 'notes/';
  * @param note note to save to file
  */
 export async function saveNoteAsync(filename: string, note: Note) {
-    if (note.title.length > MAX_STRING_LEN || note.body.length > MAX_STRING_LEN)
-        throw new RangeError(`note is too long: ${note}`);
-
-    const text = JSON.stringify(note);
-
-    try {
-        await FileSystem.readDirectoryAsync(NOTES_DIR);
-    } catch {
-        await FileSystem.makeDirectoryAsync(NOTES_DIR);
-    }
-    try {
-        const fileUri = NOTES_DIR + filename
-        await FileSystem.writeAsStringAsync(fileUri, appEncryptor.encrypt(text));
-        console.debug(`File ${filename} saved`);
-    } catch (error) {
-        console.error("An error occured in saveNoteAsync:", error);
-        throw error;
-    }
+    saveAndEncryptNote(filename, note, appEncryptor);
 }
 
 /**
@@ -122,9 +105,10 @@ export async function deleteNoteAsync(filename: string) {
     }
 }
 
-// TODO: Finish
 /**
- * Reencrypt every note saved using a new pin
+ * Reencrypt every note saved using a new pin in two steps:
+ * 1: Decrypt every note possible and reencrypt it as a copy
+ * 2: Delete the original files
  */
 export async function reencryptNotesAsync(newPin: string) {
     const okToDelete: string[] = [];
@@ -134,13 +118,15 @@ export async function reencryptNotesAsync(newPin: string) {
 
     try {
         const filenames = await FileSystem.readDirectoryAsync(NOTES_DIR);
+        console.log(filenames);
 
         // Step 1: Create new files encrypted with new pin
         for (const filename of filenames) {
+            console.log("Attempting recryptioin on " + filename);
             if (await reencryptNote(filename, newEncryptor)) {
                 okToDelete.push(filename);
             } else {
-                console.error(`Failed to reencrypt ${filename}`);
+                console.warn(`Failed to reencrypt ${filename}`);
             }
         }
 
@@ -151,25 +137,55 @@ export async function reencryptNotesAsync(newPin: string) {
                 .catch(err => console.error(err));
         }
     } catch (error) {
-        // Directory not found or empty
-        console.warn(error);
+        console.error("An error occured in reencryptNotesAsync:", error);
+        throw error;
     }
 }
 
-// TODO: Reduce to encryptor-independent save note
+
+// Helper functions //
+
+async function saveAndEncryptNote(
+    filename: string, note: Note, encryptor: Encryptor
+) {
+    if (note.title.length > MAX_STRING_LEN || note.body.length > MAX_STRING_LEN)
+        throw new RangeError(`note is too long: ${note}`);
+
+    const text = JSON.stringify(note);
+
+    try {
+        await FileSystem.readDirectoryAsync(NOTES_DIR);
+    } catch {
+        await FileSystem.makeDirectoryAsync(NOTES_DIR);
+    }
+    try {
+        const fileUri = NOTES_DIR + filename
+        await FileSystem.writeAsStringAsync(fileUri, encryptor.encrypt(text));
+        console.debug(`File ${filename} saved`);
+    } catch (error) {
+        console.error("An error occured in saveNoteAsync:", error);
+        throw error;
+    }
+}
+
+/**
+ * Attempt to fetch the note with the provided filename, encrypt it
+ * with the passed in encryptor, and save it to a new location
+ * @param filename the name of the original note file in the notes directory
+ * @param encryptor the desired encryption scheme
+ * @returns true if all parts are successful, false otherwise
+ */
 async function reencryptNote(filename: string, encryptor: Encryptor) {
     const note = await getNoteAsync(filename);
     if (note === null) {
         return false;
     }
 
-    const newFilename = NOTES_DIR + `note_${Date.now()}.ejn`;
-    const reencrypted = encryptor.encrypt(JSON.stringify(note));
     try {
-        await FileSystem.writeAsStringAsync(newFilename, reencrypted);
+        await saveAndEncryptNote(`note_${Date.now()}.ejn`, note, encryptor);
         return true;
     } catch (error) {
-        console.error(error);
+        console.error("An error occured in reencryptNote:", error);
         return false;
     }
 }

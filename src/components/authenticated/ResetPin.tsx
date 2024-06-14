@@ -10,7 +10,6 @@ import { saltAndSha256 } from "../../util/services/encryption";
 import CreatePin from "../screens/CreatePin";
 import { LoginInfo } from "../../util/storage/securestore";
 import { LoginContext } from "../../util/context";
-import { reencryptNotesAsync } from "../../util/storage/notefiles";
 
 export default function ResetPin(
     { navigation }: NativeStackScreenProps<Params, 'ResetPin'>
@@ -35,12 +34,10 @@ export default function ResetPin(
         setAuthenticated(true);
     }
 
-    /** Update the cached PIN and reencrypt every note on disk */
-    async function setAppLogin(login: LoginInfo, pin: string) {
+    // Update the cached pin in app state
+    function setAppLogin(login: LoginInfo) {
         setLogin(login);
         Alert.alert("Success!", "Your new PIN was saved");
-        
-        //await reencryptNotesAsync(pin);
         navigation.goBack();
     }
 
