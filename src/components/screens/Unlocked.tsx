@@ -69,7 +69,7 @@ export default function Unlocked(props: UnlockedProps) {
         if (Date.now() < props.expiryTime.getTime()) {
             setTimeLeft(secondsUntil(props.expiryTime));
         } else {
-            props.lock()
+            props.lock();
         }
     }
 
