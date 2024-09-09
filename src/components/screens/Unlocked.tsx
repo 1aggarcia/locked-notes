@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import { formatTime, secondsUntil } from "../../util/services/datetime";
 
 import NotesView from "../authenticated/NotesView";
@@ -35,7 +35,7 @@ interface UnlockedProps {
 export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
-    const colors = Styles.getColorTheme();
+    const { colorTheme, isDarkMode } = useStyles();
 
     // Count down until expireTime goes into the past
     useEffect(() => {
@@ -50,8 +50,8 @@ export default function Unlocked(props: UnlockedProps) {
         headerBackTitle: "Back",
         headerRight: () => <AppButton onPress={props.lock}>Lock</AppButton>,
         title: `Unlocked: ${formatTime(timeLeft)}`,
-        headerStyle: { backgroundColor: colors.fg },
-        headerTitleStyle: { color: colors.text }
+        headerStyle: { backgroundColor: colorTheme.fg },
+        headerTitleStyle: { color: colorTheme.text }
     }
 
     // Prop 'navigation' is provided by the Stack Navigator
@@ -74,7 +74,7 @@ export default function Unlocked(props: UnlockedProps) {
     }
 
     return (
-        <NavigationContainer theme={Styles.isDarkMode()? DarkTheme : DefaultTheme}>
+        <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions} initialRouteName='NotesView'>
                 <Stack.Screen name={'NotesView'} component={NotesView}
                     options={notesViewOptions} />

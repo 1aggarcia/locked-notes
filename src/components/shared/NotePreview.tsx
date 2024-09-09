@@ -1,8 +1,8 @@
 import { TouchableOpacity } from "react-native";
 
-import Note, { NoteMetadata } from "../../util/types/note";
+import { NoteMetadata } from "../../util/types/note";
 import { formatDate } from "../../util/services/datetime";
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import AppText from "./AppText";
 
 interface NotePreviewProps {
@@ -16,7 +16,7 @@ interface NotePreviewProps {
 }
 
 export default function NotePreview(props: NotePreviewProps) {
-    const styles = Styles.get();
+    const { styles } = useStyles();
     const dateModifiedString = formatDate(props.metadata.dateModified);
 
     return (

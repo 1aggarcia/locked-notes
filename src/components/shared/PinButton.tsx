@@ -1,6 +1,6 @@
 import { TouchableHighlight } from "react-native"
 
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import AppText from "./AppText";
 
 interface PinButtonProps {
@@ -9,11 +9,12 @@ interface PinButtonProps {
 }
 
 export default function PinButton(props: PinButtonProps) {
+    const { styles, colorTheme } = useStyles();
     return (
         <TouchableHighlight 
             onPress={() => props.onPress(props.digit)}
-            style={Styles.get().pinButton}
-            underlayColor={Styles.getColorTheme().placeholder}
+            style={styles.pinButton}
+            underlayColor={colorTheme.placeholder}
         >   
             <AppText style={{fontSize: 25, fontWeight: 'bold'}}>{props.digit}</AppText>
         </TouchableHighlight>

@@ -6,7 +6,7 @@ import { UNSTABLE_usePreventRemove } from "@react-navigation/native";
 import showErrorDialog from "../../util/error";
 import { getNoteAsync, saveNoteAsync } from "../../util/storage/notefiles";
 import Note from "../../util/types/note";
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 
 import { Params } from "../screens/Unlocked";
 import Loading from "../screens/Loading";
@@ -31,7 +31,7 @@ export default function EditNote(
     const [savedBody, setSavedBody] = useState('');
 
     const filename = route.params.filename;
-    const styles = Styles.get();
+    const { styles, colorTheme } = useStyles();
 
     // Fetch the note from storage
     useEffect(() => {
@@ -122,7 +122,7 @@ export default function EditNote(
                     maxLength={maxTitleLength}
                     onChangeText={setTitle}
                     placeholder='Title'
-                    placeholderTextColor={Styles.getColorTheme().placeholder}
+                    placeholderTextColor={colorTheme.placeholder}
                     multiline
                 />
                 <TextInput 
@@ -131,7 +131,7 @@ export default function EditNote(
                     maxLength={maxBodyLength}
                     onChangeText={setBody}
                     placeholder='Write something here...'
-                    placeholderTextColor={Styles.getColorTheme().placeholder}
+                    placeholderTextColor={colorTheme.placeholder}
                     multiline
                 />
             </ScrollView>

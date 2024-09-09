@@ -3,7 +3,7 @@ import { Alert, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import AppText from "../shared/AppText";
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import { Params } from "../screens/Unlocked";
 import PinPad from "../shared/PinPad";
 import { saltAndSha256 } from "../../util/services/encryption";
@@ -17,7 +17,7 @@ export default function ResetPin(
     const [login, setLogin] = useContext(LoginContext);
     const [authenticated, setAuthenticated] = useState(false);
 
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     function confirmSavedPin(pin: string) {
         const hashedPin = saltAndSha256({

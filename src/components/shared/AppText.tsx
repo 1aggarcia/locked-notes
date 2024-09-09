@@ -2,8 +2,7 @@
 
 import { PropsWithChildren } from "react";
 import { StyleProp, Text, TextStyle } from "react-native"
-
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 
 export interface AppTextProps {
     style?: StyleProp<TextStyle>;
@@ -11,8 +10,9 @@ export interface AppTextProps {
 
 /** Text component with standardized styling accross the app */
 export default function AppText(props: PropsWithChildren<AppTextProps>) {
+    const { styles } = useStyles();
     return (
-        <Text style={[Styles.get().appText, props.style]}>
+        <Text style={[styles.appText, props.style]}>
             {props.children}
         </Text>
     );

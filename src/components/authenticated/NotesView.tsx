@@ -4,7 +4,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getNoteListAsync } from "../../util/storage/notefiles";
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import { NoteMetadata } from "../../util/types/note";
 import showErrorDialog from "../../util/error";
 
@@ -18,7 +18,7 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
     // note for which the properties menu is shown. Undefined means no menu shown
     const [noteOptions, setNoteOptions] = useState<NoteMetadata>();
     const [noteList, setNoteList] = useState<NoteMetadata[]>();
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     // Refresh the list only when this screen is focused (prevents inf loop)
     useFocusEffect(useCallback(refreshList, []));

@@ -8,7 +8,7 @@ import {
     saveSettingsAsync 
 } from '../../util/storage/securestore';
 import showErrorDialog from '../../util/error';
-import Styles from '../../util/services/styles';
+import { useSetColorTheme, useStyles } from '../../contexts/stylesContext';
 import SettingsType from '../../util/types/settings';
 
 import AppText from "../shared/AppText";
@@ -25,7 +25,8 @@ export default function Settings(
     const [settings, setSettings] = useState<SettingsType>();
     const [savedSettings, setSavedSetings] = useState<SettingsType>();
 
-    const styles = Styles.get();
+    const { styles } = useStyles();
+    const setColorThemeDispatch = useSetColorTheme();
     const hasChanged = !isEqual(settings, savedSettings);
 
     // Load settings from disk
@@ -38,15 +39,15 @@ export default function Settings(
             .catch(showErrorDialog)
     }, [])
 
-    function setColorTheme(darkMode: boolean, lowContrast: boolean) {
+    function setColorTheme(isDarkMode: boolean, isLowContrast: boolean) {
         if (settings === undefined) return;
 
         setSettings({
             ...settings,
-            darkMode: darkMode,
-            lowContrast: lowContrast,
+            darkMode: isDarkMode,
+            lowContrast: isLowContrast,
         });
-        Styles.setColorTheme(darkMode, lowContrast);
+        setColorThemeDispatch({ isDarkMode, isLowContrast });
     }
 
     function setUnlockedTime(value: string) {
@@ -117,7 +118,7 @@ interface DarkModeRowProps {
 }
 
 function DarkModeRow(props: DarkModeRowProps) {
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     function toggleDarkMode(value: boolean) {
         props.setColorTheme(value, props.lowContrast);
@@ -150,7 +151,7 @@ interface UnlockedTimeRowProps {
 }
 
 function UnlockedTimeRow(props: UnlockedTimeRowProps) {
-    const styles = Styles.get();
+    const { styles, colorTheme } = useStyles();
 
     return (
         <View style={styles.settingsRow}>
@@ -163,7 +164,7 @@ function UnlockedTimeRow(props: UnlockedTimeRowProps) {
                 style={styles.settingsTextInput}
                 onChangeText={props.setUnlockedTime}
                 value={props.unlockedTime.toString()}
-                placeholderTextColor={Styles.getColorTheme().placeholder} />
+                placeholderTextColor={colorTheme.placeholder} />
 
         </View>
     )
@@ -173,7 +174,7 @@ function UnlockedTimeRow(props: UnlockedTimeRowProps) {
 interface ResetPinRowProps { navigateAway: () => void }
 
 function ResetPinRow(props: ResetPinRowProps) {
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     return (
         <View style={styles.settingsRow}>
@@ -192,7 +193,7 @@ interface SaveRowProps {
 }
 
 function SaveRow(props: SaveRowProps) {
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     return (
         <View style={styles.settingsRow}>

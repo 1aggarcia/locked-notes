@@ -3,11 +3,11 @@ import { TextInput, View } from "react-native";
 
 import appEncryptor, { saltAndSha256 } from "../../util/services/encryption";
 import { LoginInfo } from "../../util/storage/securestore";
-import Styles from "../../util/services/styles";
 
 import AppText from "../shared/AppText";
 import PinPad from "../shared/PinPad";
 import { LoginContext } from "../../util/context";
+import { useStyles } from "../../contexts/stylesContext";
 
 const BACKDOOR_ENABLED = false;
 const MAX_ATTEMPTS = 5;
@@ -21,7 +21,7 @@ interface LockedProps {
 
 export default function Locked(props: LockedProps) {
     const [login] = useContext(LoginContext);
-    const styles = Styles.get();  // should probably use context provider too
+    const { styles } = useStyles(); 
 
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);

@@ -3,7 +3,7 @@ import { Pressable, Alert, AlertButton, Platform } from "react-native";
 import showErrorDialog from "../../util/error";
 import { NoteMetadata } from "../../util/types/note";
 
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import { formatDate } from "../../util/services/datetime";
 import {
     deleteNoteAsync,
@@ -25,7 +25,7 @@ export default function NoteOptions(props: NoteOptionProps) {
     const dateCreatedString = formatDate(props.metadata.dateCreated);
     const dateModifiedString = formatDate(props.metadata.dateModified);
 
-    const styles = Styles.get();
+    const { styles } = useStyles();
 
     function handleDeleteError(reason: unknown) {
         props.close();

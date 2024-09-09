@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { GestureResponderEvent, TouchableOpacity } from "react-native";
 
-import Styles from "../../util/services/styles";
+import { useStyles } from "../../contexts/stylesContext";
 import AppText from "./AppText";
 
 interface AppButtonProps {
@@ -15,10 +15,10 @@ interface AppButtonProps {
 
 /** Simple text button with standardized styling accross the app */
 export default function AppButton(props: PropsWithChildren<AppButtonProps>) {
-    const colorTheme = Styles.getColorTheme();
+    const { styles, colorTheme } = useStyles();
 
     // Make a copy of the button styles to personalize
-    const buttonStyle = {...Styles.get().button}
+    const buttonStyle = {...styles.button}
 
     if (props.disabled) {
         // Always override colors to disabled if the button is disabled

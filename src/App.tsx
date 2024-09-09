@@ -5,24 +5,21 @@ import { StatusBar } from 'expo-status-bar';
 import {
   LoginInfo,
   getLoginAsync,
-  getSettingsAsync
 } from './util/storage/securestore';
-import Styles from './util/services/styles';
 import showErrorDialog from './util/error';
 
 import Authenticator from './components/screens/Authenticator';
 import Loading from './components/screens/Loading';
+import { StylesProvider, useStyles } from './contexts/stylesContext';
+import AppStatusBar from './components/shared/AppStatusBar';
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [login, setLogin] = useState<LoginInfo>();
   
-  async function loadSettingsAsync() {
+  async function loadLogin() {
     try {
-      const settings = await getSettingsAsync();
       const savedLogin = await getLoginAsync();
-
-      Styles.setColorTheme(settings.darkMode, settings.lowContrast);
       if (savedLogin !== null)
         setLogin(savedLogin);
 
@@ -33,19 +30,20 @@ export default function App() {
   }
 
   useEffect(() => {
-    loadSettingsAsync();
+    loadLogin();
   }, []);
 
   return (
     <SafeAreaProvider>
-      {loaded? <>
-        <Authenticator login={login} />
-        <StatusBar style={Styles.isDarkMode()? 'light' : 'dark'}/>
-        </>
-        :
-        <Loading message='Fetching app settings...' />
-      }
-
+      <StylesProvider>
+        {loaded? <>
+          <Authenticator login={login} />
+          <AppStatusBar />
+          </>
+          :
+          <Loading message='Fetching app settings...' />
+        }
+      </StylesProvider>
     </SafeAreaProvider>
   )
 }
