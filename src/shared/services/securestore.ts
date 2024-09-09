@@ -10,9 +10,9 @@
 
 import * as SecureStore from 'expo-secure-store';
 
-import { generateSalt, saltAndSha256 } from './encryption';
+import appEncryptor, { generateSalt, saltAndSha256 } from './encryption';
 import Settings, { defaultSettings, isValidSettings } from '../../settings/types';
-import { reencryptNotesAsync } from '../../notes/storage/notefiles';
+import { cleanupTempNoteFiles, reencryptNotesAsync } from '../../notes/storage/notefiles';
 
 export type LoginInfo = {
     hash: string,
@@ -24,6 +24,8 @@ const saltLength = 64;
 
 /**
  * Hash, salt, and save pin to secure store in local storage.
+ * As a side effect, re-encrypts all notes saved to disk to be
+ * accessible via the new pin
  * @param pin pin to save
  * @returns Promise with new login info saved.
  *      Will reject promise if data cannot be saved,
@@ -40,6 +42,8 @@ export async function savePinAsync(pin: string): Promise<LoginInfo> {
         await reencryptNotesAsync(pin);
         await SecureStore.setItemAsync('loginHash', loginHash);
         await SecureStore.setItemAsync('loginSalt', loginSalt);
+        appEncryptor.registerPinAsKey(pin);
+        await cleanupTempNoteFiles();
     } catch (error) {
         console.error("An error occured in savePinAsync:", error);
         throw error;

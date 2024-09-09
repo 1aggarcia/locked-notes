@@ -45,7 +45,6 @@ export function StylesProvider(props: PropsWithChildren) {
                 isDarkMode: settings.darkMode,
                 isLowContrast: settings.lowContrast
             });
-            console.debug("styles loaded");
         } catch (error) {
             showErrorDialog(error);
         }

@@ -7,6 +7,7 @@ import Note, { NoteMetadata, isNote } from '../types';
 
 const MAX_STRING_LEN = 1 << 16;  // 2^16
 const NOTES_DIR = FileSystem.documentDirectory + 'notes/';
+const TEMP_FILE_EXTENSION = ".swp";
 
 /**
  * Saves and encrypts given note to given filename in notes
@@ -69,6 +70,7 @@ export async function getNoteAsync(filename: string): Promise<Note | null> {
 export async function getNoteListAsync(): Promise<NoteMetadata[]> {
     const result: NoteMetadata[] = [];
     try {
+        await cleanupTempNoteFiles();
         const filenames = await FileSystem.readDirectoryAsync(NOTES_DIR);
 
         for (const filename of filenames) {
@@ -106,14 +108,16 @@ export async function deleteNoteAsync(filename: string) {
 }
 
 /**
- * Reencrypt every note saved using a new pin in two steps:
- * 1: Decrypt every note possible and reencrypt it as a copy
- * 2: Delete the original files
+ * Makes a copy of all readble notes on disk, decrypted with the saved app
+ * encryptor and encrypted with the PIN passed in. The files have the same
+ * as the original, but with `.swp` added to the end.
+ * 
+ * e.g. a file `note.ejn` encrypted with the pin 123456 would be copied to
+ * `note.ejn.swp` encrypted with `newPin`
+ * @param newPin PIN to use for encryption
  */
 export async function reencryptNotesAsync(newPin: string) {
-    const filePairs: [string, string][] = [];  // [originalFilename, tempFilename]
     const newEncryptor = new Encryptor();
-
     newEncryptor.registerPinAsKey(newPin);
 
     let filenames: string[];
@@ -123,26 +127,57 @@ export async function reencryptNotesAsync(newPin: string) {
         console.error("An error occured in reencryptNotesAsync:", error);
         throw error;
     }
-    console.log(filenames);
 
-    // Step 1: Create temp files encrypted with new pin
     for (const filename of filenames) {
         try {
-            const swapFilename = await reencryptNote(filename, newEncryptor);
-            if (swapFilename !== null) {
-                filePairs.push([NOTES_DIR + filename, NOTES_DIR + swapFilename]);
-            }
+            await reencryptNote(filename, newEncryptor);
         } catch (error) {
             console.error(`Failed to reencrypt ${filename}: ${error}`);
             throw error;
         }
     }
-
-    // Step 2: merge temp files to their original location
-    await mergeSwapFiles(filePairs);
-    appEncryptor.registerPinAsKey(newPin);
 }
 
+/**
+ * Cleanup to perform on the disk after calling `reencryptNotesAsync`.
+ * 
+ * Looks for pairs of notes in the notes directory with names
+ * `filename` and `filename`.swp. If `filename`.swp can be decrypted with the app
+ * encryptor, but `filename` cannot, then `filename` is deleted and
+ * `filename`.swp is renamed to `filename`.
+ * @returns Promise resolving if cleanup is successful, rejecting if an error occurs
+ * with the file system
+ */
+export async function cleanupTempNoteFiles() {
+    let filenames: Set<string>;
+    try {
+        filenames = new Set(await FileSystem.readDirectoryAsync(NOTES_DIR));
+    } catch (error) {
+        console.error("An error occured in cleanupTempNoteFiles:", error);
+        throw error;
+    }
+
+    for (const filename of filenames) {
+        const swapFilename = filename + TEMP_FILE_EXTENSION;
+        if (!filenames.has(swapFilename)) continue;
+
+        const file = await getNoteAsync(filename);
+        const swapFile = await getNoteAsync(swapFilename);
+
+        if (file === null && swapFile !== null) {
+            // Happy path: reencryption succeeded
+            await FileSystem.moveAsync({
+                from: NOTES_DIR + swapFilename,
+                to: NOTES_DIR + filename
+            });  // this may throw
+        } else if (file !== null && swapFile === null) {
+            console.warn(`reencryption failed on ${filename}: deleting ${swapFilename}`);
+            await deleteNoteAsync(swapFilename);
+        } else {
+            throw new Error(`niether ${filename} nor ${swapFilename} can be decrypted`);
+        }
+    }
+}
 
 // Helper functions //
 
@@ -184,7 +219,7 @@ async function reencryptNote(filename: string, encryptor: Encryptor) {
         return null;
     }
 
-    const newName = filename + ".swp";
+    const newName = filename + TEMP_FILE_EXTENSION;
     try {
         await saveAndEncryptNote(newName, note, encryptor);
     } catch (error) {
@@ -192,35 +227,4 @@ async function reencryptNote(filename: string, encryptor: Encryptor) {
         throw error;
     }
     return newName;
-}
-
-/**
- * Merge the contents of temporary "swap" files into the original filename,
- * remove the "swap" files
- * @param filePairs array of tuples [originalFilename, swapFilename]
- */
-async function mergeSwapFiles(filePairs: [string, string][]) {
-    for (const [file, swapFile] of filePairs) {
-        const backupFile = file + ".old";
-        try {
-            console.debug(`Moving ${file.replace(NOTES_DIR, "")} to ${backupFile.replace(NOTES_DIR, "")}...`);
-            await FileSystem.moveAsync({
-                from: file,
-                to: backupFile
-            });
-
-            console.debug(`Moving ${swapFile.replace(NOTES_DIR, "")} to ${file.replace(NOTES_DIR, "")}...`);
-            await FileSystem.moveAsync({
-                from: swapFile,
-                to: file
-            });
-
-            console.debug(`Deleting ${backupFile.replace(NOTES_DIR, "")}...`);
-            //throw new Error("Dummy delete error");
-            await FileSystem.deleteAsync(backupFile);
-        } catch (error) {
-            console.error("An error occured in mergeSwapFiles:", error);
-            throw error;
-        }
-    }
 }

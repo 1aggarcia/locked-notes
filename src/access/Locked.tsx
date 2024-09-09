@@ -2,7 +2,6 @@ import { useState } from "react";
 import { TextInput, View } from "react-native";
 
 import appEncryptor, { saltAndSha256 } from "../shared/services/encryption";
-import { LoginInfo } from "../shared/services/securestore";
 import { useLogin } from "../shared/contexts/loginContext";
 import { useStyles } from "../shared/contexts/stylesContext";
 
@@ -26,7 +25,7 @@ export default function Locked(props: LockedProps) {
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);
 
-    function confirmPin(pin: string) {
+    function onPinComplete(pin: string) {
         const hashedPin = saltAndSha256({ text: pin, salt: login.salt})
         if (hashedPin === login.hash) {
             // Correct login info, set encryption key and unlock
@@ -46,7 +45,7 @@ export default function Locked(props: LockedProps) {
         <View style={[styles.app, styles.pinContainer]}>
             <View style={[styles.centered, {flex: 1}]}>
                 {BACKDOOR_ENABLED && 
-                    <NotForProdBackdoorAction login={login} />
+                    <NotForProdBackdoorAction />
                 }
                 <AppText style={styles.header}>Enter PIN to unlock</AppText>
                 {error &&
@@ -55,20 +54,21 @@ export default function Locked(props: LockedProps) {
                     </AppText>
                 }
             </View>
-            <PinPad onComplete={confirmPin}/>
+            <PinPad onComplete={onPinComplete}/>
         </View>
     )
 }
 
 // Dangerous way to expose login details to the user
 // For development purposes only
-function NotForProdBackdoorAction(props: { login: LoginInfo }) {
+function NotForProdBackdoorAction() {
     if (!BACKDOOR_ENABLED) {
         throw new ReferenceError("Bad attempt to access secret component");
     } 
+    const { login } = useLogin();
 
-    const textLogin = props.login.hash + " " + props.login.salt;
-    console.log(textLogin);
+    const textLogin = login.hash + " " + login.salt;
+    console.debug(textLogin);
 
     return (
         // Login details in copy and paste box
@@ -83,23 +83,7 @@ function NotForProdBackdoorAction(props: { login: LoginInfo }) {
 /** Dummy button for testing new services */
 // function TestActionDontUse() {
 //     return <TouchableOpacity 
-//         onPress={() => {
-//             async function test() {
-//                 try {
-//                     const filename = 'note_1705653496165.ejn';
-//                     const rawFile = await getFileFromNotesDirAsync(filename);
-//                     if (rawFile === null)
-//                         throw ReferenceError("Error reading file");
-
-//                     await exportTextFileAsync(filename, rawFile);
-
-//                     alert("File export complete.")
-//                 } catch (error) {
-//                     showErrorDialog(error);
-//                 }
-//             }
-//             test();
-//         }}
+//         onPress={cleanupTempNoteFiles}
 //         style={{backgroundColor: 'lime', padding: 15}}
 //     >
 //         <AppText style={{textAlign: 'center'}}>Do something dangerous to my phone</AppText>
