@@ -51,11 +51,14 @@ export default function Unlocked(props: UnlockedProps) {
         headerRight: () => <AppButton onPress={props.lock}>Lock</AppButton>,
         title: `Unlocked: ${formatTime(timeLeft)}`,
         headerStyle: { backgroundColor: colorTheme.fg },
-        headerTitleStyle: { color: colorTheme.text }
+        headerTitleStyle: { color: colorTheme.text },
+        headerBackButtonMenuEnabled: false,   // TODO: watch out for problems here
     }
 
     // Prop 'navigation' is provided by the Stack Navigator
-    const notesViewOptions = ({ navigation }: NativeStackScreenProps<Params>) => ({
+    const screenOptionsWithSettingsButton = (
+        { navigation }: NativeStackScreenProps<Params>
+    ) => ({
         headerRight: () => (<>
             <AppButton onPress={() => navigation.navigate('Settings')}>
                 Settings
@@ -77,10 +80,10 @@ export default function Unlocked(props: UnlockedProps) {
         <NavigationContainer theme={isDarkMode? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={screenOptions} initialRouteName='NotesView'>
                 <Stack.Screen name={'NotesView'} component={NotesView}
-                    options={notesViewOptions} />
+                    options={screenOptionsWithSettingsButton} />
 
                 <Stack.Screen name={'EditNote'} component={EditNote}
-                    options={{ headerBackButtonMenuEnabled: false }} />
+                    options={screenOptionsWithSettingsButton} />
 
                 <Stack.Screen name={'Settings'} component={Settings} />
                 <Stack.Screen name={'ResetPin'} component={ResetPin} />
