@@ -1,8 +1,8 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StylesProvider } from './contexts/stylesContext';
-import { LoginProvider } from './contexts/loginContext';
-import Authenticator from './components/screens/Authenticator';
-import AppStatusBar from './components/shared/AppStatusBar';
+import { StylesProvider } from './shared/contexts/stylesContext';
+import { LoginProvider } from './shared/contexts/loginContext';
+import AppLayout from './layout/AppLayout';
+import AppStatusBar from './layout/AppStatusBar';
 
 export default function App() {
   return (
@@ -10,7 +10,7 @@ export default function App() {
       <StylesProvider>
         <LoginProvider>
 
-          <Authenticator />
+          <AppLayout />
           <AppStatusBar />
 
         </LoginProvider>
