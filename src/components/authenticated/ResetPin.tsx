@@ -9,12 +9,13 @@ import PinPad from "../shared/PinPad";
 import { saltAndSha256 } from "../../util/services/encryption";
 import CreatePin from "../screens/CreatePin";
 import { LoginInfo } from "../../util/storage/securestore";
-import { LoginContext } from "../../util/context";
+import { useLogin, useSetLogin } from "../../contexts/loginContext";
 
 export default function ResetPin(
     { navigation }: NativeStackScreenProps<Params, 'ResetPin'>
 ) {
-    const [login, setLogin] = useContext(LoginContext);
+    const { login } = useLogin();
+    const setLogin = useSetLogin(); 
     const [authenticated, setAuthenticated] = useState(false);
 
     const { styles } = useStyles();
@@ -36,7 +37,7 @@ export default function ResetPin(
 
     // Update the cached pin in app state
     function setAppLogin(login: LoginInfo) {
-        setLogin(login);
+        setLogin({ login, status: "Defined" });
         Alert.alert("Success!", "Your new PIN was saved");
         navigation.goBack();
     }

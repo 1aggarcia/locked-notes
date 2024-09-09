@@ -6,7 +6,7 @@ import { LoginInfo } from "../../util/storage/securestore";
 
 import AppText from "../shared/AppText";
 import PinPad from "../shared/PinPad";
-import { LoginContext } from "../../util/context";
+import { useLogin } from "../../contexts/loginContext";
 import { useStyles } from "../../contexts/stylesContext";
 
 const BACKDOOR_ENABLED = false;
@@ -20,7 +20,7 @@ interface LockedProps {
 }
 
 export default function Locked(props: LockedProps) {
-    const [login] = useContext(LoginContext);
+    const { login } = useLogin(); 
     const { styles } = useStyles(); 
 
     const [attempts, setAttempts] = useState(0);

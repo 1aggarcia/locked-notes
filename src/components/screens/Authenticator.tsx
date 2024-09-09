@@ -16,7 +16,7 @@ import Denied from './Denied';
 import Locked from './Locked';
 import Unlocked from './Unlocked';
 import Loading from "./Loading";
-import { LoginContext } from "../../util/context";
+import { useLogin, useSetLogin } from "../../contexts/loginContext";
 
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
@@ -32,13 +32,14 @@ interface AuthenticatorProps {
     login: LoginInfo | undefined;
 }
 
-export default function Authenticator(props: AuthenticatorProps) {
+export default function Authenticator() {
+    const loginState = useLogin();
+    const setLogin = useSetLogin(); 
     const [mode, setMode] = useState<Mode>('Loading');
-    const [login, setLogin] = useState(props.login);
     const [unlockedTime, setUnlockedTime] = useState(defaultUnlockedTime);
 
     function updateLogin(newLogin: LoginInfo) {
-        setLogin(newLogin);
+        setLogin({ login: newLogin, status: "Defined" });
         setMode('Unlocked');
     }
 
@@ -76,7 +77,10 @@ export default function Authenticator(props: AuthenticatorProps) {
 
     useEffect(() => { loadDependencies() }, []);
 
-    if (login === undefined)
+    if (loginState.status === "Loading")
+        return <Loading message="Fetching app settings..."/>
+
+    if (loginState.status === "Undefined")
         return <CreatePin updateLogin={updateLogin} />;
     
     switch (mode) {
@@ -84,20 +88,19 @@ export default function Authenticator(props: AuthenticatorProps) {
             return <Loading message='Verifying access...' />;
         case 'Denied':
             return <Denied />;
-        // TODO: Find a cleaner way to introduce this provider?
         case 'Unlocked':
-            return (<LoginContext.Provider value={[login, setLogin]}>
+            return (
                 <Unlocked
                     expiryTime={calculateExpiryTime(unlockedTime)}
                     lock={() => setMode('Locked')}
                 />
-            </LoginContext.Provider>);
+            );
         case 'Locked':
-            return (<LoginContext.Provider value={[login, setLogin]}>
+            return (
                 <Locked
                     unlock={() => setMode('Unlocked')}
                     denyAccess={denyAccess}
                 />
-            </LoginContext.Provider>);
+            );
       }
 }
