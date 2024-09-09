@@ -1,5 +1,11 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
-import { darkColors, lightColors, lowContrastDark, lowContrastLight } from "../assets/colors";
+import {
+    createContext,
+    PropsWithChildren,
+    useContext,
+    useEffect,
+    useState
+} from "react";
+import { Themes } from "../assets/colors";
 import { getSettingsAsync } from "../util/storage/securestore";
 import showErrorDialog from "../util/error";
 import { generateStyles } from "../util/services/styles";
@@ -7,8 +13,8 @@ import { generateStyles } from "../util/services/styles";
 type ColorThemeArgs = { isDarkMode: boolean, isLowContrast: boolean };
 
 const defualtState = {
-    styles: generateStyles(lightColors),
-    colorTheme: lightColors,
+    styles: generateStyles(Themes.LIGHT),
+    colorTheme: Themes.LIGHT,
     isDarkMode: false
 }
 
@@ -75,8 +81,8 @@ function getStylesState({ isDarkMode, isLowContrast }: ColorThemeArgs) {
 
 function getColorTheme(darkMode: boolean, lowContrast: boolean) {
     if (lowContrast) {
-        return darkMode ? lowContrastDark : lowContrastLight;
+        return darkMode ? Themes.LOW_CONTRAST_DARK : Themes.LOW_CONTRAST_LIGHT;
     } else {
-        return darkMode ? darkColors : lightColors;
+        return darkMode ? Themes.DARK : Themes.LIGHT;
     }
 }
