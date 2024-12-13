@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 import { ColorTheme } from "./colors"; 
 
+export type AppStylesheet = ReturnType<typeof generateStyles>;
+
 /** Generate the stylesheet with the given color theme */
 export function generateStyles(colorTheme: ColorTheme) {
     return (StyleSheet.create({

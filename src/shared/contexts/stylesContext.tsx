@@ -8,12 +8,12 @@ import {
 import { Themes } from "../../assets/colors";
 import { getSettingsAsync } from "../services/securestore";
 import showErrorDialog from "../util/error";
-import { generateStyles } from "../../assets/styles";
+import { AppStylesheet, generateStyles } from "../../assets/styles";
 
 type ColorThemeArgs = { isDarkMode: boolean, isLowContrast: boolean };
 
 const defualtState = {
-    styles: generateStyles(Themes.LIGHT),
+    styles: generateStyles(Themes.LIGHT) as AppStylesheet,
     colorTheme: Themes.LIGHT,
     isDarkMode: false
 }

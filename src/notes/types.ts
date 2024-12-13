@@ -15,10 +15,12 @@ export default Note;
 
 /** Lighter description of note to easily store in a list */
 export type NoteMetadata = {
-    filename: string,
-    title: string,
-    dateCreated: number,
-    dateModified: number
+    filename: string;
+    title: string;
+    dateCreated: number;
+    dateModified: number;
+    /** size in bytes */
+    fileSize: number;
 }
 
 /**

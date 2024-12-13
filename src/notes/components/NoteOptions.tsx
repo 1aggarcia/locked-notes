@@ -14,6 +14,11 @@ import { exportTextFileAsync } from "../storage/android";
 import AppText from "../../shared/components/AppText";
 import AppButton from "../../shared/components/AppButton";
 
+const KB_SIZE = 1 << 10;
+const MB_SIZE = 1 << 20;
+const GB_SIZE = 1 << 30;
+const MAX_SIG_FIGS = 5;
+
 interface NoteOptionProps {
     metadata: NoteMetadata;
 
@@ -98,6 +103,9 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppText style={{padding: 5}}>
                     Last Modified: {dateModifiedString}
                 </AppText>
+                <AppText style={{padding: 5}}>
+                    Size: {formatBytesString(props.metadata.fileSize)}
+                </AppText>
                 {/* User exports are currently only supported by android */}
                 <AppButton onPress={exportNote} disabled={Platform.OS !== "android"}>
                     Export Encrypted File
@@ -108,4 +116,25 @@ export default function NoteOptions(props: NoteOptionProps) {
             </Pressable>
         </Pressable>
     )
+}
+
+/**
+ * Given a number of bytes, return a readable string such as
+ * "25 B", "5 KB", "235 GB"
+ * @param bytes
+ */
+function formatBytesString(bytes: number) {
+    // returns a number with an upper bound on the number of significant digits
+    const truncateSigFigs = (n: number) => +n.toPrecision(MAX_SIG_FIGS);
+
+    if (bytes < KB_SIZE) {
+        return `${bytes} B`
+    }
+    if (bytes < MB_SIZE) {
+        return `${truncateSigFigs(bytes / KB_SIZE)} KB`;
+    }
+    if (bytes < GB_SIZE) {
+        return `${truncateSigFigs(bytes / MB_SIZE)} MB`;
+    }
+    return `${truncateSigFigs(bytes / GB_SIZE)} GB`;
 }

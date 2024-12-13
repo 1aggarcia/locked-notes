@@ -5,8 +5,8 @@ import * as FileSystem from 'expo-file-system';
 import appEncryptor, { Encryptor } from '../../shared/services/encryption';
 import Note, { NoteMetadata, isNote } from '../types';
 
+export const NOTES_DIR = FileSystem.documentDirectory + 'notes/';
 const MAX_STRING_LEN = 1 << 16;  // 2^16
-const NOTES_DIR = FileSystem.documentDirectory + 'notes/';
 const TEMP_FILE_EXTENSION = ".swp";
 
 /**
@@ -39,11 +39,17 @@ export async function getRawNoteAsync(filename: string): Promise<string | null> 
 /**
  * Retreives the note with the given filename, if it exists.
  * @param filename name of the note file with extension
- * @returns note as an object if there is a corresponding file, null otherwise
+ * @returns note as an object if there is a corresponding file, null otherwise.
+ *  The object includes the file size in bytes.
  */
-export async function getNoteAsync(filename: string): Promise<Note | null> {
+export async function getNoteAsync(filename: string) {
     const fileUri = NOTES_DIR + filename;
     try {
+        const info = await FileSystem.getInfoAsync(fileUri);
+        if (!info.exists) {
+            console.log(`note file does not exist: ${fileUri}`);
+            return null;
+        }
         const decryptedFile = appEncryptor.decrypt(
             await FileSystem.readAsStringAsync(fileUri)
         );
@@ -56,7 +62,7 @@ export async function getNoteAsync(filename: string): Promise<Note | null> {
         if (!isNote(note))
             return null;
 
-        return note;
+        return { ...note, size: info.size };
     } catch (error) {
         console.log("getNoteAsync caught an error:", error);
         return null;
@@ -75,19 +81,21 @@ export async function getNoteListAsync(): Promise<NoteMetadata[]> {
 
         for (const filename of filenames) {
             const note = await getNoteAsync(filename);
-            if (note !== null) {
-                // Add metadata to list
-                result.push({
-                    filename: filename,
-                    title: note.title,
-                    dateCreated: note.dateCreated,
-                    dateModified: note.dateModified
-                });
+            if (note === null) {
+                continue;
             }
+            // Add metadata to list
+            result.push({
+                filename: filename,
+                title: note.title,
+                dateCreated: note.dateCreated,
+                dateModified: note.dateModified,
+                fileSize: note.size,
+            });
         }
     } catch (error) {
         // Directory not found or empty
-        console.warn(error);
+        console.warn("getNoteListAsync", error);
     }
     return result;
 }
@@ -124,8 +132,9 @@ export async function reencryptNotesAsync(newPin: string) {
     try {
         filenames = await FileSystem.readDirectoryAsync(NOTES_DIR);
     } catch (error) {
-        console.error("An error occured in reencryptNotesAsync:", error);
-        throw error;
+        // probably the first time user is using the app
+        console.log("reencryptNotesAsync: notes directory doesn't exist", error);
+        return; 
     }
 
     for (const filename of filenames) {
@@ -153,7 +162,8 @@ export async function cleanupTempNoteFiles() {
     try {
         filenames = new Set(await FileSystem.readDirectoryAsync(NOTES_DIR));
     } catch (error) {
-        console.error("An error occured in cleanupTempNoteFiles:", error);
+        // probably the first time the user is using the app
+        console.log("cleanupTempNoteFiles: notes directory doesn't exist - ", error);
         throw error;
     }
 
