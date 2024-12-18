@@ -164,7 +164,7 @@ export async function cleanupTempNoteFiles() {
     } catch (error) {
         // probably the first time the user is using the app
         console.log("cleanupTempNoteFiles: notes directory doesn't exist - ", error);
-        throw error;
+        return; 
     }
 
     for (const filename of filenames) {

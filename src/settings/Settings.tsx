@@ -1,6 +1,6 @@
 import isEqual from 'lodash.isequal';
 import { useState, useEffect } from 'react';
-import { View, Switch, TextInput } from "react-native";
+import { View, Switch, TextInput, Alert, AlertButton } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { 
@@ -15,6 +15,7 @@ import AppText from "../shared/components/AppText";
 import Loading from '../layout/Loading';
 import AppButton from '../shared/components/AppButton';
 import { Params } from "../access/Unlocked";
+import { exportAllNotes } from '../notes/storage/android';
 
 const MIN_UNLOCKED_SECONDS = 60;
 const MAX_UNLOCKED_SECONDS = 3600;
@@ -101,6 +102,8 @@ export default function Settings(
                 <ResetPinRow
                     navigateAway={() => navigation.navigate('ResetPin')} />
 
+                <DataRow />
+
                 <SaveRow wasChanged={hasChanged} saveSettings={saveSettings} />
                 <BottomRow />
             </View>
@@ -181,6 +184,51 @@ function ResetPinRow(props: ResetPinRowProps) {
             <AppText style={styles.settingsText}>PIN</AppText>
             <AppButton onPress={props.navigateAway}>
                 Reset
+            </AppButton>
+        </View>
+    )
+}
+
+function DataRow() {
+    const { styles } = useStyles();
+
+    function onExportPress() {
+        const cancelBtn: AlertButton = { text: "Cancel", style: "cancel" };
+        const okBtn: AlertButton = {
+            text: "Ok",
+            onPress: onExportConfirm
+        };
+
+        Alert.alert(
+            "Export all notes?",
+            "This will copy all encrypted note files"
+            + " into the directory that you choose.",
+            [cancelBtn, okBtn]
+        );
+    }
+
+    async function onExportConfirm() {
+        try {
+            const success = await exportAllNotes();
+
+            if (success) {
+                Alert.alert('Success!', `All notes successfully exported.`);
+            } else {
+                Alert.alert(
+                    'Operation Cancelled',
+                    'Access to file storage was denied.'
+                );
+            }
+        } catch (err) {
+            showErrorDialog(err);
+        }
+    }
+
+    return (
+        <View style={styles.settingsRow}>
+            <AppText style={styles.settingsText}>App Data</AppText>
+            <AppButton onPress={onExportPress}>
+                Export All Notes
             </AppButton>
         </View>
     )

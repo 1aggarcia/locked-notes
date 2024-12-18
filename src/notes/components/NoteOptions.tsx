@@ -128,7 +128,7 @@ function formatBytesString(bytes: number) {
     const truncateSigFigs = (n: number) => +n.toPrecision(MAX_SIG_FIGS);
 
     if (bytes < KB_SIZE) {
-        return `${bytes} B`
+        return `${bytes} B`;
     }
     if (bytes < MB_SIZE) {
         return `${truncateSigFigs(bytes / KB_SIZE)} KB`;
