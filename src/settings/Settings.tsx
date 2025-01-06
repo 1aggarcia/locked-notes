@@ -16,6 +16,7 @@ import Loading from '../layout/Loading';
 import AppButton from '../shared/components/AppButton';
 import { Params } from "../access/Unlocked";
 import { exportAllNotes } from '../notes/storage/android';
+import { usePreventRemove } from '@react-navigation/native';
 
 const MIN_UNLOCKED_SECONDS = 60;
 const MAX_UNLOCKED_SECONDS = 3600;
@@ -27,18 +28,27 @@ export default function Settings(
     const [savedSettings, setSavedSetings] = useState<SettingsType>();
 
     const { styles } = useStyles();
-    const setColorThemeDispatch = useSetColorTheme();
+    const setAppColorTheme = useSetColorTheme();
     const hasChanged = !isEqual(settings, savedSettings);
 
     // Load settings from disk
     useEffect(() => {
         getSettingsAsync()
             .then(settings => {
+                setAppColorTheme({
+                    isDarkMode: settings.darkMode,
+                    isLowContrast: settings.lowContrast
+                });
                 setSettings(settings);
                 setSavedSetings(settings);
             })
             .catch(showErrorDialog)
-    }, [])
+    }, []);
+
+    usePreventRemove(hasChanged, ({ data }) => {
+        saveSettings()
+            .finally(() => navigation.dispatch(data.action));
+    });
 
     function setColorTheme(isDarkMode: boolean, isLowContrast: boolean) {
         if (settings === undefined) return;
@@ -48,7 +58,7 @@ export default function Settings(
             darkMode: isDarkMode,
             lowContrast: isLowContrast,
         });
-        setColorThemeDispatch({ isDarkMode, isLowContrast });
+        setAppColorTheme({ isDarkMode, isLowContrast });
     }
 
     function setUnlockedTime(value: string) {
@@ -63,7 +73,7 @@ export default function Settings(
         });
     }
 
-    function saveSettings() {
+    async function saveSettings() {
         if (hasChanged === false || settings === undefined) return;
 
         if (settings.unlockedTime < MIN_UNLOCKED_SECONDS) {
@@ -74,9 +84,12 @@ export default function Settings(
             alert(`Unlocked time must be at most ${MAX_UNLOCKED_SECONDS} seconds`);
             return;
         }
-        saveSettingsAsync(settings)
-            .then(() => setSavedSetings(settings))
-            .catch(showErrorDialog);
+        try {
+            await saveSettingsAsync(settings);
+            setSavedSetings(settings);
+        } catch (err) {
+            showErrorDialog(err);
+        }
     }
 
     if (settings === undefined) {
@@ -105,7 +118,6 @@ export default function Settings(
                 <DataRow />
 
                 <SaveRow wasChanged={hasChanged} saveSettings={saveSettings} />
-                <BottomRow />
             </View>
         </View>
     )
@@ -258,7 +270,7 @@ function SaveRow(props: SaveRowProps) {
     )
 }
 
-
+// unused
 function BottomRow() {
     return (
         <View style={{flex: 1, justifyContent: 'center'}}>

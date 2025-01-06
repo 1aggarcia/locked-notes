@@ -20,7 +20,7 @@ const defualtState = {
 
 const StylesContext = createContext(defualtState);
 const ColorThemeContext = createContext(
-    (_: ColorThemeArgs): void => {
+    ({ isDarkMode, isLowContrast }: ColorThemeArgs): void => {
         // React forces us to define this function
         throw new ReferenceError("Using context without provider");
     }

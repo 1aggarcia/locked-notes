@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ScrollView, TextInput, View, Alert, AlertButton } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { UNSTABLE_usePreventRemove } from "@react-navigation/native";
+import { usePreventRemove } from "@react-navigation/native";
 
 import showErrorDialog from "../shared/util/error";
 import { useStyles } from "../shared/contexts/stylesContext";
@@ -42,9 +42,7 @@ export default function EditNote(
 
     useEffect(() => { checkForUpdates() }, [title, body]);
 
-    // Save note before leaving the screen
-    // Only current iOS solution, stable version should come with React Navigation 7
-    UNSTABLE_usePreventRemove(title.length === 0, ({ data }) => {
+    usePreventRemove(title.length === 0, ({ data }) => {
         const cancelBtn: AlertButton = { text: "Back", style: "cancel" };
         const continueBtn: AlertButton = {
             text: "Continue",
