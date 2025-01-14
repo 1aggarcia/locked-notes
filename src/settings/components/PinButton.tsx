@@ -1,7 +1,9 @@
-import { TouchableHighlight } from "react-native"
+import { TouchableHighlight, Vibration } from "react-native"
 
 import { useStyles } from "../../shared/contexts/stylesContext";
 import AppText from "../../shared/components/AppText";
+
+export const BUTTON_VIBRATION_DURATION = 7;
 
 interface PinButtonProps {
     digit: number,
@@ -10,8 +12,10 @@ interface PinButtonProps {
 
 export default function PinButton(props: PinButtonProps) {
     const { styles, colorTheme } = useStyles();
+
     return (
-        <TouchableHighlight 
+        <TouchableHighlight
+            onPressIn={() => Vibration.vibrate(BUTTON_VIBRATION_DURATION)}
             onPress={() => props.onPress(props.digit)}
             style={styles.pinButton}
             underlayColor={colorTheme.placeholder}

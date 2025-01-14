@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, Vibration, View } from 'react-native';
 import { useStyles } from '../../shared/contexts/stylesContext';
 
-import PinButton from './PinButton';
+import PinButton, { BUTTON_VIBRATION_DURATION } from './PinButton';
 import PinVisualizer from './PinVisualizer';
 import AppText from '../../shared/components/AppText';
 
-const maxPinLength = 6;
+const MAX_PIN_LENGTH = 6;
 
 export interface PinPadProps {
     /** External action to execute once the full pin has been entered */
@@ -23,7 +23,7 @@ export default function PinPad(props: PinPadProps) {
      */
     function updatePin(digit: number) {
         // Check validity
-        if (pin.length >= maxPinLength)
+        if (pin.length >= MAX_PIN_LENGTH)
             return;
 
         if (0 > digit || digit > 9)
@@ -33,7 +33,7 @@ export default function PinPad(props: PinPadProps) {
         setPin(newPin);
 
         // Send pin back if it's reached max length
-        if (newPin.length === maxPinLength) {
+        if (newPin.length === MAX_PIN_LENGTH) {
             setPin('');
             props.onComplete(newPin);
         }
@@ -51,7 +51,7 @@ export default function PinPad(props: PinPadProps) {
     return (
         <View style={styles.pinPad}>
             <PinVisualizer
-                max={maxPinLength}
+                max={MAX_PIN_LENGTH}
                 currentLength={pin.length}
             />
             <View style={styles.keypad}>
@@ -87,8 +87,9 @@ function PinBackspace(props: PinBackspaceProps) {
     const { styles } = useStyles();
     return (
         <TouchableOpacity
-            style={styles.pinBackspace}
+            onPressIn={() => Vibration.vibrate(BUTTON_VIBRATION_DURATION)}
             onPress={props.onPress}
+            style={styles.pinBackspace}
         >
             <AppText style={{fontSize: 35}}>{'<'}</AppText>
         </TouchableOpacity>
