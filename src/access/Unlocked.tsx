@@ -5,7 +5,11 @@
 
 import { useState, useEffect } from "react";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+    NativeStackNavigationOptions,
+    NativeStackNavigationProp,
+    createNativeStackNavigator
+} from "@react-navigation/native-stack";
 
 import { useStyles } from "../shared/contexts/stylesContext";
 import { formatTime, secondsUntil } from "../shared/util/datetime";
@@ -46,9 +50,10 @@ export default function Unlocked(props: UnlockedProps) {
         return () => clearInterval(interval);
     }, []);
 
-    const screenOptions = {
+    const screenOptions: NativeStackNavigationOptions = {
         headerBackTitle: "Back",
-        headerRight: () => <AppButton onPress={props.lock}>Lock</AppButton>,
+        // not ideal to use onPressIn but for now it's more stable that onPress
+        headerRight: () => <AppButton onPressIn={props.lock}>Lock</AppButton>,
         title: `Unlocked: ${formatTime(timeLeft)}`,
         headerStyle: { backgroundColor: colorTheme.fg },
         headerTitleStyle: { color: colorTheme.text },
@@ -56,14 +61,14 @@ export default function Unlocked(props: UnlockedProps) {
     }
 
     // Prop 'navigation' is provided by the Stack Navigator
-    const screenOptionsWithSettingsButton = (
-        { navigation }: NativeStackScreenProps<Params>
-    ) => ({
+    const screenOptionsWithSettingsButton = (navProps: {
+        navigation: NativeStackNavigationProp<Params, keyof Params, undefined>
+    }) => ({
         headerRight: () => (<>
-            <AppButton onPress={() => navigation.navigate('Settings')}>
+            <AppButton onPressIn={() => navProps.navigation.navigate('Settings')}>
                 Settings
             </AppButton>
-            <AppButton onPress={props.lock}>Lock</AppButton>
+            <AppButton onPressIn={props.lock}>Lock</AppButton>
         </>),
     });
 

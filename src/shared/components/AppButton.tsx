@@ -4,13 +4,21 @@ import { GestureResponderEvent, TouchableOpacity } from "react-native";
 import { useStyles } from "../contexts/stylesContext";
 import AppText from "./AppText";
 
-interface AppButtonProps {
-    onPress: (event: GestureResponderEvent) => void,
+type AppButtonProps = {
+    onPress?: (event: GestureResponderEvent) => void;
+
+    /**
+     * Workaround for broken `onPress` handler in React Navigation w/ Expo 52:
+     * https://github.com/react-navigation/react-navigation/issues/12274
+     * 
+     * Remove this and make `onPress` required once the issue is fixed
+     */
+    onPressIn?: (event: GestureResponderEvent) => void;
 
     /** Optional override for default colors */
-    color?: string,
+    color?: string;
 
-    disabled?: boolean
+    disabled?: boolean;
 }
 
 /** Simple text button with standardized styling accross the app */
@@ -35,7 +43,11 @@ export default function AppButton(props: PropsWithChildren<AppButtonProps>) {
     }
 
     return (
-        <TouchableOpacity disabled={props.disabled} onPress={props.onPress}>
+        <TouchableOpacity
+            disabled={props.disabled}
+            onPress={props.onPress}
+            onPressIn={props.onPressIn}
+        >
             <AppText style={buttonStyle}>
                 {props.children}
             </AppText>

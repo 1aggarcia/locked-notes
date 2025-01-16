@@ -45,3 +45,9 @@ After setting up the required tools, follow the following steps to build and run
 
 4. Scan the QR code on your test device, through the Camera app on iOS or the Expo Go app on Android.
     - Make sure both the development server and test device are running on the same WiFi network, and that the computer running the development server is configured to use a public network so that it can be discovered by the phone. The trick I like to use is to use my phone's hotspot and connect my laptop to that hotspot.
+
+To build the Android APK, run the below from the `src` folder. You will need an Expo account to do so.
+
+```
+eas build -p android --profile preview
+```
