@@ -1,4 +1,5 @@
 import {
+    Context,
     createContext,
     PropsWithChildren,
     useContext,
@@ -9,16 +10,17 @@ import { Themes } from "../../assets/colors";
 import { getSettingsAsync } from "../services/securestore";
 import showErrorDialog from "../util/error";
 import { AppStylesheet, generateStyles } from "../../assets/styles";
+import { DisplayTextRecord, DisplayTranslation, getTranslations, SupportedLanguage } from "../services/translator";
 
 type ColorThemeArgs = { isDarkMode: boolean, isLowContrast: boolean };
 
-const defualtState = {
+const defaultState = {
     styles: generateStyles(Themes.LIGHT) as AppStylesheet,
     colorTheme: Themes.LIGHT,
     isDarkMode: false
 }
 
-const StylesContext = createContext(defualtState);
+const StylesContext = createContext(defaultState);
 const ColorThemeContext = createContext(
     ({ isDarkMode, isLowContrast }: ColorThemeArgs): void => {
         // React forces us to define this function
@@ -26,25 +28,46 @@ const ColorThemeContext = createContext(
     }
 );
 
+const TranslationContext = createContext(
+    <T extends DisplayTextRecord>(textRecord: T): DisplayTranslation<T> => {
+        throw new ReferenceError();
+    }
+);
+
+const SetLanguageContext = createContext(
+    (language: SupportedLanguage): void => {
+        throw new ReferenceError("Using context without provider")
+    }
+);
+
 export const useStyles = () => useContext(StylesContext);
 export const useSetColorTheme = () => useContext(ColorThemeContext);
+export const useSetLanguage = () => useContext(SetLanguageContext);
+export const useTranslation = <T extends DisplayTextRecord>(textRecord: T) =>
+    useContext(TranslationContext)(textRecord);
 
 /**
- * Allows child components to hook onto the stylesheet state with
- * `useStyles` and `useSetColorTheme`
+ * Allows child components to hook onto the settings state, loaded
+ * automatically from disk, using the below hooks:
+ * - `useStyles`
+ * - `useSetColorTheme`
+ * - `useAppText`
+ * - `useSetLanguage`
  */
-export function StylesProvider(props: PropsWithChildren) {
-    const [styles, setStyles] = useState(defualtState);
+export function SettingsProvider(props: PropsWithChildren) {
+    const [styles, setStyles] = useState(defaultState);
+    const [language, setLanguage] = useState<SupportedLanguage>("en");
 
-    useEffect(() => { loadStyles() }, []);
+    useEffect(() => { loadSettings() }, []);
 
-    async function loadStyles() {
+    async function loadSettings() {
         try {
             const settings = await getSettingsAsync();
             setColorTheme({
                 isDarkMode: settings.darkMode,
                 isLowContrast: settings.lowContrast
             });
+            setLanguage(settings.language);
         } catch (error) {
             showErrorDialog(error);
         }
@@ -53,11 +76,18 @@ export function StylesProvider(props: PropsWithChildren) {
     function setColorTheme(args: ColorThemeArgs) {
         setStyles(getStylesState(args))
     }
+    function useTranslation<T extends DisplayTextRecord>(textRecord: T) {
+        return getTranslations(textRecord, language);
+    }
 
     return (
         <StylesContext.Provider value={styles}>
             <ColorThemeContext.Provider value={setColorTheme}>
-                {props.children}
+                <SetLanguageContext.Provider value={setLanguage}>
+                    <TranslationContext.Provider value={useTranslation}>
+                        {props.children}
+                    </TranslationContext.Provider>
+                </SetLanguageContext.Provider>
             </ColorThemeContext.Provider>
         </StylesContext.Provider>
     )

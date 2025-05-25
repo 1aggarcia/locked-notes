@@ -1,7 +1,7 @@
 import { ScrollView, View } from "react-native";
 
 import { NoteMetadata } from "../types";
-import { useStyles } from "../../shared/contexts/stylesContext";
+import { useStyles } from "../../shared/contexts/settingsContext";
 
 import AppText from "../../shared/components/AppText";
 import NotePreview from "./NotePreview";

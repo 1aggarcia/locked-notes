@@ -8,7 +8,7 @@ import {
     saveSettingsAsync 
 } from '../shared/services/securestore';
 import showErrorDialog from '../shared/util/error';
-import { useSetColorTheme, useStyles } from '../shared/contexts/stylesContext';
+import { useSetColorTheme, useStyles } from '../shared/contexts/settingsContext';
 import SettingsType from './types';
 
 import AppText from "../shared/components/AppText";

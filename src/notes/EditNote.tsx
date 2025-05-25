@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { usePreventRemove } from "@react-navigation/native";
 
 import showErrorDialog from "../shared/util/error";
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import Note from "./types";
 import { getNoteAsync, saveNoteAsync } from "./storage/notefiles";
 

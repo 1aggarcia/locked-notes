@@ -3,7 +3,7 @@ import { TextInput, View } from "react-native";
 
 import appEncryptor, { saltAndSha256 } from "../shared/services/encryption";
 import { useLogin } from "../shared/contexts/loginContext";
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 
 import AppText from "../shared/components/AppText";
 import PinPad from "../settings/components/PinPad";
@@ -20,7 +20,7 @@ interface LockedProps {
 
 export default function Locked(props: LockedProps) {
     const { login } = useLogin(); 
-    const { styles } = useStyles(); 
+    const { styles } = useStyles();
 
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);

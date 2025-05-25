@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 
 /**
  * Wrapper for the expo status bar so that the color theme

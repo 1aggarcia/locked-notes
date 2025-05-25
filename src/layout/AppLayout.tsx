@@ -32,7 +32,7 @@ const denyAccessSeconds = 300;
  */
 export default function AppLayout() {
     const loginState = useLogin();
-    const setLogin = useSetLogin(); 
+    const setLogin = useSetLogin();
     const [mode, setMode] = useState<Mode>('Loading');
     const [unlockedTime, setUnlockedTime] = useState(defaultUnlockedTime);
 

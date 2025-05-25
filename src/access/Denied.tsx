@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import AppText from "../shared/components/AppText";
 
 export default function Denied() {

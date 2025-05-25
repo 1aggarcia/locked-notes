@@ -1,6 +1,6 @@
 import { View, ActivityIndicator } from "react-native";
 
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import AppText from "../shared/components/AppText";
 
 interface LoadingProps {

@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import showErrorDialog from "../shared/util/error";
 import { getNoteListAsync } from "./storage/notefiles"; 
 import { NoteMetadata } from "./types";

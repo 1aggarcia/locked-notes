@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import { LoginInfo, savePinAsync } from "../shared/services/securestore";
 import showErrorDialog from "../shared/util/error";
 

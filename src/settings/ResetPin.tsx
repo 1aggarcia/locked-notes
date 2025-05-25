@@ -3,7 +3,7 @@ import { Alert, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import AppText from "../shared/components/AppText";
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import { Params } from "../access/Unlocked";
 import PinPad from "./components/PinPad";
 import { saltAndSha256 } from "../shared/services/encryption";

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TouchableOpacity, Vibration, View } from 'react-native';
-import { useStyles } from '../../shared/contexts/stylesContext';
+import { useStyles } from '../../shared/contexts/settingsContext';
 
 import PinButton, { BUTTON_VIBRATION_DURATION } from './PinButton';
 import PinVisualizer from './PinVisualizer';

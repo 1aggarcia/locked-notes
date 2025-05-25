@@ -1,5 +1,5 @@
 import { View } from "react-native"
-import { useStyles } from "../../shared/contexts/stylesContext";
+import { useStyles } from "../../shared/contexts/settingsContext";
 
 export interface PinVisualizerProps {
     /** maximun length of PIN */

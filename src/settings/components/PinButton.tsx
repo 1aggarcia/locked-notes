@@ -1,6 +1,6 @@
 import { TouchableHighlight, Vibration } from "react-native"
 
-import { useStyles } from "../../shared/contexts/stylesContext";
+import { useStyles } from "../../shared/contexts/settingsContext";
 import AppText from "../../shared/components/AppText";
 
 export const BUTTON_VIBRATION_DURATION = 7;

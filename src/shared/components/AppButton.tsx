@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { GestureResponderEvent, TouchableOpacity } from "react-native";
 
-import { useStyles } from "../contexts/stylesContext";
+import { useStyles } from "../contexts/settingsContext";
 import AppText from "./AppText";
 
 type AppButtonProps = {

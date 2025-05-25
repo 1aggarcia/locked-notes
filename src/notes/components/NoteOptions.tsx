@@ -3,7 +3,7 @@ import { Pressable, Alert, AlertButton, Platform } from "react-native";
 import showErrorDialog from "../../shared/util/error";
 import { NoteMetadata } from "../types";
 
-import { useStyles } from "../../shared/contexts/stylesContext";
+import { useStyles } from "../../shared/contexts/settingsContext";
 import { formatDate } from "../../shared/util/datetime";
 import {
     deleteNoteAsync,

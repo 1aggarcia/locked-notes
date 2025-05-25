@@ -11,7 +11,7 @@ import {
     createNativeStackNavigator
 } from "@react-navigation/native-stack";
 
-import { useStyles } from "../shared/contexts/stylesContext";
+import { useStyles } from "../shared/contexts/settingsContext";
 import { formatTime, secondsUntil } from "../shared/util/datetime";
 
 import AppButton from "../shared/components/AppButton";
