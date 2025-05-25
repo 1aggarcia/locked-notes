@@ -25,7 +25,7 @@ export default function Settings(
     { navigation }: NativeStackScreenProps<Params, 'Settings'>)
 {
     const [settings, setSettings] = useState<SettingsType>();
-    const [savedSettings, setSavedSetings] = useState<SettingsType>();
+    const [savedSettings, setSavedSettings] = useState<SettingsType>();
 
     const { styles } = useStyles();
     const setAppColorTheme = useSetColorTheme();
@@ -40,7 +40,7 @@ export default function Settings(
                     isLowContrast: settings.lowContrast
                 });
                 setSettings(settings);
-                setSavedSetings(settings);
+                setSavedSettings(settings);
             })
             .catch(showErrorDialog)
     }, []);
@@ -86,7 +86,7 @@ export default function Settings(
         }
         try {
             await saveSettingsAsync(settings);
-            setSavedSetings(settings);
+            setSavedSettings(settings);
         } catch (err) {
             showErrorDialog(err);
         }

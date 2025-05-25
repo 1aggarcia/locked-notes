@@ -1,6 +1,6 @@
 import { DisplayTextRecord } from "../shared/services/translator";
 
-export const layoutText = {
+export const LayoutText = {
     FETCHING_APP_SETTINGS: {
         en: "Fetching app settings...",
         es: "Cargando configuración...",

@@ -7,7 +7,7 @@ import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 
 import AppText from "../shared/components/AppText";
 import PinPad from "../settings/components/PinPad";
-import { accessText } from "./accessText";
+import { AccessText } from "./accessText";
 
 const BACKDOOR_ENABLED = false;
 const MAX_ATTEMPTS = 5;
@@ -22,7 +22,7 @@ interface LockedProps {
 export default function Locked(props: LockedProps) {
     const { login } = useLogin(); 
     const { styles } = useStyles();
-    const text = useTranslation(accessText);
+    const text = useTranslation(AccessText);
 
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);

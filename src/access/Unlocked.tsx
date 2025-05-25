@@ -19,7 +19,7 @@ import NotesView from "../notes/NotesView";
 import EditNote from "../notes/EditNote";
 import Settings from "../settings/Settings";
 import ResetPin from "../settings/ResetPin";
-import { accessText } from "./accessText";
+import { AccessText } from "./accessText";
 
 export type Params = {
     NotesView: undefined;
@@ -41,7 +41,7 @@ export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
     const { colorTheme, isDarkMode } = useStyles();
-    const text = useTranslation(accessText);
+    const text = useTranslation(AccessText);
 
     // Count down until expireTime goes into the past
     useEffect(() => {

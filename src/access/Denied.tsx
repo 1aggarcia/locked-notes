@@ -2,10 +2,10 @@ import { View } from "react-native";
 
 import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import AppText from "../shared/components/AppText";
-import { accessText } from "./accessText";
+import { AccessText } from "./accessText";
 
 export default function Denied() {
-    const text = useTranslation(accessText);
+    const text = useTranslation(AccessText);
     const { styles } = useStyles();
 
     return (

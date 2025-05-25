@@ -1,6 +1,6 @@
 import { DisplayTextRecord } from "../shared/services/translator";
 
-export const accessText = {
+export const AccessText = {
     // Denied
     ACCESS_DENIED: {
         en: "Access Denied",

@@ -18,7 +18,7 @@ import Locked from '../access/Locked';
 import Unlocked from '../access/Unlocked';
 import Loading from "./Loading";
 import { useTranslation } from "../shared/contexts/settingsContext";
-import { layoutText } from "./layoutText";
+import { LayoutText } from "./layoutText";
 
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
@@ -35,7 +35,7 @@ const denyAccessSeconds = 300;
 export default function AppLayout() {
     const loginState = useLogin();
     const setLogin = useSetLogin();
-    const text = useTranslation(layoutText);
+    const text = useTranslation(LayoutText);
     const [mode, setMode] = useState<Mode>('Loading');
     const [unlockedTime, setUnlockedTime] = useState(defaultUnlockedTime);
 
