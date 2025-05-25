@@ -17,6 +17,8 @@ import Denied from '../access/Denied';
 import Locked from '../access/Locked';
 import Unlocked from '../access/Unlocked';
 import Loading from "./Loading";
+import { useTranslation } from "../shared/contexts/settingsContext";
+import { layoutText } from "./layoutText";
 
 type Mode = 'Locked' | 'Unlocked' | 'Denied' | 'Loading';
 
@@ -33,6 +35,7 @@ const denyAccessSeconds = 300;
 export default function AppLayout() {
     const loginState = useLogin();
     const setLogin = useSetLogin();
+    const text = useTranslation(layoutText);
     const [mode, setMode] = useState<Mode>('Loading');
     const [unlockedTime, setUnlockedTime] = useState(defaultUnlockedTime);
 
@@ -76,14 +79,14 @@ export default function AppLayout() {
     useEffect(() => { loadDependencies() }, []);
 
     if (loginState.status === "Loading")
-        return <Loading message="Fetching app settings..."/>
+        return <Loading message={text.FETCHING_APP_SETTINGS}/>
 
     if (loginState.status === "Undefined")
         return <CreatePin updateLogin={updateLogin} />;
     
     switch (mode) {
         case 'Loading':
-            return <Loading message='Verifying access...' />;
+            return <Loading message={text.VERIFYING_ACCESS} />;
         case 'Denied':
             return <Denied />;
         case 'Unlocked':

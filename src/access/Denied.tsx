@@ -2,15 +2,17 @@ import { View } from "react-native";
 
 import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import AppText from "../shared/components/AppText";
+import { accessText } from "./accessText";
 
 export default function Denied() {
+    const text = useTranslation(accessText);
     const { styles } = useStyles();
 
     return (
         <View style={[styles.app, styles.centered]}>
-            <AppText style={styles.header}>Access Denied</AppText>
-            <AppText>Too many failed unlock attempts</AppText>
-            <AppText>Try again in a few minutes</AppText>
+            <AppText style={styles.header}>{text.ACCESS_DENIED}</AppText>
+            <AppText>{text.TOO_MANY_ATTEMPTS}</AppText>
+            <AppText>{text.TRY_AGAIN_LATER}</AppText>
         </View>
-    )
+    );
 }

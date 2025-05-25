@@ -3,10 +3,11 @@ import { TextInput, View } from "react-native";
 
 import appEncryptor, { saltAndSha256 } from "../shared/services/encryption";
 import { useLogin } from "../shared/contexts/loginContext";
-import { useStyles } from "../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 
 import AppText from "../shared/components/AppText";
 import PinPad from "../settings/components/PinPad";
+import { accessText } from "./accessText";
 
 const BACKDOOR_ENABLED = false;
 const MAX_ATTEMPTS = 5;
@@ -21,6 +22,7 @@ interface LockedProps {
 export default function Locked(props: LockedProps) {
     const { login } = useLogin(); 
     const { styles } = useStyles();
+    const text = useTranslation(accessText);
 
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState(false);
@@ -47,10 +49,10 @@ export default function Locked(props: LockedProps) {
                 {BACKDOOR_ENABLED && 
                     <NotForProdBackdoorAction />
                 }
-                <AppText style={styles.header}>Enter PIN to unlock</AppText>
+                <AppText style={styles.header}>{text.ENTER_PIN_TO_UNLOCK}</AppText>
                 {error &&
                     <AppText style={{color: 'red', textAlign: 'center'}}>
-                        Incorrect PIN entered. {`${MAX_ATTEMPTS - attempts}`} attempts remaining.
+                        {text.incorrectPin(`${MAX_ATTEMPTS - attempts}`)}
                     </AppText>
                 }
             </View>

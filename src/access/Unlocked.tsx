@@ -11,7 +11,7 @@ import {
     createNativeStackNavigator
 } from "@react-navigation/native-stack";
 
-import { useStyles } from "../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import { formatTime, secondsUntil } from "../shared/util/datetime";
 
 import AppButton from "../shared/components/AppButton";
@@ -19,6 +19,7 @@ import NotesView from "../notes/NotesView";
 import EditNote from "../notes/EditNote";
 import Settings from "../settings/Settings";
 import ResetPin from "../settings/ResetPin";
+import { accessText } from "./accessText";
 
 export type Params = {
     NotesView: undefined;
@@ -40,6 +41,7 @@ export default function Unlocked(props: UnlockedProps) {
     // number of seconds until the app closes
     const [timeLeft, setTimeLeft] = useState(secondsUntil(props.expiryTime));
     const { colorTheme, isDarkMode } = useStyles();
+    const text = useTranslation(accessText);
 
     // Count down until expireTime goes into the past
     useEffect(() => {
@@ -51,10 +53,10 @@ export default function Unlocked(props: UnlockedProps) {
     }, []);
 
     const screenOptions: NativeStackNavigationOptions = {
-        headerBackTitle: "Back",
+        headerBackTitle: text.BACK,
         // not ideal to use onPressIn but for now it's more stable that onPress
-        headerRight: () => <AppButton onPressIn={props.lock}>Lock</AppButton>,
-        title: `Unlocked: ${formatTime(timeLeft)}`,
+        headerRight: () => <AppButton onPressIn={props.lock}>{text.LOCK}</AppButton>,
+        title: `${text.UNLOCKED}: ${formatTime(timeLeft)}`,
         headerStyle: { backgroundColor: colorTheme.fg },
         headerTitleStyle: { color: colorTheme.text },
         headerBackButtonMenuEnabled: false,   // TODO: watch out for problems here
@@ -66,9 +68,9 @@ export default function Unlocked(props: UnlockedProps) {
     }) => ({
         headerRight: () => (<>
             <AppButton onPressIn={() => navProps.navigation.navigate('Settings')}>
-                Settings
+                {text.SETTINGS}
             </AppButton>
-            <AppButton onPressIn={props.lock}>Lock</AppButton>
+            <AppButton onPressIn={props.lock}>{text.LOCK}</AppButton>
         </>),
     });
 

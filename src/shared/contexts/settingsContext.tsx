@@ -51,8 +51,8 @@ export const useTranslation = <T extends DisplayTextRecord>(textRecord: T) =>
  * automatically from disk, using the below hooks:
  * - `useStyles`
  * - `useSetColorTheme`
- * - `useAppText`
  * - `useSetLanguage`
+ * - `useTranslation`
  */
 export function SettingsProvider(props: PropsWithChildren) {
     const [styles, setStyles] = useState(defaultState);
