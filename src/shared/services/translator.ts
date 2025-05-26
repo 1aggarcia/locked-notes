@@ -1,4 +1,5 @@
-export type SupportedLanguage = "en" | "es";
+export const LANGUAGES = ["en", "es"] as const;
+export type SupportedLanguage = typeof LANGUAGES[number];
 
 type Translation = string | ((...args: string[]) => string);
 export type DisplayTextRecord = Record<string, Record<SupportedLanguage, Translation>>;
@@ -14,6 +15,11 @@ export type DisplayTextRecord = Record<string, Record<SupportedLanguage, Transla
  */
 export type DisplayTranslation<T extends DisplayTextRecord> = {
     [key in keyof T]: T[key][SupportedLanguage]
+};
+
+export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
+    en: "English",
+    es: "Español",
 };
 
 export function getTranslations<T extends DisplayTextRecord>(

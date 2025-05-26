@@ -125,15 +125,16 @@ export function generateStyles(colorTheme: ColorTheme) {
             flex: 1,
             backgroundColor: colorTheme.fg,
         },
-        noteOptions: {
+        modal: {
             backgroundColor: colorTheme.fg,
             borderColor: colorTheme.strongBorder,
             borderRadius: 10,
             borderWidth: 1,
             padding: 10,
             opacity: 1,
+            width: "100%",
         },
-        noteOptionsBg: {
+        modalBg: {
             position: "absolute",
             backgroundColor: 'rgba(0, 0, 0, 0.2)',
             top: 0,
@@ -141,6 +142,19 @@ export function generateStyles(colorTheme: ColorTheme) {
             right: 0,
             left: 0,
             padding: 40
+        },
+        dropdownOptionContainer: {
+            borderTopWidth: 1,
+            borderTopColor: colorTheme.weakBorder,
+        },
+        dropdownOption: {
+            padding: 15,
+            fontSize: 17,
+        },
+        dropdownSelectedOption: {
+            padding: 15,
+            fontSize: 17,
+            fontWeight: "bold",
         },
         button: {
             borderColor: colorTheme.strongBorder,
@@ -172,7 +186,7 @@ export function generateStyles(colorTheme: ColorTheme) {
             textAlign: 'center'
         },
         settingsRowContainer: {
-            flex: 1,
+            flex: 2,
             backgroundColor: colorTheme.fg,
         },
         settingsRow: {

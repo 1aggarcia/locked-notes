@@ -96,4 +96,12 @@ export const SettingsText = {
         en: "Confirm PIN",
         es: "Confirmar el PIN",
     },
+    LANGUAGE: {
+        en: "Language",
+        es: "Idioma",
+    },
+    SELECT_LANGUAGE: {
+        en: "Select Language",
+        es: "Elegir Idioma",
+    },
 } as const satisfies DisplayTextRecord;

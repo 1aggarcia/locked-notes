@@ -90,9 +90,9 @@ export default function NoteOptions(props: NoteOptionProps) {
     return (
         <Pressable
             onPress={props.close}
-            style={[styles.noteOptionsBg, styles.centered]}
+            style={[styles.modalBg, styles.centered]}
         >
-            <Pressable style={[styles.noteOptions, styles.centered]}>
+            <Pressable style={[styles.modal, styles.centered]}>
                 <AppText
                     style={{fontSize: 18, padding: 5, fontWeight: 'bold'}}
                 >

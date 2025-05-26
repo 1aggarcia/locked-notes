@@ -129,11 +129,17 @@ export async function saveSettingsAsync(settings: Settings): Promise<void> {
 export async function getSettingsAsync(): Promise<Settings> {
     try {
         const data = await SecureStore.getItemAsync('settings');
-
-        if (data === null || !isValidSettings(JSON.parse(data))) {
-            throw ReferenceError("Could not retreive data entry");
+        if (data === null) {
+            throw new Error("No settings entry found in SecureStore");
         }
-        return JSON.parse(data);
+        const parsedData = {
+            ...defaultSettings,
+            ...JSON.parse(data)
+        }
+        if (!isValidSettings(parsedData)) {
+            throw ReferenceError("Settings is malformed:" + data);
+        }
+        return parsedData;
     } catch (error) {
         console.log('getSettingsAsync caught an error:', error);
 

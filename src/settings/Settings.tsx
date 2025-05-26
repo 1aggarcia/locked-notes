@@ -8,7 +8,12 @@ import {
     saveSettingsAsync 
 } from '../shared/services/securestore';
 import showErrorDialog from '../shared/util/error';
-import { useSetColorTheme, useStyles, useTranslation } from '../shared/contexts/settingsContext';
+import {
+    useSetColorTheme,
+    useSetLanguage,
+    useStyles,
+    useTranslation
+} from '../shared/contexts/settingsContext';
 import SettingsType from './types';
 
 import AppText from "../shared/components/AppText";
@@ -19,6 +24,8 @@ import { exportAllNotes } from '../notes/storage/android';
 import { usePreventRemove } from '@react-navigation/native';
 import { SettingsText } from './settingsText';
 import { CommonText } from '../shared/commonText';
+import { LANGUAGE_NAMES, SupportedLanguage } from '../shared/services/translator';
+import { LanguageDropdown } from './components/LanguageDropdown';
 
 const MIN_UNLOCKED_SECONDS = 60;
 const MAX_UNLOCKED_SECONDS = 3600;
@@ -32,6 +39,7 @@ export default function Settings(
     const { styles } = useStyles();
     const text = useTranslation(SettingsText);
     const setAppColorTheme = useSetColorTheme();
+    const setAppLanguage = useSetLanguage();
     const hasChanged = !isEqual(settings, savedSettings);
 
     // Load settings from disk
@@ -42,6 +50,7 @@ export default function Settings(
                     isDarkMode: settings.darkMode,
                     isLowContrast: settings.lowContrast
                 });
+                setAppLanguage(settings.language);
                 setSettings(settings);
                 setSavedSettings(settings);
             })
@@ -62,6 +71,16 @@ export default function Settings(
             lowContrast: isLowContrast,
         });
         setAppColorTheme({ isDarkMode, isLowContrast });
+    }
+
+    function setLanguage(language: SupportedLanguage) {
+        if (settings === undefined) return;
+
+        setSettings({
+            ...settings,
+            language: language
+        });
+        setAppLanguage(language);
     }
 
     function setUnlockedTime(value: string) {
@@ -117,6 +136,10 @@ export default function Settings(
 
                 <ResetPinRow
                     navigateAway={() => navigation.navigate('ResetPin')} />
+
+                <LanguageRow
+                    currentLanguage={settings.language}
+                    onLanguageChange={setLanguage} />
 
                 <DataRow />
 
@@ -205,6 +228,30 @@ function ResetPinRow(props: ResetPinRowProps) {
             </AppButton>
         </View>
     )
+}
+
+function LanguageRow(props: {
+    currentLanguage: SupportedLanguage;
+    onLanguageChange: (language: SupportedLanguage) => void;
+}) {
+    const text = useTranslation(SettingsText);
+    const { styles } = useStyles();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    return (
+        <View style={styles.settingsRow}>
+            <AppText style={styles.settingsText}>{text.LANGUAGE}</AppText>
+            <AppButton onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
+                {LANGUAGE_NAMES[props.currentLanguage]}
+            </AppButton>
+            <LanguageDropdown
+                isOpen={isDropdownOpen}
+                selectedLanguage={props.currentLanguage}
+                onLanguageChange={props.onLanguageChange}
+                onClose={() => setIsDropdownOpen(false)}
+            />
+        </View>
+    );
 }
 
 function DataRow() {
