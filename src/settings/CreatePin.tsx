@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { useStyles } from "../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import { LoginInfo, savePinAsync } from "../shared/services/securestore";
 import showErrorDialog from "../shared/util/error";
 
 import AppText from "../shared/components/AppText";
 import PinPad from "./components/PinPad";
+import { SettingsText } from "./settingsText";
 
 interface CreatePinProps {
     /** Set the app's login state & unlock the app */
@@ -15,6 +16,7 @@ interface CreatePinProps {
 
 export default function CreatePin(props: CreatePinProps) {
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
 
     const [pin, setPin] = useState('');
     const [error, setError] = useState(false);
@@ -44,10 +46,10 @@ export default function CreatePin(props: CreatePinProps) {
         return (
             <View style={[styles.app, styles.pinContainer]}>
                 <View style={[styles.centered, {flex: 1}]}>
-                    <AppText style={styles.header}>Create a New PIN</AppText>
+                    <AppText style={styles.header}>{text.CREATE_A_NEW_PIN}</AppText>
                     {error &&
                         <AppText style={{color: 'red', textAlign: 'center'}}>
-                            The PINs entered did not match. Please try again
+                            {text.PINS_DID_NOT_MATCH}
                         </AppText>
                     }
                 </View>
@@ -59,7 +61,7 @@ export default function CreatePin(props: CreatePinProps) {
         return (
             <View style={[styles.app, styles.pinContainer]}>
                 <View style={[styles.centered, {flex: 1}]}>
-                    <AppText style={styles.header}>Confirm PIN</AppText>
+                    <AppText style={styles.header}>{text.CONFIRM_PIN}</AppText>
                 </View>
                 <PinPad onComplete={confirmPin} />
             </View>

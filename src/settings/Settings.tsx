@@ -8,7 +8,7 @@ import {
     saveSettingsAsync 
 } from '../shared/services/securestore';
 import showErrorDialog from '../shared/util/error';
-import { useSetColorTheme, useStyles } from '../shared/contexts/settingsContext';
+import { useSetColorTheme, useStyles, useTranslation } from '../shared/contexts/settingsContext';
 import SettingsType from './types';
 
 import AppText from "../shared/components/AppText";
@@ -17,6 +17,8 @@ import AppButton from '../shared/components/AppButton';
 import { Params } from "../access/Unlocked";
 import { exportAllNotes } from '../notes/storage/android';
 import { usePreventRemove } from '@react-navigation/native';
+import { SettingsText } from './settingsText';
+import { CommonText } from '../shared/commonText';
 
 const MIN_UNLOCKED_SECONDS = 60;
 const MAX_UNLOCKED_SECONDS = 3600;
@@ -28,6 +30,7 @@ export default function Settings(
     const [savedSettings, setSavedSettings] = useState<SettingsType>();
 
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
     const setAppColorTheme = useSetColorTheme();
     const hasChanged = !isEqual(settings, savedSettings);
 
@@ -77,11 +80,11 @@ export default function Settings(
         if (hasChanged === false || settings === undefined) return;
 
         if (settings.unlockedTime < MIN_UNLOCKED_SECONDS) {
-            alert(`Unlocked time must be at least ${MIN_UNLOCKED_SECONDS} seconds`);
+            alert(text.unlockedTimeTooSmall(`${MIN_UNLOCKED_SECONDS}`));
             return;
         }
         if (settings.unlockedTime > MAX_UNLOCKED_SECONDS) {
-            alert(`Unlocked time must be at most ${MAX_UNLOCKED_SECONDS} seconds`);
+            alert(text.unlockedTimeTooLarge(`${MAX_UNLOCKED_SECONDS}`));
             return;
         }
         try {
@@ -93,13 +96,13 @@ export default function Settings(
     }
 
     if (settings === undefined) {
-        return <Loading message='Loading settings...' />
+        return <Loading message={text.LOADING_SETTINGS} />
     }
 
     return (
         <View style={styles.app}>
             <View style={{flex: 1, justifyContent: 'center'}}>
-                <AppText style={styles.settingsHeader}>Settings</AppText>
+                <AppText style={styles.settingsHeader}>{text.SETTINGS}</AppText>
             </View>
 
             <View style={styles.settingsRowContainer}>
@@ -134,6 +137,7 @@ interface DarkModeRowProps {
 
 function DarkModeRow(props: DarkModeRowProps) {
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
 
     function toggleDarkMode(value: boolean) {
         props.setColorTheme(value, props.lowContrast);
@@ -145,13 +149,13 @@ function DarkModeRow(props: DarkModeRowProps) {
 
     return (<>
         <View style={styles.settingsRow}>
-            <AppText style={styles.settingsText}>Dark Mode:</AppText>
+            <AppText style={styles.settingsText}>{text.DARK_MODE}</AppText>
             <Switch 
                 onValueChange={toggleDarkMode}
                 value={props.darkMode} />
         </View>
         <View style={styles.settingsRow}>
-            <AppText style={styles.settingsText}>Low Contrast:</AppText>
+            <AppText style={styles.settingsText}>{text.LOW_CONTRAST}</AppText>
             <Switch 
                 onValueChange={toggleLowContrast}
                 value={props.lowContrast} />
@@ -167,11 +171,12 @@ interface UnlockedTimeRowProps {
 
 function UnlockedTimeRow(props: UnlockedTimeRowProps) {
     const { styles, colorTheme } = useStyles();
+    const text = useTranslation(SettingsText);
 
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>
-                Unlocked Time (seconds):
+                {text.UNLOCKED_TIME}
             </AppText>
 
             <TextInput 
@@ -190,12 +195,13 @@ interface ResetPinRowProps { navigateAway: () => void }
 
 function ResetPinRow(props: ResetPinRowProps) {
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
 
     return (
         <View style={styles.settingsRow}>
             <AppText style={styles.settingsText}>PIN</AppText>
             <AppButton onPress={props.navigateAway}>
-                Reset
+                {text.RESET}
             </AppButton>
         </View>
     )
@@ -203,18 +209,21 @@ function ResetPinRow(props: ResetPinRowProps) {
 
 function DataRow() {
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
+    const commonText = useTranslation(CommonText);
 
     function onExportPress() {
-        const cancelBtn: AlertButton = { text: "Cancel", style: "cancel" };
+        const cancelBtn: AlertButton = {
+            text: commonText.CANCEL,
+            style: "cancel"
+        };
         const okBtn: AlertButton = {
             text: "Ok",
             onPress: onExportConfirm
         };
-
         Alert.alert(
-            "Export all notes?",
-            "This will copy all encrypted note files"
-            + " into the directory that you choose.",
+            text.EXPORT_CONFIRMATION_TITLE,
+            text.EXPORT_CONFIRMATION_MESSAGE,
             [cancelBtn, okBtn]
         );
     }
@@ -224,11 +233,11 @@ function DataRow() {
             const success = await exportAllNotes();
 
             if (success) {
-                Alert.alert('Success!', `All notes successfully exported.`);
+                Alert.alert(commonText.SUCCESS, text.ALL_NOTES_EXPORTED);
             } else {
                 Alert.alert(
-                    'Operation Cancelled',
-                    'Access to file storage was denied.'
+                    commonText.OPERATION_CANCELLED,
+                    commonText.ACCESS_DENIED,
                 );
             }
         } catch (err) {
@@ -238,9 +247,9 @@ function DataRow() {
 
     return (
         <View style={styles.settingsRow}>
-            <AppText style={styles.settingsText}>App Data</AppText>
+            <AppText style={styles.settingsText}>{text.APP_DATA}</AppText>
             <AppButton onPress={onExportPress}>
-                Export All Notes
+                {text.EXPORT_ALL_NOTES}
             </AppButton>
         </View>
     )
@@ -254,16 +263,17 @@ interface SaveRowProps {
 
 function SaveRow(props: SaveRowProps) {
     const { styles } = useStyles();
+    const text = useTranslation(SettingsText);
 
     return (
         <View style={styles.settingsRow}>
             <AppButton
                 disabled={!props.wasChanged} onPress={props.saveSettings}
-            >Save</AppButton>
+            >{text.SAVE}</AppButton>
 
         {props.wasChanged &&
             <AppText style={{color: 'red', textAlignVertical: 'center'}}>
-                You have unsaved changes
+                {text.UNSAVED_CHANGES}
             </AppText>
         }
         </View>

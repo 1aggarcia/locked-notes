@@ -2,8 +2,9 @@ import { TouchableOpacity } from "react-native";
 
 import { NoteMetadata } from "../types";
 import { formatDate } from "../../shared/util/datetime";
-import { useStyles } from "../../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../../shared/contexts/settingsContext";
 import AppText from "../../shared/components/AppText";
+import { NotesText } from "../notesText";
 
 interface NotePreviewProps {
     metadata: NoteMetadata
@@ -17,6 +18,7 @@ interface NotePreviewProps {
 
 export default function NotePreview(props: NotePreviewProps) {
     const { styles } = useStyles();
+    const text = useTranslation(NotesText);
     const dateModifiedString = formatDate(props.metadata.dateModified);
 
     return (
@@ -30,7 +32,7 @@ export default function NotePreview(props: NotePreviewProps) {
                 {props.metadata.title}
             </AppText>
             <AppText style={styles.placeholder}>
-                Modified: {dateModifiedString}
+                {text.MODIFIED}: {dateModifiedString}
             </AppText>
         </TouchableOpacity>
     )

@@ -4,13 +4,14 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { usePreventRemove } from "@react-navigation/native";
 
 import showErrorDialog from "../shared/util/error";
-import { useStyles } from "../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import Note from "./types";
 import { getNoteAsync, saveNoteAsync } from "./storage/notefiles";
 
 import AppText from "../shared/components/AppText";
 import { Params } from "../access/Unlocked";
 import Loading from "../layout/Loading";
+import { NotesText } from "./notesText";
 
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
@@ -32,6 +33,7 @@ export default function EditNote(
 
     const filename = route.params.filename;
     const { styles, colorTheme } = useStyles();
+    const text = useTranslation(NotesText);
 
     // Fetch the note from storage
     useEffect(() => {
@@ -43,9 +45,9 @@ export default function EditNote(
     useEffect(() => { checkForUpdates() }, [title, body]);
 
     usePreventRemove(title.length === 0, ({ data }) => {
-        const cancelBtn: AlertButton = { text: "Back", style: "cancel" };
+        const cancelBtn: AlertButton = { text: text.BACK, style: "cancel" };
         const continueBtn: AlertButton = {
-            text: "Continue",
+            text: text.CONTINUE,
             style: "destructive",
             onPress: () => checkForUpdates().then(
                 () => navigation.dispatch(data.action)
@@ -53,9 +55,8 @@ export default function EditNote(
         };
 
         Alert.alert(
-            "Warning",
-            "This note has no title. It will be saved without a title"
-            + " if you continue.",
+            text.WARNING,
+            text.NO_TITLE_WARNING_MESSAGE,
             [cancelBtn, continueBtn]
         );
     });
@@ -108,7 +109,7 @@ export default function EditNote(
     }
 
     if (!loaded) {
-        return <Loading message="Fetching note contents..." />
+        return <Loading message={text.FETCHING_NOTE_CONTENTS} />
     }
 
     return (
@@ -119,7 +120,7 @@ export default function EditNote(
                     value={title}
                     maxLength={maxTitleLength}
                     onChangeText={setTitle}
-                    placeholder='Title'
+                    placeholder={text.TITLE}
                     placeholderTextColor={colorTheme.placeholder}
                     multiline
                 />
@@ -128,7 +129,7 @@ export default function EditNote(
                     value={body}
                     maxLength={maxBodyLength}
                     onChangeText={setBody}
-                    placeholder='Write something here...'
+                    placeholder={text.WRITE_SOMETHING_HERE}
                     placeholderTextColor={colorTheme.placeholder}
                     multiline
                 />

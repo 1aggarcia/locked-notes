@@ -18,13 +18,13 @@ export const AccessText = {
     // Locked
     ENTER_PIN_TO_UNLOCK: {
         en: "Enter PIN to unlock",
-        es: "Introduce tu clave para desbloquear",
+        es: "Introduce PIN para desbloquear",
     },
     incorrectPin: {
         en: (attempts: string) =>
             `Incorrect PIN entered. ${attempts} attempts remaining.`,
         es: (attempts: string) =>
-            `Clave incorrecta. Quedan ${attempts} intentos.`,
+            `PIN incorrecto. Quedan ${attempts} intentos.`,
     },
 
     // Unlocked

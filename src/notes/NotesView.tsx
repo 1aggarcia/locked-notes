@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { useStyles } from "../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import showErrorDialog from "../shared/util/error";
 import { getNoteListAsync } from "./storage/notefiles"; 
 import { NoteMetadata } from "./types";
@@ -13,12 +13,14 @@ import { Params } from "../access/Unlocked";
 import Loading from "../layout/Loading";
 import NoteOptions from "./components/NoteOptions";
 import { NoteList } from "./components/NoteList";
+import { NotesText } from "./notesText";
 
 export default function NotesView({ navigation }: NativeStackScreenProps<Params>) {
     // note for which the properties menu is shown. Undefined means no menu shown
     const [noteOptions, setNoteOptions] = useState<NoteMetadata>();
     const [noteList, setNoteList] = useState<NoteMetadata[]>();
     const { styles } = useStyles();
+    const text = useTranslation(NotesText);
 
     // Refresh the list only when this screen is focused (prevents inf loop)
     useFocusEffect(useCallback(refreshList, []));
@@ -45,7 +47,7 @@ export default function NotesView({ navigation }: NativeStackScreenProps<Params>
     }
 
     if (noteList === undefined)
-        return <Loading message='Fetching notes...'/>;
+        return <Loading message={text.FETCHING_NOTES} />;
 
     return (
         <View style={styles.app}>

@@ -2,7 +2,7 @@ import { View } from "react-native"
 import { useStyles } from "../../shared/contexts/settingsContext";
 
 export interface PinVisualizerProps {
-    /** maximun length of PIN */
+    /** maximum length of PIN */
     max: number,
 
     /** current number of digits entered */

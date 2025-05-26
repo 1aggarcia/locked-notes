@@ -1,10 +1,11 @@
 import { ScrollView, View } from "react-native";
 
 import { NoteMetadata } from "../types";
-import { useStyles } from "../../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../../shared/contexts/settingsContext";
 
 import AppText from "../../shared/components/AppText";
 import NotePreview from "./NotePreview";
+import { NotesText } from "../notesText";
 
 interface NoteListProps {
     noteList: NoteMetadata[];
@@ -17,6 +18,7 @@ interface NoteListProps {
 }
 
 export function NoteList(props: NoteListProps) {
+    const text = useTranslation(NotesText);
     const { styles } = useStyles();
     const result = props.noteList.map(entry => (
         <NotePreview
@@ -30,7 +32,7 @@ export function NoteList(props: NoteListProps) {
     if (result.length === 0)
         return <View style={[styles.centered, {flex: 1}]}>
             <AppText style={styles.noteListEmpty}>
-                No Notes Yet
+               {text.NO_NOTES_YET} 
             </AppText>
         </View>
 

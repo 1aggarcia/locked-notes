@@ -21,7 +21,7 @@ type AppButtonProps = {
     disabled?: boolean;
 }
 
-/** Simple text button with standardized styling accross the app */
+/** Simple text button with standardized styling across the app */
 export default function AppButton(props: PropsWithChildren<AppButtonProps>) {
     const { styles, colorTheme } = useStyles();
 

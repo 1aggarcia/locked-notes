@@ -69,7 +69,8 @@ export function generateStyles(colorTheme: ColorTheme) {
         },
         pinContainer: {
             justifyContent: 'flex-end', 
-            flex: 1
+            flex: 1,
+            padding: 20,
         },
         pinButton: {
             margin: 5,

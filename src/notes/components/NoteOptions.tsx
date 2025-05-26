@@ -3,7 +3,7 @@ import { Pressable, Alert, AlertButton, Platform } from "react-native";
 import showErrorDialog from "../../shared/util/error";
 import { NoteMetadata } from "../types";
 
-import { useStyles } from "../../shared/contexts/settingsContext";
+import { useStyles, useTranslation } from "../../shared/contexts/settingsContext";
 import { formatDate } from "../../shared/util/datetime";
 import {
     deleteNoteAsync,
@@ -13,6 +13,8 @@ import { exportTextFileAsync } from "../storage/android";
 
 import AppText from "../../shared/components/AppText";
 import AppButton from "../../shared/components/AppButton";
+import { NotesText } from "../notesText";
+import { CommonText } from "../../shared/commonText";
 
 const KB_SIZE = 1 << 10;
 const MB_SIZE = 1 << 20;
@@ -31,6 +33,8 @@ export default function NoteOptions(props: NoteOptionProps) {
     const dateModifiedString = formatDate(props.metadata.dateModified);
 
     const { styles } = useStyles();
+    const text = useTranslation(NotesText);
+    const commonText = useTranslation(CommonText);
 
     function handleDeleteError(reason: unknown) {
         props.close();
@@ -38,9 +42,9 @@ export default function NoteOptions(props: NoteOptionProps) {
     }
 
     function confirmDelete() {
-        const cancelButton: AlertButton = {text: 'Cancel', style: 'cancel'};
+        const cancelButton: AlertButton = {text: commonText.CANCEL, style: 'cancel'};
         const deleteButton: AlertButton = {
-            text: 'Delete',
+            text: text.DELETE,
             style: 'destructive',
             onPress: () => {
                 deleteNoteAsync(props.metadata.filename)
@@ -50,28 +54,31 @@ export default function NoteOptions(props: NoteOptionProps) {
         };
 
         Alert.alert(
-            'Really delete this note?',
-            `Note "${props.metadata.title}" will be deleted forever.`,
+            text.DELETE_CONFIRMATION_TITLE,
+            text.deleteConfirmationMessage(props.metadata.title),
             [cancelButton, deleteButton]
         )
     }
 
-    // Handle retreiving note and prompting user to export it
+    // Handle retrieving note and prompting user to export it
     async function exportNote() {
         try {
             const rawFile = await getRawNoteAsync(props.metadata.filename);
             if (rawFile === null) {
-                showErrorDialog(`Error reading file ${props.metadata.filename}`);
+                showErrorDialog(`${text.ERROR_READING_FILE} ${props.metadata.filename}`);
                 return;
             }
 
             if (await exportTextFileAsync(props.metadata.filename, rawFile) === false) {
                 Alert.alert(
-                    'Operation Cancelled',
-                    'Access to file storage was denied.'
+                    commonText.OPERATION_CANCELLED,
+                    commonText.ACCESS_DENIED 
                 );
             } else {
-                Alert.alert('Success!', `${props.metadata.filename} successfully exported.`);
+                Alert.alert(
+                    commonText.SUCCESS,
+                    text.successfulExport(props.metadata.filename)
+                );
             }
             props.close();
         } catch (error) {
@@ -89,29 +96,29 @@ export default function NoteOptions(props: NoteOptionProps) {
                 <AppText
                     style={{fontSize: 18, padding: 5, fontWeight: 'bold'}}
                 >
-                    Note Properties
+                    {text.NOTE_PROPERTIES}
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Filename: {props.metadata.filename}
+                    {text.FILENAME}: {props.metadata.filename}
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Title: "{props.metadata.title}"
+                    {text.TITLE}: "{props.metadata.title}"
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Created: {dateCreatedString}
+                    {text.CREATED}: {dateCreatedString}
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Last Modified: {dateModifiedString}
+                    {text.LAST_MODIFIED}: {dateModifiedString}
                 </AppText>
                 <AppText style={{padding: 5}}>
-                    Size: {formatBytesString(props.metadata.fileSize)}
+                    {text.SIZE}: {formatBytesString(props.metadata.fileSize)}
                 </AppText>
                 {/* User exports are currently only supported by android */}
                 <AppButton onPress={exportNote} disabled={Platform.OS !== "android"}>
-                    Export Encrypted File
+                    {text.EXPORT_ENCRYPTED_FILE}
                 </AppButton>
                 <AppButton color='red' onPress={confirmDelete}>
-                    Delete Note
+                    {text.DELETE_NOTE}
                 </AppButton>
             </Pressable>
         </Pressable>
