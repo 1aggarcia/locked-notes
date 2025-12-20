@@ -74,7 +74,7 @@ export function useSetLanguage() {
 export function SettingsProvider(props: PropsWithChildren) {
     const [state, dispatch] = useReducer(reduceState, initState);
 
-    useEffect(() => { loadSettings() }, []);
+    useEffect(() => void loadSettings(), []);
 
     async function loadSettings() {
         try {

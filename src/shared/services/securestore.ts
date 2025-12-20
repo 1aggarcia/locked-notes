@@ -1,10 +1,10 @@
 /**
  * Manage data stored in the device's secure store.
- * Used to store and retreive app data such as settings and login info.
+ * Used to store and retrieve app data such as settings and login info.
  * Not used to store user data like notes.
  * 
  * In general, getters should not throw errors, they should catch any errors
- * and return defualt values instead.
+ * and return default values instead.
  * Setters do throw errors if a value can't be saved.
  */
 
@@ -143,7 +143,7 @@ export async function getSettingsAsync(): Promise<Settings> {
     } catch (error) {
         console.log('getSettingsAsync caught an error:', error);
 
-        // Save the default settings, overwrite any fautly or non-existent data
+        // Save the default settings, overwrite any faulty or non-existent data
         SecureStore.setItemAsync('settings', JSON.stringify(defaultSettings));
         return defaultSettings;
     }

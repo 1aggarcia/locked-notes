@@ -138,5 +138,5 @@ export default function EditNote(
                 {body.length} / {maxBodyLength}
             </AppText>
         </View>
-    )
+    );
 }

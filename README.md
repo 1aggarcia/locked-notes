@@ -2,7 +2,7 @@
 
 This is a simple notes app offering encrypted protection of notes via numerical PIN, designed for iOS and Android. I am still working out a good name, feel free to open up an issue with name suggestions.
 
-By default the app is unlockable for 10 minutes at a time, during which the user can create, edit, and delete notes. All files are encrypted on the disk, and all changes are automatically saved.
+By default the app is un-lockable for 10 minutes at a time, during which the user can create, edit, and delete notes. All files are encrypted on the disk, and all changes are automatically saved.
 
 <img src="https://raw.githubusercontent.com/1aggarcia/locked-notes/main/mock_data/demo_1.png" width="250"/> <img src="https://raw.githubusercontent.com/1aggarcia/locked-notes/main/mock_data/demo_2.png" width="250"/> <img src="https://raw.githubusercontent.com/1aggarcia/locked-notes/main/mock_data/demo_3.png" width="250"/>
 

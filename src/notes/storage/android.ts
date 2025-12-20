@@ -15,7 +15,7 @@ import { getRawNoteAsync, NOTES_DIR } from './notefiles';
  * 
  * @param filename name of file to save
  * @param content contents of file in text
- * @returns boolean Promise resolving to true if the file was sucessfully
+ * @returns boolean Promise resolving to true if the file was successfully
  *  written, false if the user denies access. Promise rejects if an error
  *  occurs in the file system.
  */
@@ -38,7 +38,7 @@ export async function exportTextFileAsync(filename: string, content: string) {
 
         return true;
     } catch (error) {
-        console.error("An error occured in exportTextFileAsync:", error);
+        console.error("An error occurred in exportTextFileAsync:", error);
         throw error;
     }
 }
@@ -72,7 +72,7 @@ export async function exportAllNotes() {
             await SAF.writeAsStringAsync(fileUri, content);
         }
     } catch (error) {
-        console.error("An error occured in exportAllData:", error);
+        console.error("An error occurred in exportAllData:", error);
         throw error;
     }
     return true;
