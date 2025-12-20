@@ -36,12 +36,4 @@ export const AccessText = {
         en: "Unlocked",
         es: "Abierto",
     },
-    LOCK: {
-        en: "Lock",
-        es: "Cerrar"
-    },
-    SETTINGS: {
-        en: "Settings",
-        es: "Configuración",
-    }
 } as const satisfies DisplayTextRecord;

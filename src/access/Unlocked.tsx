@@ -10,6 +10,7 @@ import {
     NativeStackNavigationProp,
     createNativeStackNavigator
 } from "@react-navigation/native-stack";
+import Feather from "@expo/vector-icons/Feather";
 
 import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
 import { formatTime, secondsUntil } from "../shared/util/datetime";
@@ -27,6 +28,8 @@ export type Params = {
     Settings: undefined;
     ResetPin: undefined;
 };
+
+const ICON_BUTTON_SIZE = 19;
 
 const Stack = createNativeStackNavigator<Params>();
 
@@ -52,10 +55,16 @@ export default function Unlocked(props: UnlockedProps) {
         return () => clearInterval(interval);
     }, []);
 
+    const LockButton = () => (
+        <AppButton onPressIn={props.lock}>
+            <Feather name="lock" size={ICON_BUTTON_SIZE} />
+        </AppButton>
+    );
+
     const screenOptions: NativeStackNavigationOptions = {
         headerBackTitle: text.BACK,
         // not ideal to use onPressIn but for now it's more stable that onPress
-        headerRight: () => <AppButton onPressIn={props.lock}>{text.LOCK}</AppButton>,
+        headerRight: () => <LockButton />,
         title: `${text.UNLOCKED}: ${formatTime(timeLeft)}`,
         headerStyle: { backgroundColor: colorTheme.fg },
         headerTitleStyle: { color: colorTheme.text },
@@ -67,10 +76,12 @@ export default function Unlocked(props: UnlockedProps) {
         navigation: NativeStackNavigationProp<Params, keyof Params, undefined>
     }) => ({
         headerRight: () => (<>
-            <AppButton onPressIn={() => navProps.navigation.navigate('Settings')}>
-                {text.SETTINGS}
+            <AppButton
+                onPressIn={() => navProps.navigation.navigate('Settings')}
+            >
+                <Feather name="settings" size={ICON_BUTTON_SIZE} />
             </AppButton>
-            <AppButton onPressIn={props.lock}>{text.LOCK}</AppButton>
+            <LockButton />
         </>),
     });
 
