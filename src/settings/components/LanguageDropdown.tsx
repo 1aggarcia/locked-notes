@@ -47,6 +47,8 @@ export function LanguageDropdown(props: {
             <Pressable
                 style={[styles.modalBg, styles.centered]}
                 onPress={props.onClose}
+                // React seems to think this is a list, so key is added here to make React happy
+                key='language-dropdown-overlay'
             >
                 <Pressable style={styles.modal}>
                     <AppText style={{ padding: 10 }}>
