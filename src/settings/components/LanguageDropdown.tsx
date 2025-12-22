@@ -44,13 +44,19 @@ export function LanguageDropdown(props: {
             animationType="fade"
             visible={props.isOpen}
         >
+            {/*
+                React seems to think these pressables are a list,
+                so added keys to make React happy
+            */}
             <Pressable
                 style={[styles.modalBg, styles.centered]}
                 onPress={props.onClose}
-                // React seems to think this is a list, so key is added here to make React happy
                 key='language-dropdown-overlay'
             >
-                <Pressable style={styles.modal}>
+                <Pressable
+                    style={styles.modal}
+                    key='language-dropdown-container'
+                >
                     <AppText style={{ padding: 10 }}>
                         {text.SELECT_LANGUAGE}
                     </AppText>
