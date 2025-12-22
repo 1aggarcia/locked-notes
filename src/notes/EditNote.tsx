@@ -145,8 +145,23 @@ export default function EditNote(
             setSaveStatus(SaveStatuses.SAVED);
         } catch (err) {
             setSaveStatus(SaveStatuses.FAILED);
-            showErrorDialog(err);
+            showSaveErrorDialog(err);
         }
+    }
+
+    function showSaveErrorDialog(error: unknown) {
+        const ignoreBtn: AlertButton = { text: text.IGNORE, style: "cancel" };
+        const retryButton: AlertButton = {
+            text: text.RETRY,
+            style: "destructive",
+            onPress: () => checkForUpdates(),
+        };
+
+        Alert.alert(
+            text.FAILED_TO_SAVE,
+            text.FAILED_TO_SAVE_MESSAGE + '\n\n' + error,
+            [ignoreBtn, retryButton]
+        );
     }
 
     if (!loaded) {

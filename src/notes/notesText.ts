@@ -105,4 +105,16 @@ export const NotesText = {
         en: "Failed to save",
         es: "No se pudo guardar",
     },
+    RETRY: {
+        en: "Retry",
+        es: "Reintentar",
+    },
+    IGNORE: {
+        en: "Ignore",
+        es: "Ignorar",
+    },
+    FAILED_TO_SAVE_MESSAGE: {
+        en: "There was an error saving the latest changes to this note:",
+        es: "Hubo un error guardando los últimos cambios:",
+    },
 } as const satisfies DisplayTextRecord;
