@@ -71,6 +71,11 @@ export default function EditNote(
         );
     });
 
+    usePreventRemove(hasUnsavedChanges(), async ({ data }) => {
+        await checkForUpdates();
+        navigation.dispatch(data.action);
+    });
+
     function handleGetNote(note: Note | null) {
         if (note !== null) {
             setTitle(note.title);
