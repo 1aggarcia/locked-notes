@@ -171,14 +171,17 @@ export function generateStyles(colorTheme: ColorTheme) {
             fontSize: 25,
             fontWeight: 'bold',
         },
-        charCount: {
+        noteStatusBar: {
             backgroundColor: colorTheme.fg,
             color: colorTheme.placeholder,
-            fontSize: 13,
-            bottom: 0,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             paddingHorizontal: 7,
             paddingBottom: 2,
-            textAlign: 'right'
+        },
+        noteStatusBarText: {
+            color: colorTheme.placeholder,
+            fontSize: 13,
         },
         settingsHeader: {
             fontSize: 25,

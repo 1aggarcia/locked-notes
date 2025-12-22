@@ -88,5 +88,21 @@ export const NotesText = {
     WRITE_SOMETHING_HERE: {
         en: "Write something here...",
         es: "Escribe algo aquí..."
-    }
+    },
+    ALL_CHANGES_SAVED: {
+        en: "All changes saved",
+        es: "Todos los cambios guardados",
+    },
+    SAVING: {
+        en: "Saving...",
+        es: "Guardando...",
+    },
+    UNSAVED_CHANGES: {
+        en: "Unsaved changes",
+        es: "Cambios no guardados",
+    },
+    FAILED_TO_SAVE: {
+        en: "Failed to save",
+        es: "No se pudo guardar",
+    },
 } as const satisfies DisplayTextRecord;

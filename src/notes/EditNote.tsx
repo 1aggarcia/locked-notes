@@ -13,6 +13,14 @@ import { Params } from "../access/Unlocked";
 import Loading from "../layout/Loading";
 import { NotesText } from "./notesText";
 
+const SaveStatuses = {
+    SAVING: 'SAVING',
+    SAVED: 'SAVED',
+    FAILED: 'FAILED',
+} as const;
+
+type SaveStatus = typeof SaveStatuses[keyof typeof SaveStatuses];
+
 // Maximum number of characters permitted in the title and body
 const maxTitleLength = 128;  // 2^7
 const maxBodyLength = 16384;  // 2^14
@@ -21,6 +29,8 @@ export default function EditNote(
     { route, navigation }: NativeStackScreenProps<Params, 'EditNote'>
 ) {
     const [loaded, setLoaded] = useState(false);
+    const [saveStatus, setSaveStatus] =
+        useState<SaveStatus>(SaveStatuses.SAVED);
 
     // Default values of blank note, in the event that a new note is being created
     const [title, setTitle] = useState('');
@@ -80,6 +90,26 @@ export default function EditNote(
         navigation.goBack();
     }
 
+    function hasUnsavedChanges() {
+        return (
+            savedTitle !== title
+            || savedBody !== body
+        );
+    }
+
+    function getNoteStatusText() {
+        if (saveStatus === SaveStatuses.SAVING) {
+            return text.SAVING;
+        }
+        if (saveStatus === SaveStatuses.FAILED) {
+            return text.FAILED_TO_SAVE;
+        }
+        if (hasUnsavedChanges()) {
+            return text.UNSAVED_CHANGES;
+        }
+        return text.ALL_CHANGES_SAVED;
+    }
+
     /**
      * Checks for any new changes in the note.
      * Saves the note if there are changes.
@@ -87,7 +117,7 @@ export default function EditNote(
     async function checkForUpdates() {
         if (!loaded) return;
 
-        if (savedTitle === title && savedBody === body) {
+        if (!hasUnsavedChanges()) {
             // no new changes
             return;
         }
@@ -100,10 +130,21 @@ export default function EditNote(
         };
 
         try {
+            /*
+                TODO: Save requests should be queued instead.
+
+                Currently the wrong status "UNSAVED" is shown if an edit is
+                made while saving (should instead be "SAVING"). Saves are fast
+                enough where this practically doesn't matter and only the
+                "SAVED" status is ever visible to the user.
+            */
+            setSaveStatus(SaveStatuses.SAVING);
             await saveNoteAsync(filename, newNote);
             setSavedTitle(title);
-            setSavedBody(body);
+            setSavedBody(body); 
+            setSaveStatus(SaveStatuses.SAVED);
         } catch (err) {
+            setSaveStatus(SaveStatuses.FAILED);
             showErrorDialog(err);
         }
     }
@@ -134,9 +175,14 @@ export default function EditNote(
                     multiline
                 />
             </ScrollView>
-            <AppText style={styles.charCount}>
-                {body.length} / {maxBodyLength}
-            </AppText>
+            <View style={styles.noteStatusBar}>
+                <AppText style={styles.noteStatusBarText}>
+                    {getNoteStatusText()}
+                </AppText>
+                <AppText style={styles.noteStatusBarText}>
+                    {body.length} / {maxBodyLength}
+                </AppText>
+            </View>
         </View>
     );
 }
