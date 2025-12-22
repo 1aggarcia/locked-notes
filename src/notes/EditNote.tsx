@@ -22,8 +22,10 @@ const SaveStatuses = {
 type SaveStatus = typeof SaveStatuses[keyof typeof SaveStatuses];
 
 // Maximum number of characters permitted in the title and body
-const maxTitleLength = 128;  // 2^7
-const maxBodyLength = 16384;  // 2^14
+const MAX_TITLE_LENGTH = 128;  // 2^7
+const MAX_BODY_LENGTH = 16384;  // 2^14
+
+const NOTE_SAVE_DEBOUNCE_MS = 750;
 
 export default function EditNote(
     { route, navigation }: NativeStackScreenProps<Params, 'EditNote'>
@@ -52,7 +54,11 @@ export default function EditNote(
             .catch(handleGetNoteError);
     }, []);
 
-    useEffect(() => { checkForUpdates() }, [title, body]);
+    // Debounced save
+    useEffect(() => {
+        const timeout = setTimeout(checkForUpdates, NOTE_SAVE_DEBOUNCE_MS);
+        return () => clearTimeout(timeout);
+    }, [title, body]);
 
     usePreventRemove(title.length === 0, ({ data }) => {
         const cancelBtn: AlertButton = { text: text.BACK, style: "cancel" };
@@ -75,6 +81,25 @@ export default function EditNote(
         await checkForUpdates();
         navigation.dispatch(data.action);
     });
+
+    /*
+    POC for diffing
+    useEffect(() => {
+
+        console.log("body changed");
+        const bodyPatch = structuredPatch(filename, filename, initialBody, body);
+        console.log({ bodyPatch });
+        const timeout2 = setTimeout(() => {
+            console.log("reserving patch");
+            const reversed = reversePatch(bodyPatch);
+            const undoneBody = applyPatch(body, reversed);
+            console.log({ reversed, undoneBody });
+            setBody(!undoneBody ? "error" : undoneBody);
+        }, 1000);
+
+        return () => clearTimeout(timeout2);
+    }, [body]);
+    */
 
     function handleGetNote(note: Note | null) {
         if (note !== null) {
@@ -120,10 +145,7 @@ export default function EditNote(
      * Saves the note if there are changes.
      */
     async function checkForUpdates() {
-        if (!loaded) return;
-
-        if (!hasUnsavedChanges()) {
-            // no new changes
+        if (!loaded || !hasUnsavedChanges()) {
             return;
         }
 
@@ -179,7 +201,7 @@ export default function EditNote(
                 <TextInput 
                     style={styles.noteTitle}
                     value={title}
-                    maxLength={maxTitleLength}
+                    maxLength={MAX_TITLE_LENGTH}
                     onChangeText={setTitle}
                     placeholder={text.TITLE}
                     placeholderTextColor={colorTheme.placeholder}
@@ -188,7 +210,7 @@ export default function EditNote(
                 <TextInput 
                     style={styles.noteBody}
                     value={body}
-                    maxLength={maxBodyLength}
+                    maxLength={MAX_BODY_LENGTH}
                     onChangeText={setBody}
                     placeholder={text.WRITE_SOMETHING_HERE}
                     placeholderTextColor={colorTheme.placeholder}
@@ -200,7 +222,7 @@ export default function EditNote(
                     {getNoteStatusText()}
                 </AppText>
                 <AppText style={styles.noteStatusBarText}>
-                    {body.length} / {maxBodyLength}
+                    {body.length} / {MAX_BODY_LENGTH}
                 </AppText>
             </View>
         </View>
