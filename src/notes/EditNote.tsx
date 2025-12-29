@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { ScrollView, TextInput, View, Alert, AlertButton } from "react-native";
+import { ScrollView, TextInput, View, Alert, AlertButton, TouchableOpacity } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { usePreventRemove } from "@react-navigation/native";
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 import showErrorDialog from "../shared/util/error";
 import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
@@ -12,6 +13,16 @@ import AppText from "../shared/components/AppText";
 import { Params } from "../access/Unlocked";
 import Loading from "../layout/Loading";
 import { NotesText } from "./notesText";
+import {
+    addPatchToEditHistory,
+    canRedoPatch,
+    canUndoPatch,
+    initEditHistory,
+    NoteContents,
+    redoCurrentPatch,
+    undoCurrentPatch,
+} from "./editHistory";
+import { useDebounce } from "./hooks";
 
 const SaveStatuses = {
     SAVING: 'SAVING',
@@ -40,12 +51,17 @@ export default function EditNote(
     const [dateCreated, setDateCreated] = useState(Date.now());
 
     // The most recent values saved to the disk
-    const [savedTitle, setSavedTitle] = useState('');
-    const [savedBody, setSavedBody] = useState('');
+    const [savedContents, setSavedContents] = useState<NoteContents>({
+        title: '',
+        body: '',
+    });
+    const [editHistory, setEditHistory] = useState(initEditHistory());
 
-    const filename = route.params.filename;
+    const debounce = useDebounce(NOTE_SAVE_DEBOUNCE_MS);
     const { styles, colorTheme } = useStyles();
     const text = useTranslation(NotesText);
+    
+    const filename = route.params.filename;
 
     // Fetch the note from storage
     useEffect(() => {
@@ -54,18 +70,12 @@ export default function EditNote(
             .catch(handleGetNoteError);
     }, []);
 
-    // Debounced save
-    useEffect(() => {
-        const timeout = setTimeout(checkForUpdates, NOTE_SAVE_DEBOUNCE_MS);
-        return () => clearTimeout(timeout);
-    }, [title, body]);
-
     usePreventRemove(title.length === 0, ({ data }) => {
         const cancelBtn: AlertButton = { text: text.BACK, style: "cancel" };
         const continueBtn: AlertButton = {
             text: text.CONTINUE,
             style: "destructive",
-            onPress: () => checkForUpdates().then(
+            onPress: () => saveNote({ title, body }).then(
                 () => navigation.dispatch(data.action)
             )
         };
@@ -77,38 +87,20 @@ export default function EditNote(
         );
     });
 
-    usePreventRemove(hasUnsavedChanges(), async ({ data }) => {
-        await checkForUpdates();
+    usePreventRemove(!matchesSavedVersion(title, body), async ({ data }) => {
+        await saveNote({ title, body });
         navigation.dispatch(data.action);
     });
-
-    /*
-    POC for diffing
-    useEffect(() => {
-
-        console.log("body changed");
-        const bodyPatch = structuredPatch(filename, filename, initialBody, body);
-        console.log({ bodyPatch });
-        const timeout2 = setTimeout(() => {
-            console.log("reserving patch");
-            const reversed = reversePatch(bodyPatch);
-            const undoneBody = applyPatch(body, reversed);
-            console.log({ reversed, undoneBody });
-            setBody(!undoneBody ? "error" : undoneBody);
-        }, 1000);
-
-        return () => clearTimeout(timeout2);
-    }, [body]);
-    */
 
     function handleGetNote(note: Note | null) {
         if (note !== null) {
             setTitle(note.title);
             setBody(note.body);
             setDateCreated(note.dateCreated);
+            setSavedContents(note);
 
-            setSavedTitle(note.title);
-            setSavedBody(note.body);
+            // Reset the edit history with the last saved version
+            setEditHistory(initEditHistory(note));
         }
         // If no note was found, the default values already
         // in state work perfectly to make a new one
@@ -120,32 +112,48 @@ export default function EditNote(
         navigation.goBack();
     }
 
-    function hasUnsavedChanges() {
-        return (
-            savedTitle !== title
-            || savedBody !== body
-        );
+    function handleEdit(title: string, body: string) {
+        setTitle(title);
+        setBody(body);
+        debounce(async () => {
+            await saveNote({ title, body });
+            patchEditHistory({ title, body });
+        });
     }
 
-    function getNoteStatusText() {
-        if (saveStatus === SaveStatuses.SAVING) {
-            return text.SAVING;
+    function handleUndoPress() {
+        if (!canUndoPatch(editHistory)) {
+            return;
         }
-        if (saveStatus === SaveStatuses.FAILED) {
-            return text.FAILED_TO_SAVE;
-        }
-        if (hasUnsavedChanges()) {
-            return text.UNSAVED_CHANGES;
-        }
-        return text.ALL_CHANGES_SAVED;
+        const updated = undoCurrentPatch({ title, body }, editHistory);
+
+        setTitle(updated.note.title);
+        setBody(updated.note.body);
+        setEditHistory(updated.editHistory);
+
+        debounce(() => saveNote(updated.note));
     }
 
-    /**
-     * Checks for any new changes in the note.
-     * Saves the note if there are changes.
-     */
-    async function checkForUpdates() {
-        if (!loaded || !hasUnsavedChanges()) {
+    function handleRedoPress() {
+        if (!canRedoPatch(editHistory)) {
+            return;
+        }
+        const updated = redoCurrentPatch({ title, body }, editHistory);
+
+        setTitle(updated.note.title);
+        setBody(updated.note.body);
+        setEditHistory(updated.editHistory);
+
+        debounce(() => saveNote(updated.note));
+    } 
+
+    function matchesSavedVersion(title: string, body: string): boolean {
+        return title === savedContents.title && body === savedContents.body;
+    }
+
+    async function saveNote(contents: NoteContents) {
+        const { title, body } = contents;
+        if (!loaded || matchesSavedVersion(title, body)) {
             return;
         }
 
@@ -167,21 +175,27 @@ export default function EditNote(
             */
             setSaveStatus(SaveStatuses.SAVING);
             await saveNoteAsync(filename, newNote);
-            setSavedTitle(title);
-            setSavedBody(body); 
+            setSavedContents(contents);
             setSaveStatus(SaveStatuses.SAVED);
         } catch (err) {
             setSaveStatus(SaveStatuses.FAILED);
-            showSaveErrorDialog(err);
+            showSaveErrorDialog(err, () => saveNote(contents));
         }
     }
 
-    function showSaveErrorDialog(error: unknown) {
+    function patchEditHistory({ title, body }: NoteContents) {
+        setEditHistory((history) => addPatchToEditHistory(
+            { title, body, filename },
+            history
+        ));
+    }
+
+    function showSaveErrorDialog(error: unknown, retry: () => void) {
         const ignoreBtn: AlertButton = { text: text.IGNORE, style: "cancel" };
         const retryButton: AlertButton = {
             text: text.RETRY,
             style: "destructive",
-            onPress: () => checkForUpdates(),
+            onPress: retry,
         };
 
         Alert.alert(
@@ -189,6 +203,19 @@ export default function EditNote(
             text.FAILED_TO_SAVE_MESSAGE + '\n\n' + error,
             [ignoreBtn, retryButton]
         );
+    }
+
+    function getNoteStatusText() {
+        if (saveStatus === SaveStatuses.SAVING) {
+            return text.SAVING;
+        }
+        if (saveStatus === SaveStatuses.FAILED) {
+            return text.FAILED_TO_SAVE;
+        }
+        if (!matchesSavedVersion(title, body)) {
+            return text.UNSAVED_CHANGES;
+        }
+        return text.ALL_CHANGES_SAVED;
     }
 
     if (!loaded) {
@@ -202,7 +229,7 @@ export default function EditNote(
                     style={styles.noteTitle}
                     value={title}
                     maxLength={MAX_TITLE_LENGTH}
-                    onChangeText={setTitle}
+                    onChangeText={(newTitle) => handleEdit(newTitle, body)}
                     placeholder={text.TITLE}
                     placeholderTextColor={colorTheme.placeholder}
                     multiline
@@ -211,7 +238,7 @@ export default function EditNote(
                     style={styles.noteBody}
                     value={body}
                     maxLength={MAX_BODY_LENGTH}
-                    onChangeText={setBody}
+                    onChangeText={(newBody) => handleEdit(title, newBody)}
                     placeholder={text.WRITE_SOMETHING_HERE}
                     placeholderTextColor={colorTheme.placeholder}
                     multiline
@@ -221,6 +248,29 @@ export default function EditNote(
                 <AppText style={styles.noteStatusBarText}>
                     {getNoteStatusText()}
                 </AppText>
+                {/* TODO: fix this styling */}
+                <TouchableOpacity
+                    style={{ padding: 10 }}
+                    disabled={!canUndoPatch(editHistory)}
+                    onPress={handleUndoPress}
+                >
+                    <FontAwesome5
+                        name="undo"
+                        size={24}
+                        color={colorTheme.placeholder}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{ padding: 10 }}
+                    disabled={!canRedoPatch(editHistory)}
+                    onPress={handleRedoPress}
+                >
+                    <FontAwesome5
+                        name="redo"
+                        size={24}
+                        color={colorTheme.placeholder}
+                    />
+                </TouchableOpacity>
                 <AppText style={styles.noteStatusBarText}>
                     {body.length} / {MAX_BODY_LENGTH}
                 </AppText>

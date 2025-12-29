@@ -176,6 +176,7 @@ export function generateStyles(colorTheme: ColorTheme) {
             color: colorTheme.placeholder,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
             paddingHorizontal: 7,
             paddingBottom: 2,
         },

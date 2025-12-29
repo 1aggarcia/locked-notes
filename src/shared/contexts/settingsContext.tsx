@@ -41,6 +41,7 @@ export function useStyles() {
     return useSettings().state.styles;
 }
 
+// TODO: figure out a way to cache this
 export function useTranslation<T extends DisplayTextRecord>(textRecord: T) {
     return getTranslations(textRecord, useSettings().state.language);
 }
