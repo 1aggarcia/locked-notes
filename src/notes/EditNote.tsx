@@ -92,61 +92,6 @@ export default function EditNote(
         navigation.dispatch(data.action);
     });
 
-    function handleGetNote(note: Note | null) {
-        if (note !== null) {
-            setTitle(note.title);
-            setBody(note.body);
-            setDateCreated(note.dateCreated);
-            setSavedContents(note);
-
-            // Reset the edit history with the last saved version
-            setEditHistory(initEditHistory(note));
-        }
-        // If no note was found, the default values already
-        // in state work perfectly to make a new one
-        setLoaded(true);
-    }
-
-    function handleGetNoteError(reason: unknown) {
-        showErrorDialog(reason);
-        navigation.goBack();
-    }
-
-    function handleEdit(title: string, body: string) {
-        setTitle(title);
-        setBody(body);
-        debounce(async () => {
-            await saveNote({ title, body });
-            patchEditHistory({ title, body });
-        });
-    }
-
-    function handleUndoPress() {
-        if (!canUndoPatch(editHistory)) {
-            return;
-        }
-        const updated = undoCurrentPatch({ title, body }, editHistory);
-
-        setTitle(updated.note.title);
-        setBody(updated.note.body);
-        setEditHistory(updated.editHistory);
-
-        debounce(() => saveNote(updated.note));
-    }
-
-    function handleRedoPress() {
-        if (!canRedoPatch(editHistory)) {
-            return;
-        }
-        const updated = redoCurrentPatch({ title, body }, editHistory);
-
-        setTitle(updated.note.title);
-        setBody(updated.note.body);
-        setEditHistory(updated.editHistory);
-
-        debounce(() => saveNote(updated.note));
-    } 
-
     function matchesSavedVersion(title: string, body: string): boolean {
         return title === savedContents.title && body === savedContents.body;
     }
@@ -183,13 +128,6 @@ export default function EditNote(
         }
     }
 
-    function patchEditHistory({ title, body }: NoteContents) {
-        setEditHistory((history) => addPatchToEditHistory(
-            { title, body, filename },
-            history
-        ));
-    }
-
     function showSaveErrorDialog(error: unknown, retry: () => void) {
         const ignoreBtn: AlertButton = { text: text.IGNORE, style: "cancel" };
         const retryButton: AlertButton = {
@@ -203,6 +141,64 @@ export default function EditNote(
             text.FAILED_TO_SAVE_MESSAGE + '\n\n' + error,
             [ignoreBtn, retryButton]
         );
+    }
+
+    function handleGetNote(note: Note | null) {
+        if (note !== null) {
+            setTitle(note.title);
+            setBody(note.body);
+            setDateCreated(note.dateCreated);
+            setSavedContents(note);
+
+            // Reset the edit history with the last saved version
+            setEditHistory(initEditHistory(note));
+        }
+        // If no note was found, the default values already
+        // in state work perfectly to make a new one
+        setLoaded(true);
+    }
+
+    function handleGetNoteError(reason: unknown) {
+        showErrorDialog(reason);
+        navigation.goBack();
+    }
+
+    function handleEdit(title: string, body: string) {
+        setTitle(title);
+        setBody(body);
+        debounce(async () => {
+            await saveNote({ title, body });
+            setEditHistory((history) => addPatchToEditHistory(
+                { title, body, filename },
+                history
+            ));
+        });
+    }
+
+    function handleUndoPress() {
+        if (!canUndoPatch(editHistory)) {
+            return;
+        }
+        const updated = undoCurrentPatch({ title, body }, editHistory);
+
+        setTitle(updated.note.title);
+        setBody(updated.note.body);
+        setEditHistory(updated.editHistory);
+
+        debounce(() => saveNote(updated.note));
+    }
+
+    function handleRedoPress() {
+        if (!canRedoPatch(editHistory)) {
+            return;
+        }
+        const updated = redoCurrentPatch({ title, body }, editHistory);
+
+        setTitle(updated.note.title);
+        setBody(updated.note.body);
+        setEditHistory(updated.editHistory);
+
+        debounce(() => saveNote(updated.note));
     }
 
     function getNoteStatusText() {
