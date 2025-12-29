@@ -179,6 +179,8 @@ export function generateStyles(colorTheme: ColorTheme) {
             alignItems: 'center',
             paddingHorizontal: 7,
             paddingBottom: 2,
+            borderTopColor: colorTheme.placeholder,
+            borderTopWidth: 1,
         },
         noteStatusBarText: {
             color: colorTheme.placeholder,

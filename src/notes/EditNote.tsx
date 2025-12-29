@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { ScrollView, TextInput, View, Alert, AlertButton, TouchableOpacity } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { usePreventRemove } from "@react-navigation/native";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
+// https://icons.expo.fyi/Index/Ionicons/arrow-undo
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import showErrorDialog from "../shared/util/error";
 import { useStyles, useTranslation } from "../shared/contexts/settingsContext";
@@ -218,6 +220,34 @@ export default function EditNote(
         return <Loading message={text.FETCHING_NOTE_CONTENTS} />
     }
 
+    const UndoButton = () => (
+        <TouchableOpacity
+            style={{ padding: 10 }}
+            disabled={!canUndoPatch(editHistory)}
+            onPress={handleUndoPress}
+        >
+            <Ionicons
+                name="arrow-undo-sharp"
+                size={24}
+                color={colorTheme.placeholder}
+            />
+        </TouchableOpacity>
+    );
+    
+    const RedoButton = () => (
+        <TouchableOpacity
+            style={{ padding: 10 }}
+            disabled={!canRedoPatch(editHistory)}
+            onPress={handleRedoPress}
+        >
+            <Ionicons
+                name="arrow-redo-sharp"
+                size={24}
+                color={colorTheme.placeholder}
+            />
+        </TouchableOpacity>
+    );
+
     return (
         <View style={styles.app}>
             <ScrollView style={styles.editNote}>
@@ -241,32 +271,13 @@ export default function EditNote(
                 />
             </ScrollView>
             <View style={styles.noteStatusBar}>
+                <View style={{ flexDirection: "row" }}>
+                    <UndoButton />
+                    <RedoButton />
+                </View>
                 <AppText style={styles.noteStatusBarText}>
                     {getNoteStatusText()}
                 </AppText>
-                {/* TODO: fix this styling */}
-                <TouchableOpacity
-                    style={{ padding: 10 }}
-                    disabled={!canUndoPatch(editHistory)}
-                    onPress={handleUndoPress}
-                >
-                    <FontAwesome5
-                        name="undo"
-                        size={24}
-                        color={colorTheme.placeholder}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ padding: 10 }}
-                    disabled={!canRedoPatch(editHistory)}
-                    onPress={handleRedoPress}
-                >
-                    <FontAwesome5
-                        name="redo"
-                        size={24}
-                        color={colorTheme.placeholder}
-                    />
-                </TouchableOpacity>
                 <AppText style={styles.noteStatusBarText}>
                     {body.length} / {MAX_BODY_LENGTH}
                 </AppText>
