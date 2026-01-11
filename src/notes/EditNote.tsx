@@ -217,36 +217,48 @@ export default function EditNote(
     }
 
     if (!loaded) {
-        return <Loading message={text.FETCHING_NOTE_CONTENTS} />
+        return <Loading message={text.FETCHING_NOTE_CONTENTS} />;
     }
 
-    const UndoButton = () => (
+    const UndoButton = () => ((isEnabled) => (
         <TouchableOpacity
             style={{ padding: 10 }}
-            disabled={!canUndoPatch(editHistory)}
+            disabled={!isEnabled}
             onPress={handleUndoPress}
         >
             <Ionicons
-                name="arrow-undo-sharp"
+                name={isEnabled
+                    ? "arrow-undo-sharp"
+                    : "arrow-undo-outline"
+                }
                 size={24}
-                color={colorTheme.placeholder}
+                color={isEnabled
+                    ? colorTheme.placeholder
+                    : colorTheme.weakBorder
+                }
             />
         </TouchableOpacity>
-    );
+    ))(canUndoPatch(editHistory));
     
-    const RedoButton = () => (
+    const RedoButton = () => ((isEnabled) => (
         <TouchableOpacity
             style={{ padding: 10 }}
-            disabled={!canRedoPatch(editHistory)}
+            disabled={!isEnabled}
             onPress={handleRedoPress}
         >
             <Ionicons
-                name="arrow-redo-sharp"
+                name={isEnabled
+                    ? "arrow-redo-sharp"
+                    : "arrow-redo-outline"
+                }
                 size={24}
-                color={colorTheme.placeholder}
+                color={isEnabled
+                    ? colorTheme.placeholder
+                    : colorTheme.weakBorder
+                }
             />
         </TouchableOpacity>
-    );
+    ))(canRedoPatch(editHistory));
 
     return (
         <View style={styles.app}>
